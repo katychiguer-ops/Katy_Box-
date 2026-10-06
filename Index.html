@@ -2,725 +2,1314 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ذاكرة الكيك بوكسينغ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kickboxing Memory</title>
     
-    <!-- أيقونة التطبيق عند التثبيت على الهاتف -->
+    <!-- App Icon -->
     <link rel="icon" type="image/png" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
     <link rel="apple-touch-icon" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Kickboxing Memory">
-
-    <!-- Styles -->
+    <link rel="manifest" href="manifest.json">
+    
     <style>
         :root {
-            --bg-dark: #12131C;
-            --card-bg: #1E202E;
-            --accent-red: #FF3B30;
-            --accent-gold: #FFCC00;
-            --accent-blue: #007AFF;
-            --text-main: #FFFFFF;
-            --text-sub: #A0A5BA;
-            --border-color: #2C2F45;
-            --radius-lg: 16px;
-            --radius-md: 10px;
+            --primary: #6d4aff;
+            --primary-light: #a38bff;
+            --accent: #ff6b9d;
+            --accent-light: #ffb6c9;
+            --background: #faf5ff;
+            --surface: #ffffff;
+            --text-primary: #2d2d44;
+            --text-secondary: #6b6b8a;
+            --success: #00d285;
+            --warning: #ffc857;
+            --danger: #ff477e;
+            --shadow: rgba(109, 74, 255, 0.15);
+            --card-shadow: 0 8px 24px var(--shadow);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
-
+        
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding-bottom: 90px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #efe5ff 100%);
             min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
-
+        
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        
         /* Header */
         header {
-            background: linear-gradient(180deg, #1A1C2B 0%, var(--bg-dark) 100%);
-            padding: 20px 16px 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            box-shadow: var(--card-shadow);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
         }
-
-        .brand img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-red);
-            object-fit: cover;
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
         }
-
-        .brand h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        /* Navigation Bar */
+        
+        /* Navigation */
         nav {
             position: fixed;
             bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(30, 32, 46, 0.95);
-            backdrop-filter: blur(12px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0 20px;
-            border-top: 1px solid var(--border-color);
+            padding: 12px 8px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
-
-        .nav-btn {
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
             background: none;
             border: none;
-            color: var(--text-sub);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.75rem;
-            gap: 4px;
             cursor: pointer;
-            width: 20%;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            border-radius: 12px;
         }
-
-        .nav-btn.active {
-            color: var(--accent-red);
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+            color: var(--primary);
             font-weight: bold;
         }
-
-        .nav-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
+        
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
         }
-
-        /* Main View Container */
-        .view {
+        
+        /* Sections */
+        section {
             display: none;
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
         }
-
-        .view.active {
+        
+        section.active {
             display: block;
         }
-
-        /* Search & Filter */
-        .search-box {
-            width: 100%;
-            padding: 12px 16px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            color: #fff;
-            margin-bottom: 16px;
-            font-size: 0.95rem;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Movement Card */
-        .card-grid {
+        
+        /* Cards */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
         }
-
-        .move-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
+        
+        .card {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--card-shadow);
             cursor: pointer;
-            transition: transform 0.15s ease;
+            transition: var(--transition);
+            border: 2px solid transparent;
         }
-
-        .move-card:active {
-            transform: scale(0.97);
+        
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-light);
         }
-
-        .svg-container {
+        
+        .card.selected {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-light) 0%, var(--surface) 100%);
+        }
+        
+        .card svg {
             width: 100%;
-            height: 130px;
-            background-color: #151622;
-            border-radius: var(--radius-md);
+            height: 120px;
+            margin-bottom: 12px;
+        }
+        
+        .card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        
+        .card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .card .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-top: 8px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary-light);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Form Elements */
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--shadow);
+        }
+        
+        /* Animation Preview */
+        .animation-preview {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+        
+        .animation-stage {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, #f5f0ff 0%, #ede5ff 100%);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
             overflow: hidden;
         }
-
-        .move-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .move-sub {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-        }
-
-        /* Series Builder */
-        .series-builder {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .sequence-display {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 10px 0;
-            min-height: 100px;
-            align-items: center;
-        }
-
-        .seq-item {
-            min-width: 80px;
-            background: #151622;
-            border-radius: var(--radius-md);
-            padding: 8px;
-            text-align: center;
-            font-size: 0.75rem;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .seq-item.active-playing {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
-        }
-
-        .seq-item .remove-btn {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--accent-red);
-            color: #fff;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            border: none;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        .btn {
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: var(--radius-md);
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-secondary {
-            background-color: var(--border-color);
-            color: #fff;
-        }
-
-        /* Player Controls */
-        .player-box {
-            background: #151622;
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            text-align: center;
-            margin-top: 16px;
-            border: 1px solid var(--border-color);
-        }
-
+        
         .speed-controls {
             display: flex;
-            justify-content: center;
             gap: 8px;
-            margin-top: 10px;
+            justify-content: center;
+            margin-top: 16px;
         }
-
+        
         .speed-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            padding: 8px 16px;
+            border: 2px solid var(--primary-light);
+            background: white;
+            border-radius: 20px;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
         }
-
+        
         .speed-btn.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
-
-        /* Table Styles for Dictionary & Schedule */
-        .dict-list, .schedule-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .dict-item, .schedule-item {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .edit-input {
-            background: #151622;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 6px;
+        
+        /* Tracking */
+        .progress-bar {
+            height: 8px;
+            background: #e0e0eb;
             border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            transition: width 0.5s ease;
+        }
+        
+        .rating {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .rating-option {
+            padding: 8px 16px;
+            border: 2px solid #e0e0eb;
+            border-radius: 20px;
+            cursor: pointer;
             font-size: 0.85rem;
+            transition: var(--transition);
         }
-
-        /* Badge status */
-        .status-badge {
-            padding: 4px 8px;
+        
+        .rating-option.selected {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        /* Schedule */
+        .schedule-row {
+            background: var(--surface);
             border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
+            padding: 16px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .status-good { background: rgba(52, 199, 89, 0.2); color: #34C759; }
-        .status-medium { background: rgba(255, 204, 0, 0.2); color: #FFCC00; }
-        .status-hard { background: rgba(255, 59, 48, 0.2); color: #FF3B30; }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
+        
+        .checkbox-custom {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #e0e0eb;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
-
-        .payment-card {
-            background: var(--card-bg);
+        
+        .checkbox-custom.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .payment-month {
+            background: var(--surface);
+            border-radius: 12px;
             padding: 12px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            margin: 8px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .checkbox-custom {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--accent-red);
+        
+        .payment-month.paid {
+            background: #e8fff5;
+            border-left: 4px solid var(--success);
+        }
+        
+        .payment-toggle {
+            width: 52px;
+            height: 28px;
+            background: #e0e0eb;
+            border-radius: 14px;
+            position: relative;
             cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .payment-toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+            transition: var(--transition);
+        }
+        
+        .payment-toggle.active {
+            background: var(--success);
+        }
+        
+        .payment-toggle.active::after {
+            right: 26px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* SVG Animation Styles */
+        .animate-move {
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+        }
+        
+        .arm-right { transition: transform 0.3s ease; }
+        .arm-left { transition: transform 0.3s ease; }
+        .leg-right { transition: transform 0.3s ease; }
+        .leg-left { transition: transform 0.3s ease; }
+        
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .category-btn {
+            padding: 8px 16px;
+            border: none;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-primary);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 3000;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-
-    <!-- Header -->
-    <header>
-        <div class="brand">
-            <img src="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png" alt="Profile" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'40\' fill=\'%23FF3B30\'/></svg>'">
-            <h1>ذاكرة الكيك بوكسينغ 🥊</h1>
-        </div>
-    </header>
-
-    <!-- App Views -->
-
-    <!-- VIEW 1: MOVEMENT CARDS -->
-    <section id="view-cards" class="view active">
-        <input type="text" class="search-box" id="search-cards" placeholder="بحث عن حركة (مثال: مستقيمة, Hook, ركلة)..." oninput="filterCards()">
-        <div class="card-grid" id="cards-container"></div>
-    </section>
-
-    <!-- VIEW 2: SERIES BUILDER & ANIMATED PLAYER -->
-    <section id="view-series" class="view">
-        <div class="series-builder">
-            <h3>🔥 صناعة سلسلة جديدة</h3>
-            <div class="sequence-display" id="builder-sequence">
-                <span style="color: var(--text-sub); font-size: 0.85rem;">إضغط على الحركات أسفله لإضافتها للسلسلة...</span>
+    <div class="app-container">
+        <header>
+            <h1>🥊 ذاكرة الملاكمة</h1>
+            <p>حفظ ما تتعلمين في الصالة</p>
+        </header>
+        
+        <!-- Section 1: Cards -->
+        <section id="cards-section" class="active">
+            <div class="category-filter" id="categoryFilter"></div>
+            
+            <h2 style="margin-bottom: 16px;">بطاقات الحركات</h2>
+            <div class="grid" id="cardsGrid"></div>
+        </section>
+        
+        <!-- Section 2: Series Builder -->
+        <section id="series-section">
+            <h2 style="margin-bottom: 16px;">صناعة السلسلة</h2>
+            
+            <div class="card" style="margin-bottom: 16px;">
+                <input type="text" id="seriesName" placeholder="اسم السلسلة (مثلاً: حصة الأربعاء)">
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                    اختر حركات من بطاقات الحركات لإضافتها هنا
+                </p>
             </div>
-            <input type="text" id="series-name" class="search-box" style="margin-top:10px; margin-bottom: 5px;" placeholder="اسم السلسلة (مثلاً: Series 01 - حصة الأربعاء)">
-            <button class="btn" onclick="saveSeries()">💾 حفظ السلسلة</button>
-        </div>
-
-        <div class="player-box">
-            <h4>▶️ معينة الأنيميشن المتحرك</h4>
-            <div class="svg-container" id="player-svg-box" style="height: 180px; margin: 10px 0;">
-                <!-- Animated SVG Player Rendering -->
+            
+            <div id="selectedMoves" class="grid" style="margin-bottom: 16px;"></div>
+            
+            <button class="btn btn-primary" onclick="previewSeries()" style="width: 100%; margin-bottom: 16px;">
+                ▶️ معاينة السلسلة
+            </button>
+            
+            <div class="animation-preview" id="seriesPreview" style="display: none;">
+                <h3 style="margin-bottom: 12px;">معاينة متحركة</h3>
+                <div class="animation-stage" id="animationStage">
+                    <!-- SVG will be inserted here -->
+                </div>
+                <div class="speed-controls">
+                    <button class="speed-btn" onclick="setSpeed(0.5)">🐢 بطيء</button>
+                    <button class="speed-btn active" onclick="setSpeed(1)">▶️ عادي</button>
+                    <button class="speed-btn" onclick="setSpeed(1.5)">⚡ سريع</button>
+                    <button class="speed-btn" onclick="toggleAnimation()">◼️ إيقاف</button>
+                </div>
             </div>
-            <div id="playing-now-title" style="font-weight: bold; color: var(--accent-gold); font-size: 0.9rem;">جاهز للتشغيل</div>
-            <div class="speed-controls">
-                <button class="btn btn-secondary" style="width:auto; margin:0;" onclick="playCurrentSequence()">▶️ تشغيل</button>
-                <button class="speed-btn active" onclick="setSpeed(1, this)">1x</button>
-                <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x 🐢</button>
-                <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x ⚡</button>
+            
+            <button class="btn btn-success" onclick="saveSeries()" style="width: 100%;" id="saveSeriesBtn">
+                💾 حفظ السلسلة
+            </button>
+            
+            <h2 style="margin-top: 32px; margin-bottom: 16px;">السلاسل المحفوظة</h2>
+            <div id="savedSeriesList"></div>
+        </section>
+        
+        <!-- Section 3: Dictionary -->
+        <section id="dictionary-section">
+            <h2 style="margin-bottom: 16px;">المعجم</h2>
+            <input type="text" id="searchDict" placeholder="ابحث عن حركة..." onkeyup="filterDictionary()">
+            <div class="grid" id="dictionaryGrid"></div>
+        </section>
+        
+        <!-- Section 4: Tracking -->
+        <section id="tracking-section">
+            <h2 style="margin-bottom: 16px;">تتبع التطور</h2>
+            <div id="trackingList"></div>
+        </section>
+        
+        <!-- Section 5: Gym Schedule -->
+        <section id="schedule-section">
+            <h2 style="margin-bottom: 16px;">حصص الصالة</h2>
+            <div id="gymSchedule"></div>
+            
+            <h2 style="margin-top: 32px; margin-bottom: 16px;">الدفع</h2>
+            <div class="card" style="margin-bottom: 16px;">
+                <label>بداية الاشتراك:</label>
+                <input type="date" id="subscriptionStart" value="2026-09-15">
+            </div>
+            <div id="paymentTracker"></div>
+        </section>
+        
+        <!-- Edit Modal -->
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <h2 style="margin-bottom: 16px;">تعديل الاسم</h2>
+                <p id="editMovementName" style="margin-bottom: 16px; color: var(--text-secondary);"></p>
+                <label>الاسم الذي يستخدمه مدربك:</label>
+                <input type="text" id="customNameInput" placeholder="اكتبي الاسم هنا">
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-primary" onclick="saveCustomName()" style="flex: 1;">حفظ</button>
+                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">إلغاء</button>
+                </div>
             </div>
         </div>
-
-        <h3 style="margin: 20px 0 10px;">اختر الحركات للإضافة:</h3>
-        <div class="card-grid" id="builder-cards-container"></div>
-    </section>
-
-    <!-- VIEW 3: DICTIONARY -->
-    <section id="view-dict" class="view">
-        <h3 style="margin-bottom: 12px;">📖 المعجم القابل للتعديل</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 15px;">يمكنك تعديل الاسم التكتيكي الذي يستخدمه مدربك الخاص لكل حركة:</p>
-        <div class="dict-list" id="dict-container"></div>
-    </section>
-
-    <!-- VIEW 4: TRACKING -->
-    <section id="view-tracking" class="view">
-        <h3 style="margin-bottom: 12px;">📈 تتبع مستوى إتقان الـ Series</h3>
-        <div class="dict-list" id="tracking-container"></div>
-    </section>
-
-    <!-- VIEW 5: SCHEDULE & PAYMENTS -->
-    <section id="view-schedule" class="view">
-        <h3 style="margin-bottom: 12px;">📅 سجل حصص الصالة</h3>
-        <div class="schedule-list" id="schedule-container"></div>
-
-        <h3 style="margin: 24px 0 12px;">💰 تتبع اشتراك الصالة</h3>
-        <div class="payment-grid" id="payment-container"></div>
-    </section>
-
-    <!-- Bottom Navigation -->
+        
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+    </div>
+    
+    <!-- Navigation -->
     <nav>
-        <button class="nav-btn active" onclick="switchView('cards', this)">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
-            البطاقات
+        <button class="nav-item active" onclick="showSection('cards')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+            <span>الحركات</span>
         </button>
-        <button class="nav-btn" onclick="switchView('series', this)">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-            السلسلة
+        <button class="nav-item" onclick="showSection('series')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z"/></svg>
+            <span>السلاسل</span>
         </button>
-        <button class="nav-btn" onclick="switchView('dict', this)">
-            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-            المعجم
+        <button class="nav-item" onclick="showSection('dictionary')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+            <span>المعجم</span>
         </button>
-        <button class="nav-btn" onclick="switchView('tracking', this)">
-            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-            التتبع
+        <button class="nav-item" onclick="showSection('tracking')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+            <span>التطور</span>
         </button>
-        <button class="nav-btn" onclick="switchView('schedule', this)">
-            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-            الصالة
+        <button class="nav-item" onclick="showSection('schedule')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+            <span>الصالة</span>
         </button>
     </nav>
-
-    <!-- JavaScript Logic -->
+    
     <script>
-        // Move Database
-        const initialMovements = [
-            { id: "jab", arabic: "ضربة مستقيمة باليسار", english: "Jab", customName: "Jab", category: "لكمات", type: "punch-left" },
-            { id: "cross", arabic: "ضربة مستقيمة باليمين", english: "Cross / Straight Right", customName: "Cross", category: "لكمات", type: "punch-right" },
-            { id: "lead_hook", arabic: "ضربة مقوسة باليسار", english: "Lead Hook", customName: "Lead Hook", category: "لكمات", type: "hook-left" },
-            { id: "rear_hook", arabic: "ضربة مقوسة باليمين", english: "Rear Hook", customName: "Rear Hook", category: "لكمات", type: "hook-right" },
-            { id: "low_kick", arabic: "ركلة منخفضة باليمين", english: "Right Low Kick", customName: "Low Kick", category: "ركلات", type: "kick-low" },
-            { id: "high_kick", arabic: "ركلة مرتفعة باليمين", english: "Right High Kick", customName: "High Kick", category: "ركلات", type: "kick-high" },
-            { id: "front_teep", arabic: "ركلة دفع أمامية", english: "Push Kick / Teep", customName: "Teep", category: "ركلات", type: "kick-front" },
-            { id: "slip_left", arabic: "تادي مراوغة لليسار", english: "Slip Left", customName: "Slip Left", category: "دفاع", type: "slip-left" }
+        // ==================== MOVEMENT DATABASE ====================
+        const movementDB = [
+            // Basic Punches
+            {id: "jab", arabic: " jab (ضربة مستقيمة باليسار)", english: "Jab", category: "لكمات أساسية", level: "مبتدئ", 
+             visual: {type: "straight-punch", side: "left", limb: "arm"}},
+            {id: "cross", arabic: "كروس (ضربة مستقيمة باليمين)", english: "Cross", category: "لكمات أساسية", level: "مبتدئ",
+             visual: {type: "straight-punch", side: "right", limb: "arm"}},
+            {id: "lead-hook", arabic: "ضربة مقوسة باليسار", english: "Lead Hook", category: "لكمات مقوسة", level: "مبتدئ",
+             visual: {type: "hook", side: "left", limb: "arm"}},
+            {id: "rear-hook", arabic: "ضربة مقوسة باليمين", english: "Rear Hook", category: "لكمات مقوسة", level: "مبتدئ",
+             visual: {type: "hook", side: "right", limb: "arm"}},
+            {id: "lead-uppercut", arabic: "أبيركانت باليسار", english: "Lead Uppercut", category: "Uppercuts", level: "متوسط",
+             visual: {type: "uppercut", side: "left", limb: "arm"}},
+            {id: "rear-uppercut", arabic: "أبيركانت باليمين", english: "Rear Uppercut", category: "Uppercuts", level: "متوسط",
+             visual: {type: "uppercut", side: "right", limb: "arm"}},
+            {id: "overhand-right", arabic: "أوفر هاند باليمين", english: "Overhand Right", category: "Overhands", level: "متوسط",
+             visual: {type: "overhand", side: "right", limb: "arm"}},
+            
+            // Kicks - Low
+            {id: "low-kick-r", arabic: "ركلة منخفضة باليمين", english: "Low Roundhouse Kick", category: "ركلات منخفضة", level: "مبتدئ",
+             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "low"}},
+            {id: "low-kick-l", arabic: "ركلة منخفضة باليسار", english: "Low Roundhouse Kick", category: "ركلات منخفضة", level: "مبتدئ",
+             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "low"}},
+            
+            // Kicks - Medium
+            {id: "mid-kick-r", arabic: "ركلة وسطية باليمين", english: "Mid Roundhouse Kick", category: "ركلات متوسطة", level: "مبتدئ",
+             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "mid"}},
+            {id: "mid-kick-l", arabic: "ركلة وسطية باليسار", english: "Mid Roundhouse Kick", category: "ركلات متوسطة", level: "مبتدئ",
+             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "mid"}},
+            
+            // Kicks - High
+            {id: "high-kick-r", arabic: "ركلة مرتفعة باليمين", english: "High Kick", category: "ركلات عالية", level: "متقدم",
+             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "high"}},
+            {id: "high-kick-l", arabic: "ركلة مرتفعة باليسار", english: "High Kick", category: "ركلات عالية", level: "متقدم",
+             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "high"}},
+            
+            // Front Kicks
+            {id: "front-kick-r", arabic: "فرونت كيك باليمين", english: "Front Kick", category: "Front Kicks", level: "مبتدئ",
+             visual: {type: "front-kick", side: "right", limb: "leg"}},
+            {id: "front-kick-l", arabic: "فرونت كيك باليسار", english: "Front Kick", category: "Front Kicks", level: "مبتدئ",
+             visual: {type: "front-kick", side: "left", limb: "leg"}},
+            
+            // Side Kicks
+            {id: "side-kick-r", arabic: "سايد كيك باليمين", english: "Side Kick", category: "Side Kicks", level: "متوسط",
+             visual: {type: "side-kick", side: "right", limb: "leg"}},
+            {id: "side-kick-l", arabic: "سايد كيك باليسار", english: "Side Kick", category: "Side Kicks", level: "متوسط",
+             visual: {type: "side-kick", side: "left", limb: "leg"}},
+            
+            // Teep/Push Kick
+            {id: "teep-r", arabic: "تيب (ركلة دفع) باليمين", english: "Push Kick / Teep", category: "Push Kicks", level: "مبتدئ",
+             visual: {type: "teep", side: "right", limb: "leg"}},
+            
+            // Back Kick
+            {id: "back-kick", arabic: "باك كيك (ركلة للخلف)", english: "Back Kick", category: "Spinning Kicks", level: "متقدم",
+             visual: {type: "back-kick", side: "both", limb: "leg"}},
+            
+            // Knee Strikes
+            {id: "knee-straight", arabic: "ركبة مستقيمة", english: "Straight Knee", category: "Knee Strikes", level: "مبتدئ",
+             visual: {type: "knee-straight", side: "both", limb: "leg"}},
+            {id: "knee-clinch", arabic: "ركبة من الكلاينش", english: "Clinch Knee", category: "Knee Strikes", level: "مبتدئ",
+             visual: {type: "knee-clinch", side: "both", limb: "leg"}},
+            
+            // Elbows
+            {id: "elbow-horizontal", arabic: "مرفق أفقي", english: "Horizontal Elbow", category: "Elbows", level: "متوسط",
+             visual: {type: "elbow-horizontal", side: "right", limb: "arm"}},
+            {id: "elbow-upward", arabic: "مرفق صاعد", english: "Upward Elbow", category: "Elbows", level: "متوسط",
+             visual: {type: "elbow-upward", side: "both", limb: "arm"}},
+            {id: "elbow-spinning", arabic: "مرفق دوّار", english: "Spinning Elbow", category: "Elbows", level: "متقدم",
+             visual: {type: "elbow-spinning", side: "both", limb: "arm"}},
+            
+            // Defenses - Slips
+            {id: "slip-outside", arabic: "سليب خارجي", english: "Outside Slip", category: "دفاعات", level: "مبتدئ",
+             visual: {type: "slip", direction: "outside", part: "head"}},
+            {id: "slip-inside", arabic: "سليب داخلي", english: "Inside Slip", category: "دفاعات", level: "مبتدئ",
+             visual: {type: "slip", direction: "inside", part: "head"}},
+            
+            // Defenses - Rolls
+            {id: "roll-high", arabic: "رول عالي", english: "High Roll", category: "دفاعات", level: "متوسط",
+             visual: {type: "roll", direction: "both", part: "body"}},
+            {id: "roll-low", arabic: "رول منخفض", english: "Low Roll", category: "دفاعات", level: "متوسط",
+             visual: {type: "roll", direction: "both", part: "body"}},
+            
+            // Defenses - Blocks
+            {id: "high-block", arabic: "بلوك عالي", english: "High Block", category: "دفاعات", level: "مبتدئ",
+             visual: {type: "block", height: "high", part: "arms"}},
+            {id: "low-block", arabic: "بلوك منخفض", english: "Low Block", category: "دفاعات", level: "مبتدئ",
+             visual: {type: "block", height: "low", part: "arms"}},
+            
+            // Footwork
+            {id: "step-forward", arabic: "خطوة للأمام", english: "Step Forward", category: "Footwork", level: "مبتدئ",
+             visual: {type: "step", direction: "forward"}},
+            {id: "step-back", arabic: "خطوة للخلف", english: "Step Back", category: "Footwork", level: "مبتدئ",
+             visual: {type: "step", direction: "backward"}},
+            {id: "pivot-clockwise", arabic: "دوران باتجاه عقارب الساعة", english: "Pivot Clockwise", category: "Spins", level: "متوسط",
+             visual: {type: "pivot", direction: "clockwise"}},
+            {id: "pivot-counter", arabic: "دوران عكس عقارب الساعة", english: "Pivot Counter", category: "Spins", level: "متوسط",
+             visual: {type: "pivot", direction: "counter-clockwise"}},
         ];
-
-        let movements = JSON.parse(localStorage.getItem('kb_movements')) || initialMovements;
-        let savedSeries = JSON.parse(localStorage.getItem('kb_series')) || [];
-        let currentSequence = [];
-        let playSpeed = 1;
-        let isPlaying = false;
-
-        // Vector SVG Renderer Engine
-        function generateSVG(type, frame = 0) {
-            let armRight = "M 55 42 L 70 42";
-            let armLeft = "M 45 42 L 30 38";
-            let legRight = "M 53 60 L 55 85";
-            let legLeft = "M 47 60 L 45 85";
-            let arrow = "";
-
-            if (type === 'punch-right') {
-                let ext = frame * 15;
-                armRight = `M 55 42 L ${70 + ext} 40`;
-                arrow = `<path d="M 70 32 L 85 32" stroke="#FFCC00" stroke-width="3" marker-end="url(#arrow)" />`;
-            } else if (type === 'punch-left') {
-                let ext = frame * 15;
-                armLeft = `M 45 42 L ${30 - ext} 40`;
-                arrow = `<path d="M 30 32 L 15 32" stroke="#FFCC00" stroke-width="3" />`;
-            } else if (type === 'kick-low') {
-                let rot = frame * 20;
-                legRight = `M 53 60 L ${65 + rot} 75`;
-                arrow = `<path d="M 50 80 Q 65 85 75 75" fill="none" stroke="#FF3B30" stroke-width="3" />`;
-            } else if (type === 'kick-high') {
-                let ext = frame * 30;
-                legRight = `M 53 60 L ${60 + ext} ${45 - ext/2}`;
-                arrow = `<path d="M 50 70 Q 70 50 85 35" fill="none" stroke="#FF3B30" stroke-width="3" />`;
-            } else if (type === 'slip-left') {
-                let shift = frame * 8;
-                return `<svg viewBox="0 0 100 100" width="100%" height="100%">
-                    <circle cx="${50 - shift}" cy="25" r="8" fill="#FFF"/>
-                    <path d="M ${50 - shift} 33 L ${50 - shift} 60" stroke="#FFF" stroke-width="4"/>
-                    <path d="M ${50 - shift} 42 L 65 45" stroke="#FFF" stroke-width="3"/>
-                    <path d="M ${50 - shift} 42 L 35 45" stroke="#FFF" stroke-width="3"/>
-                    <path d="M 40 85 L 60 85" stroke="#007AFF" stroke-width="3" />
-                </svg>`;
+        
+        // ==================== STATE MANAGEMENT ====================
+        let currentCategory = "all";
+        let selectedMoves = [];
+        let seriesData = JSON.parse(localStorage.getItem('seriesData')) || [];
+        let trackingData = JSON.parse(localStorage.getItem('trackingData')) || {};
+        let gymData = JSON.parse(localStorage.getItem('gymData')) || {
+            schedule: [
+                {day: "الإثنين", time: "21:00 → 22:30", attended: false},
+                {day: "الأربعاء", time: "21:00 → 22:30", attended: false},
+                {day: "الجمعة", time: "21:00 → 22:30", attended: false}
+            ],
+            payments: {}
+        };
+        let customNames = JSON.parse(localStorage.getItem('customNames')) || {};
+        let animationSpeed = 1;
+        let isAnimating = true;
+        
+        // ==================== INITIALIZATION ====================
+        window.onload = function() {
+            renderCategories();
+            renderCards();
+            renderDictionary();
+            renderSavedSeries();
+            renderTracking();
+            renderSchedule();
+            renderPaymentTracker();
+            
+            // Set subscription start date
+            const savedDate = localStorage.getItem('subscriptionStart');
+            if(savedDate) {
+                document.getElementById('subscriptionStart').value = savedDate;
             }
-
-            return `
-            <svg viewBox="0 0 100 100" width="100%" height="100%">
-                <circle cx="50" cy="25" r="8" fill="#FFF"/>
-                <path d="M 50 33 L 50 60" stroke="#FFF" stroke-width="4"/>
-                <path d="${armLeft}" stroke="#007AFF" stroke-width="3.5" stroke-linecap="round"/>
-                <path d="${armRight}" stroke="#FF3B30" stroke-width="3.5" stroke-linecap="round"/>
-                <path d="${legLeft}" stroke="#FFF" stroke-width="3.5"/>
-                <path d="${legRight}" stroke="#FFCC00" stroke-width="3.5"/>
-                ${arrow}
+        };
+        
+        // ==================== NAVIGATION ====================
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // ==================== CATEGORY FILTER ====================
+        function renderCategories() {
+            const categories = [...new Set(movementDB.map(m => m.category))];
+            const filterDiv = document.getElementById('categoryFilter');
+            
+            let html = `<button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">الكل</button>`;
+            categories.forEach(cat => {
+                html += `<button class="category-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`;
+            });
+            filterDiv.innerHTML = html;
+        }
+        
+        function filterByCategory(category) {
+            currentCategory = category;
+            renderCategories();
+            renderCards();
+        }
+        
+        // ==================== CARD RENDERING ====================
+        function renderCards() {
+            const filtered = currentCategory === 'all' 
+                ? movementDB 
+                : movementDB.filter(m => m.category === currentCategory);
+            
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = filtered.map(move => `
+                <div class="card" onclick="viewMoveDetail('${move.id}')">
+                    ${renderSVG(move.visual)}
+                    <h3>${move.arabic.trim()}</h3>
+                    <p>${move.english}</p>
+                    <span class="badge">${move.level}</span>
+                </div>
+            `).join('');
+        }
+        
+        // ==================== SVG ANIMATION GENERATOR ====================
+        function renderSVG(visual, animate = true) {
+            const baseColor = '#6d4aff';
+            const accentColor = '#ff6b9d';
+            const skinColor = '#ffd5b5';
+            
+            let animationClass = animate ? ' animate-move' : '';
+            let dynamicStyle = '';
+            
+            switch(visual.type) {
+                case 'straight-punch':
+                    dynamicStyle = visual.side === 'right' ? 
+                        '.arm-right{transform-origin:left center;animation:punchRight 1s infinite}' :
+                        '.arm-left{transform-origin:right center;animation:punchLeft 1s infinite}';
+                    break;
+                case 'hook':
+                    dynamicStyle = visual.side === 'right' ?
+                        '.arm-right{transform-origin:left center;animation:hookRight 1.5s infinite}' :
+                        '.arm-left{transform-origin:right center;animation:hookLeft 1.5s infinite}';
+                    break;
+                case 'uppercut':
+                    dynamicStyle = visual.side === 'right' ?
+                        '.arm-right{transform-origin:left bottom;animation:uppercutRight 1.5s infinite}' :
+                        '.arm-left{transform-origin:right bottom;animation:uppercutLeft 1.5s infinite}';
+                    break;
+                case 'roundhouse-kick':
+                    const kickDelay = visual.height === 'high' ? '0s' : visual.height === 'mid' ? '0.5s' : '1s';
+                    dynamicStyle = `.leg-${visual.side}{transform-origin:top center;animation:kickRoundhouse 2s infinite ${kickDelay}}`;
+                    break;
+                case 'front-kick':
+                    dynamicStyle = `.leg-${visual.side}{transform-origin:top center;animation:kickFront 1.5s infinite}`;
+                    break;
+                case 'side-kick':
+                    dynamicStyle = `.leg-${visual.side}{transform-origin:center right;animation:kickSide 2s infinite}`;
+                    break;
+                case 'teep':
+                    dynamicStyle = `.leg-${visual.side}{transform-origin:bottom center;animation:kickTeep 1.5s infinite}`;
+                    break;
+                case 'back-kick':
+                    dynamicStyle = '.leg-right{animation:backKick 2s infinite}.leg-left{animation:backKick 2s infinite 1s}';
+                    break;
+                case 'knee-straight':
+                case 'knee-clinch':
+                    dynamicStyle = '.leg-right{transform-origin:top center;animation:kneeStrikes 1.5s infinite}';
+                    break;
+                case 'elbow-horizontal':
+                    dynamicStyle = `.arm-${visual.side}{animation:elbowHorizontal 1.5s infinite}`;
+                    break;
+                case 'slip':
+                    dynamicStyle = visual.direction === 'outside' ?
+                        'circle.head{animation:slipOut 1s infinite}' :
+                        'circle.head{animation:slipIn 1s infinite}';
+                    break;
+                case 'roll':
+                    dynamicStyle = '.ellipse.body{animation:rollBody 1.5s infinite}';
+                    break;
+                case 'block':
+                    dynamicStyle = visual.height === 'high' ?
+                        '.rect.block{animation:blockHigh 1s infinite}' :
+                        '.rect.block{animation:blockLow 1s infinite}';
+                    break;
+                case 'step':
+                    dynamicStyle = visual.direction === 'forward' ?
+                        '.circle.foot{animation:stepForward 1.5s infinite}' :
+                        '.circle.foot{animation:stepBack 1.5s infinite}';
+                    break;
+                case 'pivot':
+                    dynamicStyle = 'circle.head{animation:pivotHead 2s infinite} rect.body{animation:pivotBody 2s infinite}';
+                    break;
+            }
+            
+            return `<svg viewBox="0 0 200 200" style="overflow:hidden;">
+                <defs>
+                    <style>
+                        ${dynamicStyle}
+                        @keyframes punchRight { 0%,100%{transform:translateX(0)} 50%{transform:translateX(60px)} }
+                        @keyframes punchLeft { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-60px)} }
+                        @keyframes hookRight { 0%,100%{transform:rotate(0)} 50%{transform:rotate(120deg)} }
+                        @keyframes hookLeft { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-120deg)} }
+                        @keyframes uppercutRight { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-50px) rotate(-45deg)} }
+                        @keyframes uppercutLeft { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-50px) rotate(45deg)} }
+                        @keyframes kickRoundhouse { 0%,100%{transform:rotate(0)} 50%{transform:rotate(${visual.height==='high'?150:visual.height==='mid'?120:90}deg)} }
+                        @keyframes kickFront { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-60px)} }
+                        @keyframes kickSide { 0%,100%{transform:rotate(0)} 50%{transform:rotate(140deg)} }
+                        @keyframes kickTeep { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-50px) rotate(90deg)} }
+                        @keyframes backKick { 0%,100%{transform:rotate(0)} 50%{transform:rotate(160deg)} }
+                        @keyframes kneeStrikes { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-40px) rotate(30deg)} }
+                        @keyframes elbowHorizontal { 0%,100%{transform:rotate(0)} 50%{transform:rotate(${visual.side==='right'?120:-120}deg)} }
+                        @keyframes slipOut { 0%,100%{cx:100} 50%{cx:130} }
+                        @keyframes slipIn { 0%,100%{cx:100} 50%{cx:70} }
+                        @keyframes rollBody { 0%,100%{rx:30 ry:40} 50%{rx:25 ry:45} }
+                        @keyframes blockHigh { 0%,100%{y:30} 50%{y:20} }
+                        @keyframes blockLow { 0%,100%{y:70} 50%{y:80} }
+                        @keyframes stepForward { 0%,100%{cy:180} 50%{cy:160} }
+                        @keyframes stepBack { 0%,100%{cy:180} 50%{cy:170} }
+                        @keyframes pivotHead { 0%,100%{r:20} 50%{r:25} }
+                        @keyframes pivotBody { 0%,100%{ry:40} 50%{ry:35} }
+                    </style>
+                </defs>
+                
+                <!-- Body -->
+                <ellipse class="body" cx="100" cy="110" rx="30" ry="${visual.part==='body'?'45':'40'}" fill="${baseColor}" opacity="0.3"/>
+                
+                <!-- Head -->
+                <circle class="head" cx="100" cy="45" r="22" fill="#2d2d44"/>
+                
+                <!-- Arms -->
+                <g class="arm-left">
+                    <line x1="100" y1="75" x2="50" y2="100" stroke="${baseColor}" stroke-width="12" stroke-linecap="round"/>
+                </g>
+                <g class="arm-right">
+                    <line x1="100" y1="75" x2="150" y2="100" stroke="${accentColor}" stroke-width="12" stroke-linecap="round"/>
+                </g>
+                
+                <!-- Legs -->
+                <g class="leg-left">
+                    <line x1="90" y1="150" x2="80" y2="190" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
+                </g>
+                <g class="leg-right">
+                    <line x1="110" y1="150" x2="120" y2="190" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
+                </g>
+                
+                <!-- Arrow for direction -->
+                ${(visual.side && ['right','left'].includes(visual.side)) ? 
+                    `<polygon points="${visual.side==='right'?155:45},${visual.limb==='arm'?100:190} ${visual.side==='right'?180:20},${visual.limb==='arm'?90:200} ${visual.side==='right'?180:20},${visual.limb==='arm'?110:180}" fill="${accentColor}" opacity="0.6"/>` : ''}
+                
+                <!-- Action highlight -->
+                <circle cx="100" cy="100" r="45" fill="none" stroke="${accentColor}" stroke-width="2" opacity="0.3" stroke-dasharray="5,5"/>
             </svg>`;
         }
-
-        // Render Cards View
-        function renderCards() {
-            const container = document.getElementById('cards-container');
-            const builderContainer = document.getElementById('builder-cards-container');
-            container.innerHTML = '';
-            builderContainer.innerHTML = '';
-
-            movements.forEach(m => {
-                const cardHTML = `
-                    <div class="move-card" onclick="addToSequence('${m.id}')">
-                        <div class="svg-container">${generateSVG(m.type, 0)}</div>
-                        <div class="move-title">${m.customName || m.arabic}</div>
-                        <div class="move-sub">${m.english}</div>
-                    </div>
-                `;
-                container.innerHTML += cardHTML;
-                builderContainer.innerHTML += cardHTML;
-            });
-        }
-
-        // Search Filter
-        function filterCards() {
-            const val = document.getElementById('search-cards').value.toLowerCase();
-            const cards = document.querySelectorAll('#cards-container .move-card');
-            movements.forEach((m, idx) => {
-                const match = m.arabic.toLowerCase().includes(val) || m.english.toLowerCase().includes(val) || m.customName.toLowerCase().includes(val);
-                if (cards[idx]) cards[idx].style.display = match ? 'flex' : 'none';
-            });
-        }
-
-        // Builder Sequence Logic
-        function addToSequence(id) {
-            const move = movements.find(m => m.id === id);
-            if (!move) return;
-            currentSequence.push(move);
-            renderSequence();
-        }
-
-        function removeFromSequence(index) {
-            currentSequence.splice(index, 1);
-            renderSequence();
-        }
-
-        function renderSequence() {
-            const display = document.getElementById('builder-sequence');
-            if (currentSequence.length === 0) {
-                display.innerHTML = '<span style="color: var(--text-sub); font-size: 0.85rem;">إضغط على الحركات أسفله لإضافتها للسلسلة...</span>';
-                return;
-            }
-            display.innerHTML = '';
-            currentSequence.forEach((m, idx) => {
-                display.innerHTML += `
-                    <div class="seq-item" id="seq-item-${idx}">
-                        <button class="remove-btn" onclick="removeFromSequence(${idx})">✕</button>
-                        <div style="height:40px">${generateSVG(m.type, 0)}</div>
-                        <div style="font-size:0.7rem; font-weight:bold;">${m.customName}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // Animated Player Loop
-        async function playCurrentSequence() {
-            if (currentSequence.length === 0 || isPlaying) return;
-            isPlaying = true;
-            const playerBox = document.getElementById('player-svg-box');
-            const titleBox = document.getElementById('playing-now-title');
-
-            for (let i = 0; i < currentSequence.length; i++) {
-                const move = currentSequence[i];
-                titleBox.innerText = `▶️ الآن: ${move.customName} (${move.english})`;
-
-                // Highlight Active item in Sequence UI
-                document.querySelectorAll('.seq-item').forEach((el, idx) => {
-                    el.classList.toggle('active-playing', idx === i);
-                });
-
-                // Frame Animation
-                for (let frame = 0; frame <= 1; frame += 0.2) {
-                    playerBox.innerHTML = generateSVG(move.type, frame);
-                    await new Promise(r => setTimeout(r, 80 / playSpeed));
-                }
-                for (let frame = 1; frame >= 0; frame -= 0.2) {
-                    playerBox.innerHTML = generateSVG(move.type, frame);
-                    await new Promise(r => setTimeout(r, 60 / playSpeed));
-                }
-            }
-
-            titleBox.innerText = ' اكتملت السلسلة!';
-            playerBox.innerHTML = generateSVG('guard', 0);
-            document.querySelectorAll('.seq-item').forEach(el => el.classList.remove('active-playing'));
-            isPlaying = false;
-        }
-
-        function setSpeed(spd, btn) {
-            playSpeed = spd;
-            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        function saveSeries() {
-            const nameInput = document.getElementById('series-name');
-            if (!nameInput.value || currentSequence.length === 0) {
-                alert('الرجاء إدخال اسم السلسلة وإضافة حركات إليها أولاً');
-                return;
-            }
-            const newSeries = {
-                id: Date.now(),
-                title: nameInput.value,
-                moves: [...currentSequence],
-                rating: { speed: 'متوسط', stability: 'جيد', reflex: 'قيد التفكير' }
-            };
-            savedSeries.push(newSeries);
-            localStorage.setItem('kb_series', JSON.stringify(savedSeries));
-            nameInput.value = '';
-            currentSequence = [];
-            renderSequence();
-            renderTracking();
-            alert('تم حفظ السلسلة بنجاح! 💾');
-        }
-
-        // Render Dictionary
-        function renderDictionary() {
-            const container = document.getElementById('dict-container');
-            container.innerHTML = '';
-            movements.forEach((m, idx) => {
-                container.innerHTML += `
-                    <div class="dict-item">
-                        <div>
-                            <strong>${m.arabic}</strong>
-                            <div style="font-size:0.75rem; color:var(--text-sub);">${m.english}</div>
-                        </div>
-                        <input type="text" class="edit-input" value="${m.customName}" onchange="updateCustomName(${idx}, this.value)">
-                    </div>
-                `;
-            });
-        }
-
-        function updateCustomName(index, val) {
-            movements[index].customName = val;
-            localStorage.setItem('kb_movements', JSON.stringify(movements));
-            renderCards();
-        }
-
-        // Render Tracking View
-        function renderTracking() {
-            const container = document.getElementById('tracking-container');
-            container.innerHTML = '';
-            if (savedSeries.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center;">لم تقومي بحفظ أي سلسلة بعد.</p>';
-                return;
-            }
-            savedSeries.forEach((s) => {
-                container.innerHTML += `
-                    <div class="dict-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
-                        <div style="display:flex; justify-content:space-between; width:100%;">
-                            <strong>${s.title}</strong>
-                            <span class="status-badge status-good">🟢 محفوظة</span>
-                        </div>
-                        <div style="font-size:0.8rem; color:var(--text-sub);">
-                            الحركات: ${s.moves.map(m => m.customName).join(' ➔ ')}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Render Schedule & Payments
-        function renderSchedule() {
-            const schedContainer = document.getElementById('schedule-container');
-            const payContainer = document.getElementById('payment-container');
-
-            const days = ['الإثنين', 'الأربعاء', 'الجمعة'];
-            schedContainer.innerHTML = '';
-            days.forEach(d => {
-                schedContainer.innerHTML += `
-                    <div class="schedule-item">
-                        <div>
-                            <strong>حصة يوم ${d}</strong>
-                            <div style="font-size:0.75rem; color:var(--text-sub);">21:00 ← 22:30</div>
-                        </div>
-                        <input type="checkbox" class="checkbox-custom">
-                    </div>
-                `;
-            });
-
-            const months = ['09/2026', '10/2026', '11/2026', '12/2026', '01/2027', '02/2027'];
-            payContainer.innerHTML = '';
-            months.forEach((m, idx) => {
-                payContainer.innerHTML += `
-                    <div class="payment-card">
-                        <span style="font-size:0.85rem; font-weight:bold;">${m}</span>
-                        <input type="checkbox" class="checkbox-custom" ${idx === 0 ? 'checked' : ''}>
-                    </div>
-                `;
-            });
-        }
-
-        // View Switcher Navigation
-        function switchView(viewKey, btn) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        // ==================== MOVE DETAIL ====================
+        let currentEditingId = null;
+        
+        function viewMoveDetail(moveId) {
+            const move = movementDB.find(m => m.id === moveId);
+            if(!move) return;
             
-            document.getElementById(`view-${viewKey}`).classList.add('active');
-            if (btn) btn.classList.add('active');
-
-            if (viewKey === 'dict') renderDictionary();
-            if (viewKey === 'tracking') renderTracking();
-            if (viewKey === 'schedule') renderSchedule();
+            // Show modal for detail view with edit option
+            showToast(`📝 "${move.arabic.trim()}"\n${move.english}\n\nاضغطي لتعديل الاسم`);
+            
+            setTimeout(() => {
+                openEditModal(move);
+            }, 500);
         }
-
-        // App Initialization
-        window.onload = () => {
-            renderCards();
-            document.getElementById('player-svg-box').innerHTML = generateSVG('guard', 0);
-        };
+        
+        function openEditModal(move) {
+            currentEditingId = move.id;
+            document.getElementById('editMovementName').textContent = move.arabic.trim() + '\n' + move.english;
+            document.getElementById('customNameInput').value = customNames[move.id] || '';
+            document.getElementById('editModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditingId = null;
+        }
+        
+        function saveCustomName() {
+            const customName = document.getElementById('customNameInput').value.trim();
+            if(currentEditingId && customName) {
+                customNames[currentEditingId] = customName;
+                localStorage.setItem('customNames', JSON.stringify(customNames));
+                showToast('✅ تم حفظ الاسم الجديد');
+                renderDictionary();
+            }
+            closeModal();
+        }
+        
+        // ==================== SERIES BUILDER ====================
+        function addToSeries(moveId) {
+            if(selectedMoves.length >= 8) {
+                showToast('⚠️ الحد الأقصى 8 حركات في السلسلة');
+                return;
+            }
+            
+            const move = movementDB.find(m => m.id === moveId);
+            if(move && !selectedMoves.find(m => m.id === moveId)) {
+                selectedMoves.push(move);
+                renderSelectedMoves();
+                showToast('➕ تمت إضافة الحركة للسلسلة');
+            }
+        }
+        
+        function removeFromSeries(index) {
+            selectedMoves.splice(index, 1);
+            renderSelectedMoves();
+        }
+        
+        function renderSelectedMoves() {
+            const container = document.getElementById('selectedMoves');
+            if(selectedMoves.length === 0) {
+                container.innerHTML = '<div class="empty-state">لا توجد حركات مضافة بعد<br>اضغطي على أي بطاقة لإضافتها</div>';
+                return;
+            }
+            
+            container.innerHTML = selectedMoves.map((move, idx) => `
+                <div class="card selected" style="position:relative;">
+                    <span onclick="removeFromSeries(${idx})" style="position:absolute;top:8px;right:8px;background:var(--danger);color:white;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;cursor:pointer;font-size:16px;">×</span>
+                    ${renderSVG(move.visual, false)}
+                    <h3>${move.arabic.trim()}</h3>
+                    <p>${move.english}</p>
+                </div>
+            `).join('');
+        }
+        
+        function previewSeries() {
+            if(selectedMoves.length === 0) {
+                showToast('⚠️ أضفي حركات أولاً');
+                return;
+            }
+            
+            const stage = document.getElementById('animationStage');
+            document.getElementById('seriesPreview').style.display = 'block';
+            
+            // Create animated sequence
+            stage.innerHTML = renderSVG(selectedMoves[0].visual, true);
+            
+            // Cycle through moves
+            let moveIndex = 0;
+            clearInterval(window.seriesInterval);
+            window.seriesInterval = setInterval(() => {
+                if(!isAnimating) return;
+                
+                stage.innerHTML = renderSVG(selectedMoves[moveIndex].visual, true);
+                showToast(`▶️ الآن: ${selectedMoves[moveIndex].arabic.trim().substring(0, 30)}...`);
+                
+                moveIndex = (moveIndex + 1) % selectedMoves.length;
+            }, 2000 / animationSpeed);
+        }
+        
+        function setSpeed(speed) {
+            animationSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function toggleAnimation() {
+            isAnimating = !isAnimating;
+            showToast(isAnimating ? '▶️ استئناف' : '⏸️ إيقاف');
+        }
+        
+        function saveSeries() {
+            if(selectedMoves.length === 0) {
+                showToast('⚠️ لا توجد حركات للحفظ');
+                return;
+            }
+            
+            const name = document.getElementById('seriesName').value.trim();
+            if(!name) {
+                showToast('⚠️ اكتبي اسم السلسلة');
+                return;
+            }
+            
+            const series = {
+                id: Date.now(),
+                name: name,
+                moves: [...selectedMoves],
+                date: new Date().toISOString(),
+                progress: 0,
+                ratings: {}
+            };
+            
+            seriesData.push(series);
+            localStorage.setItem('seriesData', JSON.stringify(seriesData));
+            
+            showToast('💾 تم حفظ السلسلة بنجاح');
+            
+            // Reset
+            selectedMoves = [];
+            document.getElementById('seriesName').value = '';
+            document.getElementById('seriesPreview').style.display = 'none';
+            renderSelectedMoves();
+            renderSavedSeries();
+        }
+        
+        function renderSavedSeries() {
+            const container = document.getElementById('savedSeriesList');
+            
+            if(seriesData.length === 0) {
+                container.innerHTML = '<div class="empty-state">لم تحفظي أي سلاسل بعد<br>صنعي سلسلة جديدة!</div>';
+                return;
+            }
+            
+            container.innerHTML = seriesData.map(s => `
+                <div class="card" onclick="loadSeries(${s.id})" style="margin:8px 0;">
+                    <h3>${s.name}</h3>
+                    <p>${s.moves.length} حركات • منذ ${formatDate(s.date)}</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:${s.progress}%"></div>
+                    </div>
+                    <p style="font-size:0.8rem;margin-top:8px;">إتقان: ${s.progress}%</p>
+                </div>
+            `).join('');
+        }
+        
+        function loadSeries(seriesId) {
+            const series = seriesData.find(s => s.id === seriesId);
+            if(!series) return;
+            
+            selectedMoves = [...series.moves];
+            renderSelectedMoves();
+            showSection('series');
+            showToast(`🎯 تم تحميل: ${series.name}`);
+        }
+        
+        // ==================== DICTIONARY ====================
+        function renderDictionary(searchTerm = '') {
+            const filtered = movementDB.filter(m => 
+                searchTerm === '' || 
+                m.arabic.includes(searchTerm) || 
+                m.english.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            const grid = document.getElementById('dictionaryGrid');
+            grid.innerHTML = filtered.map(move => `
+                <div class="card" onclick="openEditModalById('${move.id}')" style="padding:12px;">
+                    ${renderSVG(move.visual, false)}
+                    <h3 style="font-size:0.9rem;">${move.arabic.trim()}</h3>
+                    <p style="font-size:0.75rem;">${customNames[move.id] || move.english}</p>
+                    <span class="badge" style="font-size:0.65rem;">${move.level}</span>
+                </div>
+            `).join('');
+        }
+        
+        function openEditModalById(moveId) {
+            const move = movementDB.find(m => m.id === moveId);
+            openEditModal(move);
+        }
+        
+        function filterDictionary() {
+            const term = document.getElementById('searchDict').value;
+            renderDictionary(term);
+        }
+        
+        // ==================== TRACKING ====================
+        function renderTracking() {
+            const container = document.getElementById('trackingList');
+            
+            if(seriesData.length === 0) {
+                container.innerHTML = '<div class="empty-state">ابدئي بصناعة سلسلة لرؤية تطورك</div>';
+                return;
+            }
+            
+            container.innerHTML = seriesData.map(s => `
+                <div class="card" style="margin:8px 0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <h3>${s.name}</h3>
+                        <span class="badge">${s.moves.length} حركات</span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:${s.progress}%"></div>
+                    </div>
+                    
+                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                        <div style="flex:1;min-width:120px;">
+                            <small>السرعة</small>
+                            <select onchange="updateRating(${s.id},'speed',this.value)" style="margin:4px 0;padding:8px;font-size:0.85rem;">
+                                <option value="">-</option>
+                                <option value="slow" ${s.ratings?.speed==='slow'?'selected':''}>بطيئة</option>
+                                <option value="medium" ${s.ratings?.speed==='medium'?'selected':''}>متوسطة</option>
+                                <option value="fast" ${s.ratings?.speed==='fast'?'selected':''}>سريعة</option>
+                            </select>
+                        </div>
+                        <div style="flex:1;min-width:120px;">
+                            <small>الثبات</small>
+                            <select onchange="updateRating(${s.id},'consistency',this.value)" style="margin:4px 0;padding:8px;font-size:0.85rem;">
+                                <option value="">-</option>
+                                <option value="poor" ${s.ratings?.consistency==='poor'?'selected':''}>ضعيف</option>
+                                <option value="good" ${s.ratings?.consistency==='good'?'selected':''}>جيد</option>
+                                <option value="excellent" ${s.ratings?.consistency==='excellent'?'selected':''}>ممتاز</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="practiceSeries(${s.id})" style="margin-top:12px;width:100%;">
+                        🏃 تمرّن عليها
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function updateRating(seriesId, ratingType, value) {
+            const series = seriesData.find(s => s.id === seriesId);
+            if(!series) return;
+            
+            series.ratings = series.ratings || {};
+            series.ratings[ratingType] = value;
+            
+            // Update progress based on ratings
+            let progress = series.progress;
+            if(value === 'slow') progress = Math.max(20, progress - 5);
+            if(value === 'medium') progress = Math.min(70, progress + 10);
+            if(value === 'fast') progress = Math.min(100, progress + 15);
+            if(value === 'good' || value === 'excellent') progress = Math.min(100, progress + 10);
+            
+            series.progress = progress;
+            localStorage.setItem('seriesData', JSON.stringify(seriesData));
+            renderTracking();
+            renderSavedSeries();
+        }
+        
+        function practiceSeries(seriesId) {
+            const series = seriesData.find(s => s.id === seriesId);
+            if(!series) return;
+            
+            selectedMoves = [...series.moves];
+            renderSelectedMoves();
+            document.getElementById('seriesName').value = series.name;
+            showSection('series');
+            previewSeries();
+            showToast(`🏃 بدأ التمرين: ${series.name}`);
+        }
+        
+        // ==================== GYM SCHEDULE ====================
+        function renderSchedule() {
+            const container = document.getElementById('gymSchedule');
+            
+            container.innerHTML = gymData.schedule.map((item, idx) => `
+                <div class="schedule-row">
+                    <div>
+                        <strong>${item.day}</strong><br>
+                        <small style="color:var(--text-secondary);">${item.time}</small>
+                    </div>
+                    <div class="checkbox-custom ${item.attended ? 'checked' : ''}" onclick="toggleAttendance(${idx})">
+                        ${item.attended ? '✓' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function toggleAttendance(idx) {
+            gymData.schedule[idx].attended = !gymData.schedule[idx].attended;
+            localStorage.setItem('gymData', JSON.stringify(gymData));
+            renderSchedule();
+        }
+        
+        // ==================== PAYMENT TRACKER ====================
+        function renderPaymentTracker() {
+            const startDate = document.getElementById('subscriptionStart').value;
+            localStorage.setItem('subscriptionStart', startDate);
+            
+            const start = new Date(startDate);
+            const today = new Date();
+            const months = 6;
+            
+            const container = document.getElementById('paymentTracker');
+            let html = '';
+            
+            for(let i = 0; i < months; i++) {
+                const date = new Date(start);
+                date.setMonth(start.getMonth() + i);
+                const monthKey = date.toISOString().slice(0, 7);
+                const isPaid = gymData.payments[monthKey];
+                const monthName = date.toLocaleDateString('ar-EG', {year:'numeric', month:'long'});
+                
+                html += `
+                    <div class="payment-month ${isPaid ? 'paid' : ''}">
+                        <span>${monthName}</span>
+                        <div class="payment-toggle ${isPaid ? 'active' : ''}" onclick="togglePayment('${monthKey}')"></div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function togglePayment(monthKey) {
+            const element = event.currentTarget;
+            const isPaid = element.classList.toggle('active');
+            
+            if(isPaid) {
+                element.classList.add('active');
+                element.parentElement.classList.add('paid');
+                gymData.payments[monthKey] = true;
+            } else {
+                element.classList.remove('active');
+                element.parentElement.classList.remove('paid');
+                delete gymData.payments[monthKey];
+            }
+            
+            localStorage.setItem('gymData', JSON.stringify(gymData));
+        }
+        
+        // ==================== UTILITIES ====================
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            
+            if(diff === 0) return 'اليوم';
+            if(diff === 1) return 'أمس';
+            if(diff < 7) return `${diff} أيام`;
+            if(diff < 30) return `${Math.floor(diff/7)} أسابيع`;
+            return `${Math.floor(diff/30)} أشهر`;
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Close modal on outside click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if(e.target === this) closeModal();
+        });
     </script>
 </body>
 </html>
-
