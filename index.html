@@ -1,1027 +1,7149 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kickboxing Memory</title>
-    
-    <!-- App Icon -->
-    <link rel="icon" type="image/png" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
-    <link rel="apple-touch-icon" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
-    <link rel="manifest" href="manifest.json">
-    
-    <style>
-        :root {
-            --primary: #6d4aff;
-            --primary-light: #a38bff;
-            --accent: #ff6b9d;
-            --accent-light: #ffb6c9;
-            --background: #faf5ff;
-            --surface: #ffffff;
-            --text-primary: #2d2d44;
-            --text-secondary: #6b6b8a;
-            --success: #00d285;
-            --warning: #ffc857;
-            --danger: #ff477e;
-            --shadow: rgba(109, 74, 255, 0.15);
-            --card-shadow: 0 8px 24px var(--shadow);
-            --border-radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--background) 0%, #efe5ff 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding-bottom: 80px;
-        }
-        
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            padding: 24px 20px;
-            text-align: center;
-            border-radius: 0 0 30px 30px;
-            box-shadow: var(--card-shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-        }
-        
-        header p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-        
-        /* Navigation */
-        nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: var(--surface);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 8px;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 16px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            border-radius: 12px;
-        }
-        
-        .nav-item.active {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
-            color: var(--primary);
-            font-weight: bold;
-        }
-        
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-        }
-        
-        /* Sections */
-        section {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        section.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 16px;
-        }
-        
-        .card {
-            background: var(--surface);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            box-shadow: var(--card-shadow);
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary-light);
-        }
-        
-        .card.selected {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, var(--accent-light) 0%, var(--surface) 100%);
-        }
-        
-        .card svg {
-            width: 100%;
-            height: 120px;
-            margin-bottom: 12px;
-        }
-        
-        .card h3 {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        
-        .card p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        
-        .card .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 20px;
-            font-size: 0.7rem;
-            margin-top: 8px;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            box-shadow: 0 4px 16px var(--shadow);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--shadow);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary-light);
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* Form Elements */
-        input, select, textarea {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e0eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            margin-bottom: 16px;
-            transition: var(--transition);
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--shadow);
-        }
-        
-        /* Animation Preview */
-        .animation-preview {
-            background: var(--surface);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin: 16px 0;
-            box-shadow: var(--card-shadow);
-            text-align: center;
-        }
-        
-        .animation-stage {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 16px;
-            background: linear-gradient(135deg, #f5f0ff 0%, #ede5ff 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .speed-controls {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-        
-        .speed-btn {
-            padding: 8px 16px;
-            border: 2px solid var(--primary-light);
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-        
-        .speed-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        /* Tracking */
-        .progress-bar {
-            height: 8px;
-            background: #e0e0eb;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 12px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-            transition: width 0.5s ease;
-        }
-        
-        .rating {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        
-        .rating-option {
-            padding: 8px 16px;
-            border: 2px solid #e0e0eb;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-        
-        .rating-option.selected {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        /* Schedule */
-        .schedule-row {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .checkbox-custom {
-            width: 28px;
-            height: 28px;
-            border: 2px solid #e0e0eb;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-        
-        .checkbox-custom.checked {
-            background: var(--success);
-            border-color: var(--success);
-        }
-        
-        .payment-month {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .payment-month.paid {
-            background: #e8fff5;
-            border-left: 4px solid var(--success);
-        }
-        
-        .payment-toggle {
-            width: 52px;
-            height: 28px;
-            background: #e0e0eb;
-            border-radius: 14px;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .payment-toggle::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            right: 2px;
-            transition: var(--transition);
-        }
-        
-        .payment-toggle.active {
-            background: var(--success);
-        }
-        
-        .payment-toggle.active::after {
-            right: 26px;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: var(--surface);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        /* Category Filter */
-        .category-filter {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        
-        .category-btn {
-            padding: 8px 16px;
-            border: none;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-        
-        .category-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-        
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--text-primary);
-            color: white;
-            padding: 16px 28px;
-            border-radius: 12px;
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 3000;
-        }
-        
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        
-        /* Series Builder Selection */
-        .move-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 16px 0;
-        }
-        
-        .selector-card {
-            background: var(--surface);
-            border: 2px solid #e0e0eb;
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-        }
-        
-        .selector-card:hover {
-            border-color: var(--primary-light);
-        }
-        
-        .selector-card.selected {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, var(--accent-light) 0%, var(--surface) 100%);
-        }
-        
-        .selector-card .add-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: var(--transition);
-        }
-        
-        .selector-card.selected .add-btn {
-            background: var(--success);
-        }
-    </style>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta name="theme-color" content="#7654e8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Boxing Memory">
+
+<title>Boxing Memory — ذاكرتي للكيك بوكسينغ</title>
+
+<link rel="manifest" href="./manifest.json">
+
+<link
+  rel="apple-touch-icon"
+  href="./AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png"
+>
+
+<link
+  rel="icon"
+  type="image/png"
+  href="./AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png"
+>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+:root {
+    --purple: #7654e8;
+    --purple-dark: #5338b8;
+    --purple-light: #eeeaff;
+    --lavender: #f7f5ff;
+    --pink: #ff78a8;
+    --green: #28a96b;
+    --green-light: #e8f8ef;
+    --yellow: #f3b83f;
+    --yellow-light: #fff6dc;
+    --red: #e85d68;
+    --red-light: #ffecef;
+    --blue: #4e8ee8;
+    --blue-light: #eaf2ff;
+    --text: #24222d;
+    --muted: #777383;
+    --border: #e8e4f2;
+    --white: #ffffff;
+    --shadow: 0 10px 35px rgba(73, 50, 130, 0.09);
+    --radius: 22px;
+    --radius-small: 14px;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(118,84,232,0.08),
+            transparent 32%
+        ),
+        var(--lavender);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+    min-height: 100vh;
+    padding-bottom: 90px;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(247,245,255,0.94);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(118,84,232,0.08);
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: auto;
+    padding: 15px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.brand-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    object-fit: cover;
+    box-shadow: 0 6px 20px rgba(118,84,232,0.18);
+}
+
+.brand-text h1 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 900;
+}
+
+.brand-text p {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.header-action {
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    color: var(--purple);
+    font-size: 19px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 18px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section-title {
+    margin: 10px 0 5px;
+    font-size: 25px;
+    font-weight: 950;
+}
+
+.section-subtitle {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(118,84,232,0.98),
+            rgba(151,116,241,0.96)
+        );
+    color: white;
+    border-radius: 30px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(89,62,180,0.22);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    left: -50px;
+    bottom: -80px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    right: -25px;
+    top: -40px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h2 {
+    margin: 0 0 8px;
+    font-size: 27px;
+    font-weight: 950;
+}
+
+.hero p {
+    margin: 0;
+    line-height: 1.8;
+    opacity: 0.92;
+    font-size: 13px;
+}
+
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 9px;
+    margin-top: 18px;
+}
+
+.hero-stat {
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 17px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.hero-stat strong {
+    display: block;
+    font-size: 22px;
+}
+
+.hero-stat span {
+    font-size: 10px;
+    opacity: .85;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border: none;
+    border-radius: 15px;
+    padding: 11px 16px;
+    font-weight: 800;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn:active {
+    transform: scale(.96);
+}
+
+.btn-primary {
+    background: var(--purple);
+    color: white;
+    box-shadow: 0 7px 18px rgba(118,84,232,.2);
+}
+
+.btn-secondary {
+    background: var(--purple-light);
+    color: var(--purple-dark);
+}
+
+.btn-white {
+    background: white;
+    color: var(--purple-dark);
+}
+
+.btn-danger {
+    background: var(--red-light);
+    color: #b92e3d;
+}
+
+.btn-success {
+    background: var(--green-light);
+    color: #16804d;
+}
+
+.btn-small {
+    padding: 8px 11px;
+    border-radius: 11px;
+    font-size: 12px;
+}
+
+/* =========================================================
+   DASHBOARD GRID
+========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.dashboard-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 17px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform .18s ease;
+}
+
+.dashboard-card:active {
+    transform: scale(.98);
+}
+
+.dashboard-card .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    background: var(--purple-light);
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.dashboard-card h3 {
+    margin: 0 0 5px;
+    font-size: 14px;
+}
+
+.dashboard-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 180px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 15px;
+    padding: 12px 42px 12px 13px;
+    outline: none;
+}
+
+.search-box span {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+}
+
+.select-control {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 15px;
+    padding: 0 13px;
+    outline: none;
+    color: var(--text);
+}
+
+/* =========================================================
+   CATEGORY CHIPS
+========================================================= */
+
+.chips {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+    display: none;
+}
+
+.chip {
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--muted);
+    border-radius: 30px;
+    padding: 8px 13px;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.chip.active {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: white;
+}
+
+/* =========================================================
+   MOVEMENT GRID
+========================================================= */
+
+.moves-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 12px;
+}
+
+.move-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .18s ease;
+}
+
+.move-card:active {
+    transform: scale(.985);
+}
+
+.move-visual {
+    background:
+        radial-gradient(
+            circle at center,
+            #ffffff,
+            #f0edff
+        );
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.move-level {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    background: rgba(255,255,255,.92);
+    border-radius: 10px;
+    padding: 5px 8px;
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--purple-dark);
+}
+
+.move-info {
+    padding: 13px;
+}
+
+.move-info h3 {
+    font-size: 14px;
+    margin: 0 0 4px;
+}
+
+.move-info .english {
+    direction: ltr;
+    text-align: left;
+    color: var(--purple);
+    font-weight: 850;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.move-info p {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.6;
+    margin: 0 0 10px;
+}
+
+.move-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.move-actions button {
+    flex: 1;
+    border: none;
+    border-radius: 11px;
+    padding: 8px 4px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   SVG CHARACTER
+========================================================= */
+
+.fighter-svg {
+    width: 100%;
+    max-width: 185px;
+    height: 170px;
+    overflow: visible;
+}
+
+.fighter-svg .head {
+    fill: #f1c8a9;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .hair {
+    fill: #30253b;
+}
+
+.fighter-svg .body {
+    fill: #7654e8;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .shorts {
+    fill: #2d2840;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .skin {
+    stroke: #3b304e;
+    stroke-width: 6;
+    stroke-linecap: round;
+    fill: none;
+}
+
+.fighter-svg .leg {
+    stroke: #3b304e;
+    stroke-width: 7;
+    stroke-linecap: round;
+    fill: none;
+}
+
+.fighter-svg .glove {
+    fill: #ff5d79;
+    stroke: #3b304e;
+    stroke-width: 2;
+}
+
+.fighter-svg .arrow {
+    stroke: #7654e8;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 7 5;
+}
+
+.fighter-svg .target {
+    fill: rgba(255,93,121,.15);
+    stroke: #ff5d79;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+}
+
+.fighter-svg .pivot {
+    fill: none;
+    stroke: #4e8ee8;
+    stroke-width: 2.5;
+    stroke-dasharray: 5 4;
+}
+
+.fighter-svg .animated-part {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+/* =========================================================
+   MOVE DETAIL MODAL
+========================================================= */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,20,43,.58);
+    z-index: 500;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    width: min(760px,100%);
+    max-height: 94vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    padding: 18px;
+    animation: modalIn .22s ease;
+}
+
+@keyframes modalIn {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.modal-head h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.close-btn {
+    border: none;
+    background: var(--purple-light);
+    color: var(--purple);
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    font-size: 20px;
+}
+
+.modal-visual {
+    background: #f5f2ff;
+    border-radius: 24px;
+    min-height: 280px;
+    display: grid;
+    place-items: center;
+    margin: 10px 0 15px;
+}
+
+.modal-visual .fighter-svg {
+    max-width: 300px;
+    height: 260px;
+}
+
+.detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 12px;
+}
+
+.meta-pill {
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border-radius: 20px;
+    padding: 7px 10px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.detail-description {
+    color: #56515f;
+    font-size: 13px;
+    line-height: 1.9;
+    background: #faf9fd;
+    border-radius: 16px;
+    padding: 13px;
+}
+
+.modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 13px;
+}
+
+/* =========================================================
+   ANIMATION CONTROLS
+========================================================= */
+
+.animation-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    margin-bottom: 15px;
+}
+
+.animation-display {
+    background:
+        radial-gradient(circle,#ffffff,#f0edff);
+    border-radius: 20px;
+    min-height: 300px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.animation-display .fighter-svg {
+    max-width: 330px;
+    height: 290px;
+}
+
+.animation-label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+}
+
+.animation-label span {
+    background: rgba(255,255,255,.92);
+    padding: 7px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 850;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+}
+
+.speed-controls {
+    display: flex;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.speed-btn {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--muted);
+    padding: 9px 5px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.speed-btn.active {
+    background: var(--purple);
+    color: white;
+    border-color: var(--purple);
+}
+
+/* =========================================================
+   SERIES BUILDER
+========================================================= */
+
+.series-builder {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 23px;
+    padding: 15px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+}
+
+.series-builder h3 {
+    margin: 0 0 5px;
+}
+
+.series-builder p {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.series-strip {
+    min-height: 125px;
+    border: 2px dashed #dcd5f5;
+    background: #faf9ff;
+    border-radius: 17px;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    align-items: center;
+}
+
+.series-empty {
+    min-width: 100%;
+    text-align: center;
+    color: #aaa4b5;
+    font-size: 11px;
+}
+
+.series-mini-card {
+    min-width: 110px;
+    width: 110px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.series-mini-card .mini-visual {
+    height: 82px;
+    background: #f2efff;
+    display: grid;
+    place-items: center;
+}
+
+.series-mini-card .mini-visual .fighter-svg {
+    width: 100px;
+    height: 78px;
+}
+
+.series-mini-card .mini-name {
+    padding: 7px;
+    font-size: 9px;
+    font-weight: 850;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.remove-mini {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 23px;
+    height: 23px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255,255,255,.95);
+    color: var(--red);
+    font-weight: 900;
+}
+
+.series-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.series-speed {
+    display: flex;
+    gap: 5px;
+    margin-top: 9px;
+}
+
+.series-speed button {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 10px;
+    padding: 7px 2px;
+    font-size: 10px;
+}
+
+.series-speed button.active {
+    background: var(--purple);
+    color: white;
+}
+
+/* =========================================================
+   SAVED SERIES
+========================================================= */
+
+.saved-series {
+    display: grid;
+    gap: 12px;
+}
+
+.saved-series-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 21px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+}
+
+.saved-series-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+}
+
+.saved-series-header h3 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.saved-series-header small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.saved-series-visuals {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.saved-mini {
+    min-width: 75px;
+    width: 75px;
+    height: 65px;
+    border-radius: 11px;
+    background: #f1effa;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.saved-mini .fighter-svg {
+    width: 70px;
+    height: 60px;
+}
+
+.saved-series-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* =========================================================
+   DICTIONARY
+========================================================= */
+
+.dictionary-list {
+    display: grid;
+    gap: 9px;
+}
+
+.dictionary-row {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.dictionary-main strong {
+    display: block;
+    font-size: 13px;
+}
+
+.dictionary-main .standard {
+    direction: ltr;
+    text-align: left;
+    color: var(--purple);
+    font-size: 11px;
+    font-weight: 850;
+    margin-top: 3px;
+}
+
+.dictionary-main small {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+    margin-top: 3px;
+}
+
+.dictionary-edit {
+    border: none;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border-radius: 11px;
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+.tracking-list {
+    display: grid;
+    gap: 12px;
+}
+
+.tracking-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 21px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+}
+
+.tracking-card h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
+.rating-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 6px;
+}
+
+.rating-item {
+    background: #faf9fd;
+    border-radius: 12px;
+    padding: 8px 4px;
+    text-align: center;
+}
+
+.rating-item span {
+    display: block;
+    font-size: 9px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.rating-value {
+    font-size: 15px;
+}
+
+/* =========================================================
+   CLASSES
+========================================================= */
+
+.schedule-list {
+    display: grid;
+    gap: 10px;
+}
+
+.class-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+}
+
+.class-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.day-name {
+    font-size: 16px;
+    font-weight: 950;
+}
+
+.class-time {
+    color: var(--purple);
+    font-weight: 800;
+    font-size: 11px;
+}
+
+.attendance-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 8px 11px;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.attendance-btn.present {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+.attendance-btn.absent {
+    background: var(--red-light);
+    color: var(--red);
+}
+
+.class-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 11px;
+}
+
+.class-stat {
+    background: #faf9fd;
+    border-radius: 12px;
+    padding: 9px;
+}
+
+.class-stat small {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.class-stat strong {
+    font-size: 15px;
+}
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.payment-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 15px;
+    box-shadow: var(--shadow);
+    margin-top: 15px;
+}
+
+.payment-box h3 {
+    margin: 0 0 5px;
+}
+
+.payment-box p {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.payment-list {
+    display: grid;
+    gap: 8px;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    background: #faf9fd;
+    border-radius: 13px;
+    padding: 10px;
+}
+
+.payment-row strong {
+    font-size: 11px;
+}
+
+.payment-row span {
+    font-size: 10px;
+}
+
+.payment-toggle {
+    border: none;
+    border-radius: 10px;
+    padding: 7px 10px;
+    font-size: 9px;
+    font-weight: 850;
+}
+
+.payment-toggle.paid {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+.payment-toggle.unpaid {
+    background: var(--red-light);
+    color: var(--red);
+}
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding:
+        7px
+        max(7px, env(safe-area-inset-right))
+        calc(7px + env(safe-area-inset-bottom))
+        max(7px, env(safe-area-inset-left));
+}
+
+.nav-inner {
+    max-width: 760px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 4px;
+}
+
+.nav-btn {
+    border: none;
+    background: transparent;
+    color: #8d8797;
+    border-radius: 14px;
+    padding: 7px 2px;
+    font-size: 9px;
+    font-weight: 750;
+}
+
+.nav-btn .nav-icon {
+    display: block;
+    font-size: 20px;
+    line-height: 22px;
+    margin-bottom: 2px;
+}
+
+.nav-btn.active {
+    color: var(--purple);
+    background: var(--purple-light);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 92px;
+    transform: translateX(-50%) translateY(20px);
+    background: #282334;
+    color: white;
+    padding: 11px 16px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 750;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s ease;
+    z-index: 1000;
+    white-space: nowrap;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    background: white;
+    border: 1px dashed #d9d3e8;
+    border-radius: 20px;
+    padding: 35px 20px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.empty-state .empty-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    margin: 0 0 5px;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 10px;
+    font-weight: 850;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 13px;
+    padding: 10px 11px;
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(118,84,232,.09);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (min-width: 650px) {
+
+    .moves-grid {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(4,1fr);
+    }
+
+    .modal-backdrop {
+        align-items: center;
+        padding: 20px;
+    }
+
+    .modal {
+        border-radius: 30px;
+        max-height: 90vh;
+    }
+}
+
+@media (min-width: 1000px) {
+
+    main {
+        padding: 25px;
+    }
+
+    .moves-grid {
+        grid-template-columns: repeat(4,minmax(0,1fr));
+    }
+
+    .hero {
+        padding: 35px;
+    }
+}
+
+/* =========================================================
+   REAL MOVEMENT ANIMATION
+========================================================= */
+
+@keyframes punchForward {
+    0%,100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    45% {
+        transform: translateX(22px) rotate(-3deg);
+    }
+
+    60% {
+        transform: translateX(25px) rotate(-4deg);
+    }
+}
+
+@keyframes punchBack {
+    0%,100% {
+        transform: translateX(0);
+    }
+
+    45% {
+        transform: translateX(-22px);
+    }
+
+    60% {
+        transform: translateX(-25px);
+    }
+}
+
+@keyframes kickForward {
+    0%,100% {
+        transform: rotate(0deg);
+    }
+
+    45% {
+        transform: rotate(-18deg) translate(12px,-12px);
+    }
+
+    60% {
+        transform: rotate(-20deg) translate(15px,-14px);
+    }
+}
+
+@keyframes kneeUp {
+    0%,100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    45% {
+        transform: translateY(-25px) rotate(-18deg);
+    }
+
+    60% {
+        transform: translateY(-28px) rotate(-20deg);
+    }
+}
+
+@keyframes slipLeft {
+    0%,100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateX(-25px) rotate(-12deg);
+    }
+}
+
+@keyframes slipRight {
+    0%,100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateX(25px) rotate(12deg);
+    }
+}
+
+@keyframes bodyRoll {
+    0%,100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(18px) rotate(20deg);
+    }
+}
+
+.animate-punch-left {
+    animation: punchForward 1s ease-in-out infinite;
+}
+
+.animate-punch-right {
+    animation: punchBack 1s ease-in-out infinite;
+}
+
+.animate-kick {
+    animation: kickForward 1s ease-in-out infinite;
+}
+
+.animate-knee {
+    animation: kneeUp 1s ease-in-out infinite;
+}
+
+.animate-slip-left {
+    animation: slipLeft 1s ease-in-out infinite;
+}
+
+.animate-slip-right {
+    animation: slipRight 1s ease-in-out infinite;
+}
+
+.animate-roll {
+    animation: bodyRoll 1s ease-in-out infinite;
+}
+
+/* =========================================================
+   SERIES ACTIVE
+========================================================= */
+
+.series-active {
+    border: 2px solid var(--purple) !important;
+    box-shadow:
+        0 0 0 4px rgba(118,84,232,.10),
+        0 15px 40px rgba(118,84,232,.16);
+}
+
+.series-playing-indicator {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: var(--purple);
+    color: white;
+    border-radius: 10px;
+    padding: 6px 9px;
+    font-size: 9px;
+    font-weight: 900;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+    min-height: 180px;
+    display: grid;
+    place-items: center;
+}
+
+.spinner {
+    width: 34px;
+    height: 34px;
+    border: 4px solid #e9e3fa;
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+</style>
 </head>
+
 <body>
-    <div class="app-container">
-        <header>
-            <h1>🥊 ذاكرة الملاكمة</h1>
-            <p>حفظ ما تتعلمين في الصالة</p>
-        </header>
-        
-        <!-- Section 1: Cards -->
-        <section id="cards-section" class="active">
-            <div class="category-filter" id="categoryFilter"></div>
-            
-            <h2 style="margin-bottom: 16px;">بطاقات الحركات</h2>
-            <div class="grid" id="cardsGrid"></div>
-        </section>
-        
-        <!-- Section 2: Series Builder -->
-        <section id="series-section">
-            <h2 style="margin-bottom: 16px;">صناعة السلسلة</h2>
-            
-            <div class="card" style="margin-bottom: 16px;">
-                <input type="text" id="seriesName" placeholder="اسم السلسلة (مثلاً: حصة الأربعاء)">
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    اضغطي + على البطاقات لإضافة الحركات للسلسلة
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
+<header class="app-header">
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <img
+                class="brand-icon"
+                src="./AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png"
+                alt="Boxing Memory"
+            >
+
+            <div class="brand-text">
+
+                <h1>🥊 Boxing Memory</h1>
+
+                <p>
+                    ذاكرتي البصرية للكيك بوكسينغ
                 </p>
+
             </div>
-            
-            <h3 style="margin: 16px 0;">الحركات المضافة:</h3>
-            <div id="selectedMoves" class="grid" style="margin-bottom: 16px;"></div>
-            
-            <div class="move-selector" id="moveSelector"></div>
-            
-            <button class="btn btn-primary" onclick="previewSeries()" style="width: 100%; margin: 16px 0;">
-                ▶️ معاينة السلسلة
-            </button>
-            
-            <div class="animation-preview" id="seriesPreview" style="display: none;">
-                <h3 style="margin-bottom: 12px;">معاينة متحركة</h3>
-                <div class="animation-stage" id="animationStage">
-                    <!-- SVG will be inserted here -->
-                </div>
-                <div class="speed-controls">
-                    <button class="speed-btn" onclick="setSpeed(0.5)">🐢 بطيء</button>
-                    <button class="speed-btn active" onclick="setSpeed(1)">▶️ عادي</button>
-                    <button class="speed-btn" onclick="setSpeed(1.5)">⚡ سريع</button>
-                    <button class="speed-btn" onclick="toggleAnimation()">◼️ إيقاف</button>
-                </div>
-            </div>
-            
-            <button class="btn btn-success" onclick="saveSeries()" style="width: 100%;" id="saveSeriesBtn">
-                💾 حفظ السلسلة
-            </button>
-            
-            <h2 style="margin-top: 32px; margin-bottom: 16px;">السلاسل المحفوظة</h2>
-            <div id="savedSeriesList"></div>
-        </section>
-        
-        <!-- Section 3: Dictionary -->
-        <section id="dictionary-section">
-            <h2 style="margin-bottom: 16px;">المعجم</h2>
-            <input type="text" id="searchDict" placeholder="ابحث عن حركة..." onkeyup="filterDictionary()">
-            <div class="grid" id="dictionaryGrid"></div>
-        </section>
-        
-        <!-- Section 4: Tracking -->
-        <section id="tracking-section">
-            <h2 style="margin-bottom: 16px;">تتبع التطور</h2>
-            <div id="trackingList"></div>
-        </section>
-        
-        <!-- Section 5: Gym Schedule -->
-        <section id="schedule-section">
-            <h2 style="margin-bottom: 16px;">حصص الصالة</h2>
-            <div id="gymSchedule"></div>
-            
-            <h2 style="margin-top: 32px; margin-bottom: 16px;">الدفع</h2>
-            <div class="card" style="margin-bottom: 16px;">
-                <label>بداية الاشتراك:</label>
-                <input type="date" id="subscriptionStart" value="2026-09-15">
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">سيتم عرض الأشهر بالصيغة: 15/09/2026</p>
-            </div>
-            <div id="paymentTracker"></div>
-        </section>
-        
-        <!-- Edit Modal -->
-        <div class="modal" id="editModal">
-            <div class="modal-content">
-                <h2 style="margin-bottom: 16px;">تعديل الاسم</h2>
-                <p id="editMovementName" style="margin-bottom: 16px; color: var(--text-secondary);"></p>
-                <label>الاسم الذي يستخدمه مدربك:</label>
-                <input type="text" id="customNameInput" placeholder="اكتبي الاسم هنا">
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-primary" onclick="saveCustomName()" style="flex: 1;">حفظ</button>
-                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">إلغاء</button>
-                </div>
-            </div>
+
         </div>
-        
-        <!-- Toast -->
-        <div class="toast" id="toast"></div>
+
+        <button
+            class="header-action"
+            onclick="openSettings()"
+            aria-label="الإعدادات"
+        >
+            ⚙️
+        </button>
+
     </div>
-    
-    <!-- Navigation -->
-    <nav>
-        <button class="nav-item active" onclick="showSection('cards')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-            <span>الحركات</span>
+
+</header>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main>
+
+
+<!-- =======================================================
+     HOME
+======================================================= -->
+
+<section
+    id="section-home"
+    class="section active"
+>
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <h2>
+                ذاكرتي للكيك بوكسينغ 🥊
+            </h2>
+
+            <p>
+                كل حركة تعلمتها في الجيم،
+                أحفظها بصرياً، أتدرب عليها،
+                وأبني منها الـ Series الخاصة بي.
+            </p>
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+                    <strong id="homeMoveCount">0</strong>
+                    <span>حركة</span>
+                </div>
+
+                <div class="hero-stat">
+                    <strong id="homeSeriesCount">0</strong>
+                    <span>Series</span>
+                </div>
+
+                <div class="hero-stat">
+                    <strong id="homeClassesCount">0</strong>
+                    <span>حصص</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+        <div
+            class="dashboard-card"
+            onclick="showSection('moves')"
+        >
+
+            <div class="icon">🥊</div>
+
+            <h3>
+                الحركات
+            </h3>
+
+            <p>
+                مكتبة بصرية للحركات
+                من الأساسيات إلى المتقدمة.
+            </p>
+
+        </div>
+
+
+        <div
+            class="dashboard-card"
+            onclick="showSection('series')"
+        >
+
+            <div class="icon">🔥</div>
+
+            <h3>
+                Series
+            </h3>
+
+            <p>
+                ركبي حركاتك بالترتيب
+                وشغليها كأنها حصة.
+            </p>
+
+        </div>
+
+
+        <div
+            class="dashboard-card"
+            onclick="showSection('dictionary')"
+        >
+
+            <div class="icon">📖</div>
+
+            <h3>
+                Dictionary
+            </h3>
+
+            <p>
+                العربي + المصطلح الإنجليزي
+                مع اسم الكوتش الخاص بك.
+            </p>
+
+        </div>
+
+
+        <div
+            class="dashboard-card"
+            onclick="showSection('tracking')"
+        >
+
+            <div class="icon">📈</div>
+
+            <h3>
+                Tracking
+            </h3>
+
+            <p>
+                السرعة والثبات والغريزة
+                والذاكرة لكل Series.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="animation-panel">
+
+        <div class="animation-display">
+
+            <div class="animation-label">
+
+                <span>
+                    🎬 آخر حركة
+                </span>
+
+                <span id="homeAnimationName">
+                    Jab
+                </span>
+
+            </div>
+
+            <div id="homeAnimationVisual"></div>
+
+        </div>
+
+        <div class="speed-controls">
+
+            <button
+                class="speed-btn"
+                onclick="setHomeSpeed(0.5,this)"
+            >
+                🐢 0.5×
+            </button>
+
+            <button
+                class="speed-btn active"
+                onclick="setHomeSpeed(1,this)"
+            >
+                ▶️ 1×
+            </button>
+
+            <button
+                class="speed-btn"
+                onclick="setHomeSpeed(1.5,this)"
+            >
+                ⚡ 1.5×
+            </button>
+
+            <button
+                class="speed-btn"
+                onclick="setHomeSpeed(2,this)"
+            >
+                ⚡ 2×
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     MOVES
+======================================================= -->
+
+<section
+    id="section-moves"
+    class="section"
+>
+
+    <h2 class="section-title">
+        🥊 الحركات
+    </h2>
+
+    <p class="section-subtitle">
+        اختاري أي حركة باش تشوفيها بصرياً،
+        الاسم بالعربية والإنجليزية،
+        الاتجاه والعضو المستعمل،
+        وتقدري تضيفيها مباشرة للـ Series.
+    </p>
+
+
+    <div class="toolbar">
+
+        <div class="search-box">
+
+            <span>🔎</span>
+
+            <input
+                id="moveSearch"
+                type="search"
+                placeholder="ابحثي عن حركة..."
+                oninput="renderMoves()"
+            >
+
+        </div>
+
+
+        <select
+            id="levelFilter"
+            class="select-control"
+            onchange="renderMoves()"
+        >
+
+            <option value="all">
+                كل المستويات
+            </option>
+
+            <option value="أساسي">
+                أساسي
+            </option>
+
+            <option value="متوسط">
+                متوسط
+            </option>
+
+            <option value="متقدم">
+                متقدم
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div
+        id="moveCategories"
+        class="chips"
+    ></div>
+
+
+    <div
+        id="movesGrid"
+        class="moves-grid"
+    ></div>
+
+</section>
+
+
+<!-- =======================================================
+     SERIES
+======================================================= -->
+
+<section
+    id="section-series"
+    class="section"
+>
+
+    <h2 class="section-title">
+        🔥 Series Builder
+    </h2>
+
+    <p class="section-subtitle">
+        اختاري الحركات بالترتيب.
+        كل بطاقة تبقى ظاهرة بصورتها،
+        وبعدها شغلي السلسلة حركة وراء حركة.
+    </p>
+
+
+    <div class="series-builder">
+
+        <h3>
+            Series الحالية
+        </h3>
+
+        <p>
+            أضيفي الحركات من مكتبة الحركات بواسطة +.
+        </p>
+
+
+        <div
+            id="builderStrip"
+            class="series-strip"
+        >
+
+            <div class="series-empty">
+                لم تضيفي أي حركة بعد 🥊
+            </div>
+
+        </div>
+
+
+        <div class="series-speed">
+
+            <button
+                class="active"
+                onclick="setSeriesSpeed(0.5,this)"
+            >
+                🐢 0.5×
+            </button>
+
+            <button
+                onclick="setSeriesSpeed(1,this)"
+            >
+                ▶️ 1×
+            </button>
+
+            <button
+                onclick="setSeriesSpeed(1.5,this)"
+            >
+                ⚡ 1.5×
+            </button>
+
+            <button
+                onclick="setSeriesSpeed(2,this)"
+            >
+                ⚡ 2×
+            </button>
+
+        </div>
+
+
+        <div class="series-tools">
+
+            <button
+                class="btn btn-primary"
+                onclick="playCurrentSeries()"
+            >
+                ▶️ تشغيل Series
+            </button>
+
+            <button
+                class="btn btn-secondary"
+                onclick="stopSeriesPlayback()"
+            >
+                ⏹️ إيقاف
+            </button>
+
+            <button
+                class="btn btn-success"
+                onclick="saveCurrentSeries()"
+            >
+                💾 حفظ Series
+            </button>
+
+            <button
+                class="btn btn-danger"
+                onclick="clearBuilder()"
+            >
+                🗑️ مسح
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="seriesPlayer"
+        class="animation-panel hidden"
+    >
+
+        <div class="animation-display">
+
+            <div class="animation-label">
+
+                <span>
+                    🎬 تشغيل Series
+                </span>
+
+                <span id="seriesCurrentLabel">
+                    1 / 1
+                </span>
+
+            </div>
+
+            <div id="seriesAnimationVisual"></div>
+
+        </div>
+
+    </div>
+
+
+    <h3 style="margin:20px 0 10px;">
+        💾 Series المحفوظة
+    </h3>
+
+    <div
+        id="savedSeries"
+        class="saved-series"
+    ></div>
+
+</section>
+
+
+<!-- =======================================================
+     DICTIONARY
+======================================================= -->
+
+<section
+    id="section-dictionary"
+    class="section"
+>
+
+    <h2 class="section-title">
+        📖 Dictionary
+    </h2>
+
+    <p class="section-subtitle">
+        المصطلح القياسي بالإنجليزية يبقى محفوظاً،
+        ويمكنك إضافة اسم الكوتش أو الاسم الذي تستعملينه
+        أنتِ في الجيم.
+    </p>
+
+
+    <div class="toolbar">
+
+        <div class="search-box">
+
+            <span>🔎</span>
+
+            <input
+                id="dictionarySearch"
+                type="search"
+                placeholder="ابحثي..."
+                oninput="renderDictionary()"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="dictionaryList"
+        class="dictionary-list"
+    ></div>
+
+</section>
+
+
+<!-- =======================================================
+     TRACKING
+======================================================= -->
+
+<section
+    id="section-tracking"
+    class="section"
+>
+
+    <h2 class="section-title">
+        📈 Tracking
+    </h2>
+
+    <p class="section-subtitle">
+        تابعي تطورك في كل Series.
+        التقييم قابل للتعديل مع الوقت.
+    </p>
+
+
+    <div
+        id="trackingList"
+        class="tracking-list"
+    ></div>
+
+</section>
+
+
+<!-- =======================================================
+     CLASSES
+======================================================= -->
+
+<section
+    id="section-classes"
+    class="section"
+>
+
+    <h2 class="section-title">
+        📅 Gym Classes
+    </h2>
+
+    <p class="section-subtitle">
+        الجدول الأساسي:
+        الإثنين، الأربعاء، الجمعة
+        من 21:00 إلى 22:30.
+    </p>
+
+
+    <div
+        id="scheduleList"
+        class="schedule-list"
+    ></div>
+
+
+    <div class="payment-box">
+
+        <h3>
+            💳 تتبع الأداء الشهري
+        </h3>
+
+        <p>
+            يبدأ التتبع من 15/09/2026.
+            علّمي الشهر عندما يتم الأداء.
+        </p>
+
+
+        <button
+            class="btn btn-primary btn-small"
+            onclick="addNextPaymentMonth()"
+        >
+            ＋ إضافة شهر
         </button>
-        <button class="nav-item" onclick="showSection('series')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z"/></svg>
-            <span>السلاسل</span>
+
+
+        <div
+            id="paymentList"
+            class="payment-list"
+            style="margin-top:12px;"
+        ></div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =======================================================
+     BOTTOM NAV
+======================================================= -->
+
+<nav class="bottom-nav">
+
+    <div class="nav-inner">
+
+        <button
+            class="nav-btn active"
+            data-section="home"
+            onclick="showSection('home')"
+        >
+            <span class="nav-icon">🏠</span>
+            الرئيسية
         </button>
-        <button class="nav-item" onclick="showSection('dictionary')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
-            <span>المعجم</span>
+
+        <button
+            class="nav-btn"
+            data-section="moves"
+            onclick="showSection('moves')"
+        >
+            <span class="nav-icon">🥊</span>
+            الحركات
         </button>
-        <button class="nav-item" onclick="showSection('tracking')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
-            <span>التطور</span>
+
+        <button
+            class="nav-btn"
+            data-section="series"
+            onclick="showSection('series')"
+        >
+            <span class="nav-icon">🔥</span>
+            Series
         </button>
-        <button class="nav-item" onclick="showSection('schedule')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-            <span>الصالة</span>
+
+        <button
+            class="nav-btn"
+            data-section="dictionary"
+            onclick="showSection('dictionary')"
+        >
+            <span class="nav-icon">📖</span>
+            القاموس
         </button>
-    </nav>
-    
-    <script>
-        // ==================== MOVEMENT DATABASE - 200+ MOVES ====================
-        const movementDB = [
-            // ========== ضربات الأرجل (Leg Strikes) =========
-            // ركلات أمامية
-            {id: "front-kick-r-basic", arabic: "فرونت كيك أمامي باليمين", english: "Basic Front Kick Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "front-kick", side: "right", height: "basic"}},
-            {id: "front-kick-l-basic", arabic: "فرونت كيك أمامي باليسار", english: "Basic Front Kick Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "front-kick", side: "left", height: "basic"}},
-            {id: "front-kick-r-high", arabic: "فرونت كيك مرتفع باليمين", english: "High Front Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "front-kick", side: "right", height: "high"}},
-            {id: "front-kick-l-high", arabic: "فرونت كيك مرتفع باليسار", english: "High Front Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "front-kick", side: "left", height: "high"}},
-            {id: "snap-kick-r", arabic: "سناب كيك باليمين", english: "Snap Kick Right", category: "ضربات الأرجل", level: "متوسط", visual: {type: "snap-kick", side: "right"}},
-            {id: "snap-kick-l", arabic: "سناب كيك باليسار", english: "Snap Kick Left", category: "ضربات الأرجل", level: "متوسط", visual: {type: "snap-kick", side: "left"}},
-            
-            // ركلات دائرية
-            {id: "roundhouse-low-r", arabic: "راوند هوس منخفض باليمين", english: "Low Roundhouse Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "right", height: "low"}},
-            {id: "roundhouse-low-l", arabic: "راوند هوس منخفض باليسار", english: "Low Roundhouse Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "left", height: "low"}},
-            {id: "roundhouse-mid-r", arabic: "راوند هوس متوسط باليمين", english: "Mid Roundhouse Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "right", height: "mid"}},
-            {id: "roundhouse-mid-l", arabic: "راوند هوس متوسط باليسار", english: "Mid Roundhouse Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "left", height: "mid"}},
-            {id: "roundhouse-high-r", arabic: "راوند هوس مرتفع باليمين", english: "High Roundhouse Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "roundhouse-kick", side: "right", height: "high"}},
-            {id: "roundhouse-high-l", arabic: "راوند هوس مرتفع باليسار", english: "High Roundhouse Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "roundhouse-kick", side: "left", height: "high"}},
-            {id: "roundhouse-crescent-r", arabic: "راوند هوس قمر باليمين", english: "Crescent Roundhouse Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "crescent-roundhouse", side: "right"}},
-            {id: "roundhouse-crescent-l", arabic: "راوند هوس قمر باليسار", english: "Crescent Roundhouse Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "crescent-roundhouse", side: "left"}},
-            
-            // ركلات جانبية
-            {id: "side-kick-r-basic", arabic: "سايد كيك أساسي باليمين", english: "Basic Side Kick Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "side-kick", side: "right", height: "basic"}},
-            {id: "side-kik-l-basic", arabic: "سايد كيك أساسي باليسار", english: "Basic Side Kick Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "side-kick", side: "left", height: "basic"}},
-            {id: "side-kick-r-thrust", arabic: "سايد كيك زخم باليمين", english: "Thrust Side Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "side-kick", side: "right", height: "thrust"}},
-            {id: "side-kick-l-thrust", arabic: "سايد كيك زخم باليسار", english: "Thrust Side Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "side-kick", side: "left", height: "thrust"}},
-            {id: "side-kick-spinning-r", arabic: "سايد كيك دوار باليمين", english: "Spinning Side Kick Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "spinning-side-kick", side: "right"}},
-            {id: "side-kick-spinning-l", arabic: "سايد كيك دوار باليسار", english: "Spinning Side Kick Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "spinning-side-kick", side: "left"}},
-            
-            // ركلات خلفية ودوارة
-            {id: "back-kick-r", arabic: "باك كيك باليمين", english: "Back Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "back-kick", side: "right"}},
-            {id: "back-kick-l", arabic: "باك كيك باليسار", english: "Back Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "back-kick", side: "left"}},
-            {id: "spin-kick-r", arabic: "سبين كيك باليمين", english: "Spin Kick Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "spin-kick", side: "right"}},
-            {id: "spin-kick-l", arabic: "سبين كيك باليسار", english: "Spin Kick Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "spin-kick", side: "left"}},
-            {id: "hook-spin-r", arabic: "هوك سبين باليمين", english: "Hook Spin Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "hook-spin", side: "right"}},
-            {id: "hook-spin-l", arabic: "هوك سبين باليسار", english: "Hook Spin Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "hook-spin", side: "left"}},
-            {id: "scissor-kick", arabic: "ركلة المقص", english: "Scissor Kick", category: "ضربات الأرجل", level: "متقدم", visual: {type: "scissor-kick", side: "both"}},
-            {id: "wheel-kick", arabic: "ركلة العجلة", english: "Wheel Kick", category: "ضربات الأرجل", level: "محترف", visual: {type: "wheel-kick", side: "both"}},
-            
-            // ركلات ضغط
-            {id: "teep-front-r", arabic: "تيب أمامي باليمين", english: "Front Teep Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "teep", side: "right", style: "front"}},
-            {id: "teep-front-l", arabic: "تيب أمامي باليسار", english: "Front Teep Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "teep", side: "left", style: "front"}},
-            {id: "teep-side-r", arabic: "تيب جانبي باليمين", english: "Side Teep Right", category: "ضربات الأرجل", level: "متوسط", visual: {type: "teep", side: "right", style: "side"}},
-            {id: "teep-side-l", arabic: "تيب جانبي باليسار", english: "Side Teep Left", category: "ضربات الأرجل", level: "متوسط", visual: {type: "teep", side: "left", style: "side"}},
-            {id: "teep-pivot-r", arabic: "تيب محور باليمين", english: "Pivot Teep Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "teep", side: "right", style: "pivot"}},
-            {id: "teep-pivot-l", arabic: "تيب محور باليسار", english: "Pivot Teep Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "teep", side: "left", style: "pivot"}},
-            
-            // ========== ضربات البوكس (Punches) =========
-            // جبهات أساسية
-            {id: "jab-right", arabic: "جاب باليمين", english: "Jab Right", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab", side: "right"}},
-            {id: "jab-left", arabic: "جاب باليسار", english: "Jab Left", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab", side: "left"}},
-            {id: "cross-right", arabic: "كروس باليمين", english: "Cross Right", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "cross", side: "right"}},
-            {id: "cross-left", arabic: "كروس باليسار", english: "Cross Left", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "cross", side: "left"}},
-            {id: "jab-cross-combo", arabic: "جاب-كروس", english: "Jab-Cross Combo", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab-cross", side: "both"}},
-            {id: "double-jab", arabic: "جاب مزدوج", english: "Double Jab", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "double-jab", side: "leading"}},
-            
-            // هوك
-            {id: "hook-left-basic", arabic: "هوك يسار أساسي", english: "Basic Left Hook", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "hook", side: "left", style: "basic"}},
-            {id: "hook-right-basic", arabic: "هوك يمين أساسي", english: "Basic Right Hook", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "hook", side: "right", style: "basic"}},
-            {id: "hook-left-stepping", arabic: "هوك يسار مع خطوة", english: "Stepping Left Hook", category: "ضربات البوكس", level: "متوسط", visual: {type: "hook", side: "left", style: "stepping"}},
-            {id: "hook-right-stepping", arabic: "هوك يمين مع خطوة", english: "Stepping Right Hook", category: "ضربات البوكس", level: "متوسط", visual: {type: "hook", side: "right", style: "stepping"}},
-            {id: "hook-leaping", arabic: "هوك القاد", english: "Leaping Hook", category: "ضربات البوكس", level: "متقدم", visual: {type: "hook", side: "both", style: "leaping"}},
-            {id: "spinning-hook", arabic: "هوك دوّار", english: "Spinning Hook", category: "ضربات البوكس", level: "محترف", visual: {type: "spinning-hook", side: "both"}},
-            
-            // أبيركانت
-            {id: "uppercut-left-low", arabic: "أبيركانت يسار منخفض", english: "Low Uppercut Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "left", height: "low"}},
-            {id: "uppercut-right-low", arabic: "أبيركانت يمين منخفض", english: "Low Uppercut Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "right", height: "low"}},
-            {id: "uppercut-left-mid", arabic: "أبيركانت يسار متوسط", english: "Mid Uppercut Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "left", height: "mid"}},
-            {id: "uppercut-right-mid", arabic: "أبيركانت يمين متوسط", english: "Mid Uppercut Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "right", height: "mid"}},
-            {id: "uppercut-dropping", arabic: "أبيركانت هابط", english: "Dropping Uppercut", category: "ضربات البوكس", level: "متقدم", visual: {type: "dropping-uppercut", side: "both"}},
-            
-            // أوفر هاند
-            {id: "overhand-right-basic", arabic: "أوفر هاند يمين أساسي", english: "Basic Overhand Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "overhand", side: "right"}},
-            {id: "overhand-left-basic", arabic: "أوفر هاند يسار أساسي", english: "Basic Overhand Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "overhand", side: "left"}},
-            {id: "overhand-switch", arabic: "أوفر هاند بالتبديل", english: "Switch Overhand", category: "ضربات البوكس", level: "متقدم", visual: {type: "switch-overhand", side: "both"}},
-            {id: "overhand-slip", arabic: "أوفر هاند بالسليب", english: "Slip Overhand", category: "ضربات البوكس", level: "متقدم", visual: {type: "slip-overhand", side: "leading"}},
-            
-            // ثباتات خاصة
-            {id: "check-hook", arabic: "تشيك هوك", english: "Check Hook", category: "ضربات البوكس", level: "متقدم", visual: {type: "check-hook", side: "leading"}},
-            {id: "plunger-punch", arabic: "بانش الغواص", english: "Plunger Punch", category: "ضربات البوكس", level: "متقدم", visual: {type: "plunger-punch", side: "rear"}},
-            {id: "hammer-fist", arabic: "قبضة المطرقة", english: "Hammer Fist", category: "ضربات البوكس", level: "متوسط", visual: {type: "hammer-fist", side: "both"}},
-            {id: "knife-hand", arabic: "ضربة السكين", english: "Knife Hand Strike", category: "ضربات البوكس", level: "متقدم", visual: {type: "knife-hand", side: "both"}},
-            
-            // كمبيو
-            {id: "one-two", arabic: "واحد اثنين", english: "One-Two", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "one-two", side: "both"}},
-            {id: "one-two-three", arabic: "واحد اثنان ثلاثة", english: "One-Two-Three", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "one-two-three", side: "both"}},
-            {id: "two-three-two", arabic: "اثنان ثلاثة اثنان", english: "Two-Three-Two", category: "ضربات البوكس", level: "متوسط", visual: {type: "two-three-two", side: "both"}},
-            {id: "four-punch-combo", arabic: "مجموعة أربع punches", english: "Four Punch Combo", category: "ضربات البوكس", level: "متقدم", visual: {type: "four-punch", side: "both"}},
-            
-            // ========== ضربات اليد العادية (Hand Strikes) =========
-            {id: "palm-heel-push", arabic: "دفعة باطن الكف", english: "Palm Heel Push", category: "ضربات اليد العادية", level: "مبتدئ", visual: {type: "palm-heel", side: "both", style: "push"}},
-            {id: "palm-heel-strike", arabic: "ضربة باطن الكف", english: "Palm Heel Strike", category: "ضربات اليد العادية", level: "مبتدئ", visual: {type: "palm-heel", side: "both", style: "strike"}},
-            {id: "ridge-hand", arabic: "ضربة ظهر اليد", english: "Ridge Hand Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "ridge-hand", side: "both"}},
-            {id: "back-fist", arabic: "ضربة مؤخر القبضة", english: "Back Fist Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "back-fist", side: "both"}},
-            {id: "finger-strike", arabic: "ضربة الأصابع", english: "Finger Strike", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "finger-strike", side: "both"}},
-            {id: "forearm-strike", arabic: "ضربة الساعد", english: "Forearm Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "forearm-strike", side: "both"}},
-            {id: "wrist-lock-break", arabic: "كسر قفل المعصم", english: "Wrist Lock Break", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "wrist-lock", side: "both"}},
-            {id: "elbow-strike-down", arabic: "ضربة المرفق الهابطة", english: "Downward Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "down", side: "both"}},
-            {id: "elbow-strike-up", arabic: "ضربة المرفق الصاعدة", english: "Upward Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "up", side: "both"}},
-            {id: "elbow-strike-side", arabic: "ضربة المرفق الجانبية", english: "Side Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "side", side: "both"}},
-            {id: "elbow-spinning", arabic: "ضربة المرفق الدوارة", english: "Spinning Elbow Strike", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "elbow-strike", direction: "spin", side: "both"}},
-            
-            // ========== ضربات الوجه (Face Strikes) =========
-            {id: "eye-gouge", arabic: "وخز العينين", english: "Eye Gouge", category: "ضربات الوجه", level: "متقدم", visual: {type: "eye-gouge", target: "eyes"}},
-            {id: "nose-butt", arabic: "ضربة الأنف بالرأس", english: "Headbutt Nose Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "headbutt-nose", target: "face"}},
-            {id: "temple-strike", arabic: "ضربة الصدغ", english: "Temple Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "temple-strike", target: "temples"}},
-            {id: "chin-undercut", arabic: "ضربة الذقن السفلية", english: "Chin Undercut", category: "ضربات الوجه", level: "متقدم", visual: {type: "chin-strike", target: "chin"}},
-            {id: "throat-strike", arabic: "ضربة الحنجرة", english: "Throat Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "throat-strike", target: "throat"}},
-            {id: "mouth-strike", arabic: "ضربة الفم باليد", english: "Mouth Finger Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "mouth-strike", target: "mouth"}},
-            
-            // ========== حماية النفس (Self Protection) =========
-            // دفاعات الرأس
-            {id: "high-guard", arabic: "حارس عالي", english: "High Guard", category: "حماية نفس", level: "مبتدئ", visual: {type: "guard", position: "high", style: "classic"}},
-            {id: "peele-guard", arabic: "حرس بييل", english: "Philly Shell Guard", category: "حماية نفس", level: "متوسط", visual: {type: "guard", position: "shell", style: "philly"}},
-            {id: "peek-a-boo", arabic: "حرس بك-بو", english: "Peek-a-Boo Guard", category: "حماية نفس", level: "متقدم", visual: {type: "guard", position: "peekabo", style: "crawford"}},
-            {id: "rope-guard", arabic: "حرس الحبال", english: "Rope-a-Dope Guard", category: "حماية نفس", level: "متقدم", visual: {type: "guard", position: "ropes", style: "tyson"}},
-            
-            // سليب وتجنب
-            {id: "slip-outside-left", arabic: "سليب خارجي لليسار", english: "Outside Slip Left", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "outside", hand: "left"}},
-            {id: "slip-outside-right", arabic: "سليب خارجي لليمين", english: "Outside Slip Right", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "outside", hand: "right"}},
-            {id: "slip-inside-left", arabic: "سليب داخلي لليسار", english: "Inside Slip Left", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "inside", hand: "left"}},
-            {id: "slip-inside-right", arabic: "سليب داخلي لليمين", english: "Inside Slip Right", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "inside", hand: "right"}},
-            {id: "bob-and-weave", arabic: "بوب أند ويڤ", english: "Bob and Weave", category: "حماية نفس", level: "متوسط", visual: {type: "bob-weave", motion: "both"}},
-            {id: "pull-counter", arabic: "بول كونتر", english: "Pull Counter", category: "حماية نفس", level: "متقدم", visual: {type: "pull-counter", style: "counter"}},
-            {id: "shoulder-roll", arabic: "تدوير الكتف", english: "Shoulder Roll Defense", category: "حماية نفس", level: "متقدم", visual: {type: "shoulder-roll", side: "rear"}},
-            
-            // بلوك وحجب
-            {id: "parry-incoming", arabic: "باري للضربة القادمة", english: "Incoming Parry", category: "حماية نفس", level: "مبتدئ", visual: {type: "parry", hand: "leading"}},
-            {id: "catch-cross", arabic: "كروس الكأس", english: "Cross Catch", category: "حماية نفس", level: "متوسط", visual: {type: "catch", punch: "cross"}},
-            {id: "cover-up", arabic: "كفر أب", english: "Cover Up", category: "حماية نفس", level: "مبتدئ", visual: {type: "coverup", intensity: "full"}},
-            {id: "shelling-up", arabic: "تحت القذائف", english: "Shelling Up", category: "حماية نفس", level: "متقدم", visual: {type: "shellup", coverage: "tight"}},
-            
-            // أنحناء وهروب
-            {id: "duck-under", arabic: "دك تحت الضربة", english: "Duck Under Punch", category: "حماية نفس", level: "مبتدئ", visual: {type: "duck", under: "cross"}},
-            {id: "step-off-angle", arabic: "خطوة زاوية", english: "Angled Step Off", category: "حماية نفس", level: "متوسط", visual: {type: "angle-step", direction: "out"}},
-            {id: "pivot-away", arabic: "دوران بعيداً", english: "Pivot Away", category: "حماية نفس", level: "متوسط", visual: {type: "pivot", direction: "away"}},
-            {id: "clinch-break", arabic: "كسر كلاينش", english: "Clinch Break Escape", category: "حماية نفس", level: "متقدم", visual: {type: "clinch-break", escape: "forward"}},
-            {id: "floor-escape", arabic: "هروب من الأرض", english: "Ground Escape", category: "حماية نفس", level: "محترف", visual: {type: "ground-escape", technique: "bridge"}},
-            
-            // ========== انحناءات وهروب (Ducks & Evasions) =========
-            {id: "under-hook-evade", arabic: "تجنب تحت الخطاف", english: "Underhook Evade", category: "انحنائات وهروب", level: "مبتدئ", visual: {type: "underhook-evade", position: "under"}},
-            {id: "level-change-shoot", arabic: "تغير المستوى", english: "Level Change Shoot", category: "انحنائات وهروب", level: "متوسط", visual: {type: "level-change", style: "shoot"}},
-            {id: "sprawl-defense", arabic: "سبرول الدفاعي", english: "Sprawl Defense", category: "انحناءات وهروب", level: "متوسط", visual: {type: "sprawl", defense: "takedown"}},
-            {id: "sprawl-whizzer", arabic: "سبرول مع الويزر", english: "Sprawl with Whizzer", category: "انحناءات وهروب", level: "متقدم", visual: {type: "sprawl-whizzer", control: "single"}},
-            {id: "roll-through", arabic: "تدحرج مستمر", english: "Roll Through Defense", category: "انحناءات وهروب", level: "متقدم", visual: {type: "roll-through", direction: "forward"}},
-            {id: "standup-grapple", arabic: "وقوف من الكفاح", english: "Standup from Grapple", category: "انحناءات وهروب", level: "محترف", visual: {type: "standup", from: "ground"}},
-            {id: "hip-escape", arabic: "هروب الحوض", english: "Hip Escape (Shrimp)", category: "انحناءات وهروب", level: "متوسط", visual: {type: "hip-escape", direction: "side"}},
-            {id: "technical-standup", arabic: "وقوف فني", english: "Technical Standup", category: "انحناءات وهروب", level: "متقدم", visual: {type: "tech-standup", guard: "hands"}},
-            {id: "back-take-prevent", arabic: "منع أخذ الظهر", english: "Prevent Back Take", category: "انحناءات وهروب", level: "متقدم", visual: {type: "back-prevent", technique: "turtle"}},
-            {id: "mount-exit", arabic: "خروج من المونت", english: "Mount Exit Escape", category: "انحناءات وهروب", level: "متقدم", visual: {type: "mount-exit", technique: "upa"}},
-            {id: "guard-recovery", arabic: "استعادة الحارس", english: "Guard Recovery", category: "انحناءات وهروب", level: "متقدم", visual: {type: "guard-recovery", position: "closed"}}
+
+        <button
+            class="nav-btn"
+            data-section="classes"
+            onclick="showSection('classes')"
+        >
+            <span class="nav-icon">📅</span>
+            الحصص
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- =======================================================
+     MOVE MODAL
+======================================================= -->
+
+<div
+    id="moveModal"
+    class="modal-backdrop"
+    onclick="closeModalOutside(event,'moveModal')"
+>
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2 id="modalMoveName">
+                الحركة
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('moveModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="modalMoveVisual"
+            class="modal-visual"
+        ></div>
+
+
+        <div
+            id="modalMoveMeta"
+            class="detail-meta"
+        ></div>
+
+
+        <div
+            id="modalMoveDescription"
+            class="detail-description"
+        ></div>
+
+
+        <div class="modal-actions">
+
+            <button
+                id="modalAddSeriesBtn"
+                class="btn btn-primary"
+            >
+                ＋ أضيفي للـ Series
+            </button>
+
+            <button
+                id="modalLearnBtn"
+                class="btn btn-success"
+            >
+                ✓ تعلمتها
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     SAVE SERIES MODAL
+======================================================= -->
+
+<div
+    id="saveSeriesModal"
+    class="modal-backdrop"
+    onclick="closeModalOutside(event,'saveSeriesModal')"
+>
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>
+                💾 حفظ Series
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('saveSeriesModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                اسم الـ Series
+            </label>
+
+            <input
+                id="seriesNameInput"
+                class="form-control"
+                placeholder="مثلاً: Series 01 — حصة الأربعاء"
+            >
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            style="width:100%;"
+            onclick="confirmSaveSeries()"
+        >
+            💾 حفظ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     RATING MODAL
+======================================================= -->
+
+<div
+    id="ratingModal"
+    class="modal-backdrop"
+    onclick="closeModalOutside(event,'ratingModal')"
+>
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2 id="ratingTitle">
+                📈 تقييم Series
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('ratingModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                ⚡ السرعة
+            </label>
+
+            <select
+                id="ratingSpeed"
+                class="form-control"
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🧍 الثبات
+            </label>
+
+            <select
+                id="ratingStability"
+                class="form-control"
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🧠 الغريزة
+            </label>
+
+            <select
+                id="ratingInstinct"
+                class="form-control"
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🧠 الذاكرة
+            </label>
+
+            <select
+                id="ratingMemory"
+                class="form-control"
+            ></select>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            style="width:100%;"
+            onclick="saveRating()"
+        >
+            💾 حفظ التقييم
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     DICTIONARY MODAL
+======================================================= -->
+
+<div
+    id="dictionaryModal"
+    class="modal-backdrop"
+    onclick="closeModalOutside(event,'dictionaryModal')"
+>
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>
+                ✏️ تعديل اسم الكوتش
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('dictionaryModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                الاسم الذي يستعمله الكوتش
+            </label>
+
+            <input
+                id="coachNameInput"
+                class="form-control"
+            >
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            style="width:100%;"
+            onclick="saveCoachName()"
+        >
+            💾 حفظ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     SETTINGS MODAL
+======================================================= -->
+
+<div
+    id="settingsModal"
+    class="modal-backdrop"
+    onclick="closeModalOutside(event,'settingsModal')"
+>
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>
+                ⚙️ الإعدادات
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('settingsModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="detail-description">
+
+            <strong>
+                Boxing Memory
+            </strong>
+
+            <br><br>
+
+            كل بياناتك يتم حفظها داخل الهاتف
+            باستخدام LocalStorage.
+
+            <br><br>
+
+            يمكنك إغلاق التطبيق وفتحه من جديد
+            وستبقى Series والتقييمات والحصص محفوظة.
+
+        </div>
+
+
+        <div
+            style="
+                display:grid;
+                gap:8px;
+                margin-top:12px;
+            "
+        >
+
+            <button
+                class="btn btn-secondary"
+                onclick="exportData()"
+            >
+                📤 تصدير بياناتي
+            </button>
+
+            <button
+                class="btn btn-secondary"
+                onclick="document.getElementById('importFile').click()"
+            >
+                📥 استرجاع بيانات
+            </button>
+
+            <input
+                id="importFile"
+                type="file"
+                accept=".json"
+                style="display:none;"
+                onchange="importData(event)"
+            >
+
+            <button
+                class="btn btn-danger"
+                onclick="resetAllData()"
+            >
+                🗑️ حذف كل البيانات
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     TOAST
+======================================================= -->
+
+<div
+    id="toast"
+    class="toast"
+>
+    تم الحفظ ❤️
+</div>
+
+
+<script>
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY = "boxing_memory_v2";
+
+
+const defaultState = {
+
+    customNames: {},
+
+    series: [],
+
+    ratings: {},
+
+    learned: {},
+
+    attendance: {},
+
+    classDetails: {},
+
+    payments: [],
+
+    schedule: {
+
+        monday: {
+            day: "الإثنين",
+            time: "21:00 → 22:30"
+        },
+
+        wednesday: {
+            day: "الأربعاء",
+            time: "21:00 → 22:30"
+        },
+
+        friday: {
+            day: "الجمعة",
+            time: "21:00 → 22:30"
+        }
+
+    }
+
+};
+
+
+let state = loadState();
+
+
+function loadState() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if (!saved) {
+
+            return structuredClone(defaultState);
+
+        }
+
+        const parsed =
+            JSON.parse(saved);
+
+        return {
+
+            ...structuredClone(defaultState),
+
+            ...parsed,
+
+            schedule: {
+                ...defaultState.schedule,
+                ...(parsed.schedule || {})
+            }
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            "Storage error:",
+            error
+        );
+
+        return structuredClone(defaultState);
+
+    }
+
+}
+
+
+function saveState() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+    );
+
+}
+
+
+/* =========================================================
+   UTILITY
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        },2200);
+
+}
+
+
+function openModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.add("open");
+
+}
+
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.remove("open");
+
+}
+
+
+function closeModalOutside(event,id) {
+
+    if (event.target.id === id) {
+
+        closeModal(id);
+
+    }
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showSection(sectionName) {
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+            section.classList.remove("active");
+
+        });
+
+
+    const target =
+        document.getElementById(
+            "section-" + sectionName
+        );
+
+
+    if (!target) return;
+
+
+    target.classList.add("active");
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.section === sectionName
+            );
+
+        });
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    if (sectionName === "moves") {
+
+        renderCategories();
+        renderMoves();
+
+    }
+
+    if (sectionName === "series") {
+
+        renderBuilder();
+        renderSavedSeries();
+
+    }
+
+    if (sectionName === "dictionary") {
+
+        renderDictionary();
+
+    }
+
+    if (sectionName === "tracking") {
+
+        renderTracking();
+
+    }
+
+    if (sectionName === "classes") {
+
+        renderClasses();
+        renderPayments();
+
+    }
+
+}
+
+
+/* =========================================================
+   MOVEMENT DATABASE
+========================================================= */
+
+const MOVES = [
+
+/* ---------------------------------------------------------
+   BASIC PUNCHES
+--------------------------------------------------------- */
+
+{
+    id:"jab",
+    ar:"الـ Jab — اللكمة الأمامية",
+    en:"Jab",
+    cat:"لكمات",
+    level:"أساسي",
+    type:"punch",
+    side:"lead",
+    target:"head",
+    desc:"لكمة مستقيمة سريعة باليد الأمامية من وضع الحراسة. الهدف الأساسي هو الرأس أو الوجه، مع رجوع اليد مباشرة للحراسة."
+},
+
+{
+    id:"cross",
+    ar:"الـ Cross — اللكمة الخلفية",
+    en:"Cross",
+    cat:"لكمات",
+    level:"أساسي",
+    type:"punch",
+    side:"rear",
+    target:"head",
+    desc:"لكمة مستقيمة باليد الخلفية مع دوران الورك والكتف للمساعدة في توليد القوة."
+},
+
+{
+    id:"lead-body-punch",
+    ar:"Jab إلى الجسم",
+    en:"Lead Body Jab",
+    cat:"لكمات الجسم",
+    level:"أساسي",
+    type:"body-punch",
+    side:"lead",
+    target:"body",
+    desc:"لكمة مستقيمة باليد الأمامية نحو الجسم مع خفض مستوى الجسم بشكل مضبوط."
+},
+
+{
+    id:"rear-body-cross",
+    ar:"Cross إلى الجسم",
+    en:"Rear Body Cross",
+    cat:"لكمات الجسم",
+    level:"أساسي",
+    type:"body-punch",
+    side:"rear",
+    target:"body",
+    desc:"الـ Cross موجه إلى منطقة الجسم بدلاً من الرأس."
+},
+
+{
+    id:"double-jab",
+    ar:"Jab مزدوج",
+    en:"Double Jab",
+    cat:"لكمات",
+    level:"أساسي",
+    type:"combo",
+    side:"lead",
+    target:"head",
+    desc:"لكمتان متتاليتان باليد الأمامية، تستخدمان للمسافة والضغط."
+},
+
+{
+    id:"jab-cross",
+    ar:"Jab ثم Cross",
+    en:"Jab-Cross",
+    cat:"Combinations",
+    level:"أساسي",
+    type:"combo",
+    side:"both",
+    target:"head",
+    desc:"التركيبة الأساسية: Jab باليد الأمامية ثم Cross باليد الخلفية."
+},
+
+{
+    id:"cross-jab",
+    ar:"Cross ثم Jab",
+    en:"Cross-Jab",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo",
+    side:"both",
+    target:"head",
+    desc:"Cross باليد الخلفية ثم العودة بالـ Jab باليد الأمامية."
+},
+
+/* ---------------------------------------------------------
+   HOOKS
+--------------------------------------------------------- */
+
+{
+    id:"lead-hook",
+    ar:"Hook أمامية",
+    en:"Lead Hook",
+    cat:"لكمات مقوسة",
+    level:"أساسي",
+    type:"hook",
+    side:"lead",
+    target:"head",
+    desc:"لكمة مقوسة باليد الأمامية مع دوران الجسم والقدم للحصول على القوة."
+},
+
+{
+    id:"rear-hook",
+    ar:"Hook خلفية",
+    en:"Rear Hook",
+    cat:"لكمات مقوسة",
+    level:"متوسط",
+    type:"hook",
+    side:"rear",
+    target:"head",
+    desc:"Hook باليد الخلفية بعد دوران الجسم والكتف."
+},
+
+{
+    id:"lead-body-hook",
+    ar:"Hook أمامية للجسم",
+    en:"Lead Body Hook",
+    cat:"لكمات الجسم",
+    level:"متوسط",
+    type:"body-hook",
+    side:"lead",
+    target:"body",
+    desc:"Hook موجهة إلى جانب الجسم أو منطقة الأضلاع."
+},
+
+{
+    id:"rear-body-hook",
+    ar:"Hook خلفية للجسم",
+    en:"Rear Body Hook",
+    cat:"لكمات الجسم",
+    level:"متوسط",
+    type:"body-hook",
+    side:"rear",
+    target:"body",
+    desc:"Hook باليد الخلفية موجهة إلى الجسم."
+},
+
+/* ---------------------------------------------------------
+   UPPERCUTS
+--------------------------------------------------------- */
+
+{
+    id:"lead-uppercut",
+    ar:"Uppercut أمامية",
+    en:"Lead Uppercut",
+    cat:"Uppercuts",
+    level:"أساسي",
+    type:"uppercut",
+    side:"lead",
+    target:"head",
+    desc:"Uppercut قصيرة باليد الأمامية من مستوى منخفض إلى الأعلى."
+},
+
+{
+    id:"rear-uppercut",
+    ar:"Uppercut خلفية",
+    en:"Rear Uppercut",
+    cat:"Uppercuts",
+    level:"أساسي",
+    type:"uppercut",
+    side:"rear",
+    target:"head",
+    desc:"Uppercut باليد الخلفية مع استخدام الرجل والورك لتوليد القوة."
+},
+
+{
+    id:"lead-body-uppercut",
+    ar:"Uppercut أمامية للجسم",
+    en:"Lead Body Uppercut",
+    cat:"لكمات الجسم",
+    level:"متوسط",
+    type:"body-uppercut",
+    side:"lead",
+    target:"body",
+    desc:"Uppercut قصيرة تستهدف الجسم من مسافة قريبة."
+},
+
+{
+    id:"rear-body-uppercut",
+    ar:"Uppercut خلفية للجسم",
+    en:"Rear Body Uppercut",
+    cat:"لكمات الجسم",
+    level:"متوسط",
+    type:"body-uppercut",
+    side:"rear",
+    target:"body",
+    desc:"Uppercut باليد الخلفية تستهدف الجسم."
+},
+
+/* ---------------------------------------------------------
+   OVERHANDS
+--------------------------------------------------------- */
+
+{
+    id:"rear-overhand",
+    ar:"Overhand خلفية",
+    en:"Rear Overhand",
+    cat:"لكمات",
+    level:"متوسط",
+    type:"overhand",
+    side:"rear",
+    target:"head",
+    desc:"لكمة دائرية من الأعلى إلى الأسفل باليد الخلفية، غالباً لتجاوز الحراسة."
+},
+
+{
+    id:"lead-overhand",
+    ar:"Overhand أمامية",
+    en:"Lead Overhand",
+    cat:"لكمات",
+    level:"متقدم",
+    type:"overhand",
+    side:"lead",
+    target:"head",
+    desc:"Overhand باليد الأمامية مع ميل ودوران الجسم."
+},
+
+/* ---------------------------------------------------------
+   LOW KICKS
+--------------------------------------------------------- */
+
+{
+    id:"lead-low-round",
+    ar:"Low Kick أمامية",
+    en:"Lead Low Round Kick",
+    cat:"ركلات منخفضة",
+    level:"أساسي",
+    type:"low-kick",
+    side:"lead",
+    target:"leg",
+    desc:"ركلة دائرية بالرجل الأمامية تستهدف الفخذ أو الساق."
+},
+
+{
+    id:"rear-low-round",
+    ar:"Low Kick خلفية",
+    en:"Rear Low Round Kick",
+    cat:"ركلات منخفضة",
+    level:"أساسي",
+    type:"low-kick",
+    side:"rear",
+    target:"leg",
+    desc:"ركلة دائرية قوية بالرجل الخلفية تستهدف الرجل."
+},
+
+{
+    id:"inside-low-kick",
+    ar:"Inside Low Kick",
+    en:"Inside Low Kick",
+    cat:"ركلات منخفضة",
+    level:"أساسي",
+    type:"inside-low",
+    side:"lead",
+    target:"inner-thigh",
+    desc:"ركلة منخفضة من الداخل إلى الفخذ الداخلي."
+},
+
+{
+    id:"outside-low-kick",
+    ar:"Outside Low Kick",
+    en:"Outside Low Kick",
+    cat:"ركلات منخفضة",
+    level:"أساسي",
+    type:"outside-low",
+    side:"rear",
+    target:"outer-thigh",
+    desc:"ركلة منخفضة من الخارج نحو الفخذ الخارجي."
+},
+
+/* ---------------------------------------------------------
+   BODY KICKS
+--------------------------------------------------------- */
+
+{
+    id:"lead-body-round",
+    ar:"ركلة دائرية أمامية للجسم",
+    en:"Lead Body Round Kick",
+    cat:"ركلات متوسطة",
+    level:"متوسط",
+    type:"body-kick",
+    side:"lead",
+    target:"body",
+    desc:"ركلة دائرية بالرجل الأمامية تستهدف الجسم أو الأضلاع."
+},
+
+{
+    id:"rear-body-round",
+    ar:"ركلة دائرية خلفية للجسم",
+    en:"Rear Body Round Kick",
+    cat:"ركلات متوسطة",
+    level:"أساسي",
+    type:"body-kick",
+    side:"rear",
+    target:"body",
+    desc:"ركلة دائرية بالرجل الخلفية إلى الجسم."
+},
+
+{
+    id:"lead-rib-kick",
+    ar:"ركلة أمامية للأضلاع",
+    en:"Lead Rib Kick",
+    cat:"ركلات متوسطة",
+    level:"متوسط",
+    type:"body-kick",
+    side:"lead",
+    target:"ribs",
+    desc:"ركلة دائرية تستهدف الأضلاع من الجهة الأمامية."
+},
+
+{
+    id:"rear-rib-kick",
+    ar:"ركلة خلفية للأضلاع",
+    en:"Rear Rib Kick",
+    cat:"ركلات متوسطة",
+    level:"متوسط",
+    type:"body-kick",
+    side:"rear",
+    target:"ribs",
+    desc:"ركلة قوية بالرجل الخلفية إلى منطقة الأضلاع."
+},
+
+/* ---------------------------------------------------------
+   HIGH KICKS
+--------------------------------------------------------- */
+
+{
+    id:"lead-high-round",
+    ar:"High Kick أمامية",
+    en:"Lead High Round Kick",
+    cat:"ركلات عالية",
+    level:"متقدم",
+    type:"high-kick",
+    side:"lead",
+    target:"head",
+    desc:"ركلة دائرية عالية بالرجل الأمامية تستهدف الرأس."
+},
+
+{
+    id:"rear-high-round",
+    ar:"High Kick خلفية",
+    en:"Rear High Round Kick",
+    cat:"ركلات عالية",
+    level:"متقدم",
+    type:"high-kick",
+    side:"rear",
+    target:"head",
+    desc:"ركلة دائرية عالية بالرجل الخلفية."
+},
+
+/* ---------------------------------------------------------
+   FRONT KICKS / TEEP
+--------------------------------------------------------- */
+
+{
+    id:"lead-front-kick",
+    ar:"Front Kick أمامية",
+    en:"Lead Front Kick",
+    cat:"Front Kick / Teep",
+    level:"أساسي",
+    type:"front-kick",
+    side:"lead",
+    target:"body",
+    desc:"ركلة مستقيمة بالرجل الأمامية لدفع الخصم أو ضرب الجسم."
+},
+
+{
+    id:"rear-front-kick",
+    ar:"Front Kick خلفية",
+    en:"Rear Front Kick",
+    cat:"Front Kick / Teep",
+    level:"أساسي",
+    type:"front-kick",
+    side:"rear",
+    target:"body",
+    desc:"Front Kick بالرجل الخلفية مع رفع الركبة ثم الدفع إلى الأمام."
+},
+
+{
+    id:"lead-teep",
+    ar:"Teep أمامية",
+    en:"Lead Teep",
+    cat:"Front Kick / Teep",
+    level:"أساسي",
+    type:"teep",
+    side:"lead",
+    target:"body",
+    desc:"Teep بالقدم الأمامية للتحكم في المسافة وإبعاد الخصم."
+},
+
+{
+    id:"rear-teep",
+    ar:"Teep خلفية",
+    en:"Rear Teep",
+    cat:"Front Kick / Teep",
+    level:"أساسي",
+    type:"teep",
+    side:"rear",
+    target:"body",
+    desc:"Teep بالرجل الخلفية مع دفع مباشر إلى الجسم."
+},
+
+/* ---------------------------------------------------------
+   SIDE KICKS
+--------------------------------------------------------- */
+
+{
+    id:"lead-side-kick",
+    ar:"Side Kick أمامية",
+    en:"Lead Side Kick",
+    cat:"Side Kicks",
+    level:"متوسط",
+    type:"side-kick",
+    side:"lead",
+    target:"body",
+    desc:"ركلة جانبية بالرجل الأمامية مع إدخال الركبة ثم مد القدم."
+},
+
+{
+    id:"rear-side-kick",
+    ar:"Side Kick خلفية",
+    en:"Rear Side Kick",
+    cat:"Side Kicks",
+    level:"متقدم",
+    type:"side-kick",
+    side:"rear",
+    target:"body",
+    desc:"Side Kick من الرجل الخلفية مع دوران الجسم."
+},
+
+/* ---------------------------------------------------------
+   BACK KICKS
+--------------------------------------------------------- */
+
+{
+    id:"back-kick",
+    ar:"Back Kick",
+    en:"Back Kick",
+    cat:"Back Kicks",
+    level:"متقدم",
+    type:"back-kick",
+    side:"rear",
+    target:"body",
+    desc:"ركلة مباشرة إلى الخلف بعد توجيه الظهر نحو الخصم."
+},
+
+{
+    id:"spinning-back-kick",
+    ar:"Spinning Back Kick",
+    en:"Spinning Back Kick",
+    cat:"ركلات دورانية",
+    level:"متقدم",
+    type:"spinning-back-kick",
+    side:"rear",
+    target:"body",
+    desc:"دوران للخلف ثم مد الرجل بقوة نحو الهدف."
+},
+
+/* ---------------------------------------------------------
+   SPINNING KICKS
+--------------------------------------------------------- */
+
+{
+    id:"spinning-hook-kick",
+    ar:"Spinning Hook Kick",
+    en:"Spinning Hook Kick",
+    cat:"ركلات دورانية",
+    level:"متقدم",
+    type:"spinning-hook",
+    side:"rear",
+    target:"head",
+    desc:"ركلة دورانية يمر فيها الساق حول الهدف قبل الوصول إليه."
+},
+
+{
+    id:"spinning-wheel-kick",
+    ar:"Spinning Wheel Kick",
+    en:"Spinning Wheel Kick",
+    cat:"ركلات دورانية",
+    level:"متقدم",
+    type:"spinning-hook",
+    side:"rear",
+    target:"head",
+    desc:"ركلة دورانية واسعة وعالية تشبه حركة العجلة."
+},
+
+/* ---------------------------------------------------------
+   KNEES
+--------------------------------------------------------- */
+
+{
+    id:"lead-knee",
+    ar:"ركبة أمامية",
+    en:"Lead Knee",
+    cat:"ركب",
+    level:"أساسي",
+    type:"knee",
+    side:"lead",
+    target:"body",
+    desc:"ركبة بالرجل الأمامية إلى الجسم من المسافة القريبة."
+},
+
+{
+    id:"rear-knee",
+    ar:"ركبة خلفية",
+    en:"Rear Knee",
+    cat:"ركب",
+    level:"أساسي",
+    type:"knee",
+    side:"rear",
+    target:"body",
+    desc:"ركبة بالرجل الخلفية مع دفع الورك إلى الأمام."
+},
+
+{
+    id:"straight-knee",
+    ar:"Straight Knee",
+    en:"Straight Knee",
+    cat:"ركب",
+    level:"متوسط",
+    type:"knee",
+    side:"rear",
+    target:"body",
+    desc:"ركبة مباشرة إلى الأمام نحو الجسم."
+},
+
+{
+    id:"diagonal-knee",
+    ar:"Diagonal Knee",
+    en:"Diagonal Knee",
+    cat:"ركب",
+    level:"متوسط",
+    type:"knee",
+    side:"lead",
+    target:"body",
+    desc:"ركبة قطرية نحو الجسم أو الأضلاع."
+},
+
+/* ---------------------------------------------------------
+   ELBOWS
+--------------------------------------------------------- */
+
+{
+    id:"lead-horizontal-elbow",
+    ar:"كوع أفقي أمامي",
+    en:"Lead Horizontal Elbow",
+    cat:"أكواع",
+    level:"متوسط",
+    type:"elbow",
+    side:"lead",
+    target:"head",
+    desc:"كوع أفقي بالذراع الأمامية مع دوران الجسم."
+},
+
+{
+    id:"rear-horizontal-elbow",
+    ar:"كوع أفقي خلفي",
+    en:"Rear Horizontal Elbow",
+    cat:"أكواع",
+    level:"متوسط",
+    type:"elbow",
+    side:"rear",
+    target:"head",
+    desc:"كوع أفقي بالذراع الخلفية."
+},
+
+{
+    id:"lead-upward-elbow",
+    ar:"كوع صاعد أمامي",
+    en:"Lead Upward Elbow",
+    cat:"أكواع",
+    level:"متقدم",
+    type:"elbow",
+    side:"lead",
+    target:"head",
+    desc:"كوع صاعد من الأسفل إلى الأعلى."
+},
+
+{
+    id:"rear-upward-elbow",
+    ar:"كوع صاعد خلفي",
+    en:"Rear Upward Elbow",
+    cat:"أكواع",
+    level:"متقدم",
+    type:"elbow",
+    side:"rear",
+    target:"head",
+    desc:"كوع صاعد بالذراع الخلفية."
+},
+
+/* ---------------------------------------------------------
+   DEFENSE
+--------------------------------------------------------- */
+
+{
+    id:"high-guard",
+    ar:"High Guard",
+    en:"High Guard",
+    cat:"دفاعات",
+    level:"أساسي",
+    type:"guard",
+    side:"both",
+    target:"head",
+    desc:"رفع اليدين للحماية من اللكمات القادمة إلى الرأس."
+},
+
+{
+    id:"long-guard",
+    ar:"Long Guard",
+    en:"Long Guard",
+    cat:"دفاعات",
+    level:"متوسط",
+    type:"guard",
+    side:"lead",
+    target:"head",
+    desc:"Guard طويلة باستخدام اليد الأمامية للتحكم في المسافة."
+},
+
+{
+    id:"shell-guard",
+    ar:"Shell Guard",
+    en:"Shell Guard",
+    cat:"دفاعات",
+    level:"متوسط",
+    type:"shell",
+    side:"both",
+    target:"head",
+    desc:"وضعية دفاعية تغطي الرأس والجسم مع حماية الذقن."
+},
+
+{
+    id:"parry-jab",
+    ar:"صد الـ Jab",
+    en:"Jab Parry",
+    cat:"دفاعات",
+    level:"أساسي",
+    type:"parry",
+    side:"lead",
+    target:"head",
+    desc:"إبعاد لكمة الـ Jab بحركة صغيرة باليد."
+},
+
+{
+    id:"parry-cross",
+    ar:"صد الـ Cross",
+    en:"Cross Parry",
+    cat:"دفاعات",
+    level:"أساسي",
+    type:"parry",
+    side:"rear",
+    target:"head",
+    desc:"صد أو تحويل مسار الـ Cross القادمة."
+},
+
+{
+    id:"lead-leg-check",
+    ar:"Check بالرجل الأمامية",
+    en:"Lead Leg Check",
+    cat:"دفاعات",
+    level:"أساسي",
+    type:"check",
+    side:"lead",
+    target:"leg",
+    desc:"رفع الساق للحماية من الركلات المنخفضة."
+},
+
+{
+    id:"rear-leg-check",
+    ar:"Check بالرجل الخلفية",
+    en:"Rear Leg Check",
+    cat:"دفاعات",
+    level:"أساسي",
+    type:"check",
+    side:"rear",
+    target:"leg",
+    desc:"رفع الرجل الخلفية لاعتراض الركلة."
+},
+
+/* ---------------------------------------------------------
+   SLIPS
+--------------------------------------------------------- */
+
+{
+    id:"slip-left",
+    ar:"Slip إلى اليسار",
+    en:"Slip Left",
+    cat:"Slips",
+    level:"أساسي",
+    type:"slip-left",
+    side:"left",
+    target:"head",
+    desc:"تحريك الرأس والجسم قليلاً إلى اليسار لتجاوز اللكمة."
+},
+
+{
+    id:"slip-right",
+    ar:"Slip إلى اليمين",
+    en:"Slip Right",
+    cat:"Slips",
+    level:"أساسي",
+    type:"slip-right",
+    side:"right",
+    target:"head",
+    desc:"تحريك الرأس والجسم قليلاً إلى اليمين لتجاوز اللكمة."
+},
+
+{
+    id:"double-slip",
+    ar:"Double Slip",
+    en:"Double Slip",
+    cat:"Slips",
+    level:"متوسط",
+    type:"double-slip",
+    side:"both",
+    target:"head",
+    desc:"Slip متتابع في اتجاهين لتجنب أكثر من لكمة."
+},
+
+/* ---------------------------------------------------------
+   ROLLS
+--------------------------------------------------------- */
+
+{
+    id:"roll-left",
+    ar:"Roll إلى اليسار",
+    en:"Roll Left",
+    cat:"Rolls",
+    level:"متوسط",
+    type:"roll-left",
+    side:"left",
+    target:"head",
+    desc:"خفض الجسم والدوران تحت اللكمة المقوسة."
+},
+
+{
+    id:"roll-right",
+    ar:"Roll إلى اليمين",
+    en:"Roll Right",
+    cat:"Rolls",
+    level:"متوسط",
+    type:"roll-right",
+    side:"right",
+    target:"head",
+    desc:"خفض الجسم والدوران إلى الجهة الأخرى."
+},
+
+/* ---------------------------------------------------------
+   FOOTWORK
+--------------------------------------------------------- */
+
+{
+    id:"forward-step",
+    ar:"خطوة للأمام",
+    en:"Forward Step",
+    cat:"Footwork",
+    level:"أساسي",
+    type:"step-forward",
+    side:"both",
+    target:"space",
+    desc:"التقدم خطوة مع الحفاظ على التوازن ووضعية الحراسة."
+},
+
+{
+    id:"back-step",
+    ar:"خطوة للخلف",
+    en:"Back Step",
+    cat:"Footwork",
+    level:"أساسي",
+    type:"step-back",
+    side:"both",
+    target:"space",
+    desc:"الابتعاد خطوة مع المحافظة على التوازن والحراسة."
+},
+
+{
+    id:"left-step",
+    ar:"خطوة إلى اليسار",
+    en:"Left Step",
+    cat:"Footwork",
+    level:"أساسي",
+    type:"step-left",
+    side:"both",
+    target:"space",
+    desc:"التحرك جانبياً إلى اليسار دون فقدان الحراسة."
+},
+
+{
+    id:"right-step",
+    ar:"خطوة إلى اليمين",
+    en:"Right Step",
+    cat:"Footwork",
+    level:"أساسي",
+    type:"step-right",
+    side:"both",
+    target:"space",
+    desc:"التحرك جانبياً إلى اليمين مع الحفاظ على التوازن."
+},
+
+{
+    id:"lead-pivot",
+    ar:"Pivot أمامي",
+    en:"Lead Pivot",
+    cat:"Footwork",
+    level:"متوسط",
+    type:"pivot",
+    side:"lead",
+    target:"space",
+    desc:"الدوران حول الرجل الأمامية لتغيير الزاوية."
+},
+
+{
+    id:"rear-pivot",
+    ar:"Pivot خلفي",
+    en:"Rear Pivot",
+    cat:"Footwork",
+    level:"متوسط",
+    type:"pivot",
+    side:"rear",
+    target:"space",
+    desc:"الدوران وتغيير الزاوية باستخدام الرجل الخلفية."
+},
+
+/* ---------------------------------------------------------
+   COUNTERS
+--------------------------------------------------------- */
+
+{
+    id:"jab-cross-counter",
+    ar:"Jab → Cross كـ Counter",
+    en:"Jab-Cross Counter",
+    cat:"Counters",
+    level:"متوسط",
+    type:"counter",
+    side:"both",
+    target:"head",
+    desc:"الرد بتركيبة Jab-Cross بعد تفادي أو صد هجوم الخصم."
+},
+
+{
+    id:"slip-cross",
+    ar:"Slip → Cross",
+    en:"Slip-Cross",
+    cat:"Counters",
+    level:"متوسط",
+    type:"counter",
+    side:"rear",
+    target:"head",
+    desc:"Slip ثم الرد مباشرة بالـ Cross."
+},
+
+{
+    id:"parry-cross-counter",
+    ar:"Parry → Cross",
+    en:"Parry-Cross Counter",
+    cat:"Counters",
+    level:"متوسط",
+    type:"counter",
+    side:"rear",
+    target:"head",
+    desc:"صد اللكمة ثم الرد بالـ Cross."
+},
+
+{
+    id:"check-return",
+    ar:"Check → Return",
+    en:"Check and Return",
+    cat:"Counters",
+    level:"متوسط",
+    type:"counter-kick",
+    side:"rear",
+    target:"leg",
+    desc:"رفع الساق لاعتراض الركلة ثم الرد بركلة."
+},
+
+/* ---------------------------------------------------------
+   FEINTS
+--------------------------------------------------------- */
+
+{
+    id:"jab-feint",
+    ar:"تمويه Jab",
+    en:"Jab Feint",
+    cat:"Feints",
+    level:"أساسي",
+    type:"feint",
+    side:"lead",
+    target:"head",
+    desc:"حركة توحي ببدء الـ Jab بهدف إجبار الخصم على رد فعل."
+},
+
+{
+    id:"level-change-feint",
+    ar:"تمويه تغيير المستوى",
+    en:"Level Change Feint",
+    cat:"Feints",
+    level:"متوسط",
+    type:"level-feint",
+    side:"both",
+    target:"body",
+    desc:"تغيير مستوى الجسم لإيهام الخصم بهجوم نحو الجسم."
+},
+
+{
+    id:"kick-feint",
+    ar:"تمويه الركلة",
+    en:"Kick Feint",
+    cat:"Feints",
+    level:"متوسط",
+    type:"kick-feint",
+    side:"rear",
+    target:"leg",
+    desc:"إظهار بداية حركة الركلة دون إكمالها."
+},
+
+/* ---------------------------------------------------------
+   COMBINATIONS
+--------------------------------------------------------- */
+
+{
+    id:"one-two",
+    ar:"1-2",
+    en:"One-Two",
+    cat:"Combinations",
+    level:"أساسي",
+    type:"combo",
+    side:"both",
+    target:"head",
+    desc:"Jab ثم Cross."
+},
+
+{
+    id:"one-two-hook",
+    ar:"1-2-3",
+    en:"One-Two-Three",
+    cat:"Combinations",
+    level:"أساسي",
+    type:"combo",
+    side:"both",
+    target:"head",
+    desc:"Jab ثم Cross ثم Lead Hook."
+},
+
+{
+    id:"one-two-low",
+    ar:"1-2 → Low Kick",
+    en:"Jab-Cross-Low Kick",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo-kick",
+    side:"both",
+    target:"leg",
+    desc:"Jab ثم Cross ثم Low Kick بالرجل الخلفية."
+},
+
+{
+    id:"jab-low",
+    ar:"Jab → Low Kick",
+    en:"Jab-Low Kick",
+    cat:"Combinations",
+    level:"أساسي",
+    type:"combo-kick",
+    side:"both",
+    target:"leg",
+    desc:"Jab لفتح المسافة ثم Low Kick."
+},
+
+{
+    id:"cross-hook-low",
+    ar:"Cross → Hook → Low Kick",
+    en:"Cross-Hook-Low Kick",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo-kick",
+    side:"both",
+    target:"leg",
+    desc:"Cross ثم Hook ثم Low Kick."
+},
+
+{
+    id:"jab-cross-body-hook",
+    ar:"Jab → Cross → Body Hook",
+    en:"Jab-Cross-Body Hook",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo",
+    side:"both",
+    target:"body",
+    desc:"تركيبة تنقل الهجوم من الرأس إلى الجسم."
+},
+
+{
+    id:"jab-cross-high-kick",
+    ar:"Jab → Cross → High Kick",
+    en:"Jab-Cross-High Kick",
+    cat:"Combinations",
+    level:"متقدم",
+    type:"combo-kick",
+    side:"both",
+    target:"head",
+    desc:"Jab ثم Cross لفتح الحراسة ثم High Kick."
+},
+
+{
+    id:"jab-teep",
+    ar:"Jab → Teep",
+    en:"Jab-Teep",
+    cat:"Combinations",
+    level:"أساسي",
+    type:"combo-kick",
+    side:"both",
+    target:"body",
+    desc:"Jab ثم Teep للتحكم في المسافة."
+},
+
+{
+    id:"jab-cross-rear-knee",
+    ar:"Jab → Cross → Rear Knee",
+    en:"Jab-Cross-Rear Knee",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo-knee",
+    side:"both",
+    target:"body",
+    desc:"Jab ثم Cross ثم ركبة خلفية."
+},
+
+{
+    id:"hook-cross-hook",
+    ar:"Hook → Cross → Hook",
+    en:"Hook-Cross-Hook",
+    cat:"Combinations",
+    level:"متوسط",
+    type:"combo",
+    side:"both",
+    target:"head",
+    desc:"تركيبة ثلاثية من اللكمات المقوسة والمستقيمة."
+}
+
+];
+
+
+/* =========================================================
+   CATEGORY STATE
+========================================================= */
+
+let activeCategory = "الكل";
+
+
+/* =========================================================
+   RENDER CATEGORIES
+========================================================= */
+
+function renderCategories() {
+
+    const container =
+        document.getElementById("moveCategories");
+
+    if (!container) return;
+
+
+    const categories = [
+
+        "الكل",
+
+        ...new Set(
+            MOVES.map(move => move.cat)
+        )
+
+    ];
+
+
+    container.innerHTML =
+        categories
+            .map(category => `
+
+                <button
+                    class="chip ${
+                        activeCategory === category
+                            ? "active"
+                            : ""
+                    }"
+                    onclick="setMoveCategory('${escapeHTML(category)}')"
+                >
+                    ${escapeHTML(category)}
+                </button>
+
+            `)
+            .join("");
+
+}
+
+
+function setMoveCategory(category) {
+
+    activeCategory = category;
+
+    renderCategories();
+    renderMoves();
+
+}
+
+
+/* =========================================================
+   SVG FIGHTER
+========================================================= */
+
+function poseSVG(
+    move,
+    animated = false,
+    active = false
+) {
+
+    const type =
+        move?.type || "guard";
+
+
+    let animationClass = "";
+
+
+    if (animated) {
+
+        if (
+            type.includes("punch") ||
+            type === "hook" ||
+            type === "uppercut" ||
+            type === "overhand" ||
+            type === "body-punch" ||
+            type === "body-hook" ||
+            type === "body-uppercut"
+        ) {
+
+            animationClass =
+                move.side === "lead"
+                    ? "animate-punch-left"
+                    : "animate-punch-right";
+
+        }
+
+        else if (
+            type.includes("kick") ||
+            type === "teep" ||
+            type === "front-kick" ||
+            type === "side-kick"
+        ) {
+
+            animationClass = "animate-kick";
+
+        }
+
+        else if (type === "knee") {
+
+            animationClass = "animate-knee";
+
+        }
+
+        else if (type === "slip-left") {
+
+            animationClass = "animate-slip-left";
+
+        }
+
+        else if (type === "slip-right") {
+
+            animationClass = "animate-slip-right";
+
+        }
+
+        else if (
+            type === "roll-left" ||
+            type === "roll-right"
+        ) {
+
+            animationClass = "animate-roll";
+
+        }
+
+    }
+
+
+    const bodyTransform =
+        active
+            ? "translate(0,-2)"
+            : "translate(0,0)";
+
+
+    let leftArm =
+        "M94 77 L70 93 L57 111";
+
+
+    let rightArm =
+        "M106 77 L130 92 L143 110";
+
+
+    let leftLeg =
+        "M91 112 L78 145 L68 168";
+
+
+    let rightLeg =
+        "M109 112 L122 145 L134 168";
+
+
+    let arrow = "";
+
+
+    /* -----------------------------------------------
+       PUNCH
+    ------------------------------------------------ */
+
+    if (
+        type === "punch" ||
+        type === "body-punch"
+    ) {
+
+        if (move.side === "lead") {
+
+            leftArm =
+                "M94 77 L73 87 L42 75";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M48 66 L28 61"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        } else {
+
+            rightArm =
+                "M106 77 L132 86 L163 70";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M150 61 L173 54"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+    }
+
+
+    /* -----------------------------------------------
+       HOOK
+    ------------------------------------------------ */
+
+    if (
+        type === "hook" ||
+        type === "body-hook"
+    ) {
+
+        if (move.side === "lead") {
+
+            leftArm =
+                "M94 77 L74 82 L55 101 L38 97";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M41 88 Q28 77 39 67"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        } else {
+
+            rightArm =
+                "M106 77 L126 82 L145 101 L162 97";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M159 88 Q174 77 163 67"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+    }
+
+
+    /* -----------------------------------------------
+       UPPERCUT
+    ------------------------------------------------ */
+
+    if (
+        type === "uppercut" ||
+        type === "body-uppercut"
+    ) {
+
+        if (move.side === "lead") {
+
+            leftArm =
+                "M94 77 L72 97 L62 82";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M61 94 Q50 77 62 62"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        } else {
+
+            rightArm =
+                "M106 77 L128 97 L138 82";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M139 94 Q150 77 138 62"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+    }
+
+
+    /* -----------------------------------------------
+       KICK
+    ------------------------------------------------ */
+
+    if (
+        type.includes("kick") ||
+        type === "teep"
+    ) {
+
+        if (
+            type === "low-kick" ||
+            type === "inside-low" ||
+            type === "outside-low"
+        ) {
+
+            if (move.side === "lead") {
+
+                leftLeg =
+                    "M91 112 L76 140 L45 132";
+
+            } else {
+
+                rightLeg =
+                    "M109 112 L123 140 L155 132";
+
+            }
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M50 121 L25 115"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+        else if (
+            type === "high-kick"
+        ) {
+
+            if (move.side === "lead") {
+
+                leftLeg =
+                    "M91 112 L70 127 L53 70";
+
+            } else {
+
+                rightLeg =
+                    "M109 112 L130 127 L147 70";
+
+            }
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M53 78 Q39 58 25 50"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+        else if (
+            type === "front-kick" ||
+            type === "teep"
+        ) {
+
+            if (move.side === "lead") {
+
+                leftLeg =
+                    "M91 112 L70 143 L39 143";
+
+            } else {
+
+                rightLeg =
+                    "M109 112 L130 143 L161 143";
+
+            }
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M41 132 L18 132"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+        else if (
+            type === "side-kick"
+        ) {
+
+            if (move.side === "lead") {
+
+                leftLeg =
+                    "M91 112 L70 140 L32 125";
+
+            } else {
+
+                rightLeg =
+                    "M109 112 L130 140 L168 125";
+
+            }
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M35 114 L14 104"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+        else {
+
+            rightLeg =
+                "M109 112 L125 135 L153 104";
+
+            arrow = `
+                <path
+                    class="arrow"
+                    d="M150 95 Q174 82 171 62"
+                    marker-end="url(#arrowHead)"
+                />
+            `;
+
+        }
+
+    }
+
+
+    /* -----------------------------------------------
+       KNEE
+    ------------------------------------------------ */
+
+    if (type === "knee") {
+
+        if (move.side === "lead") {
+
+            leftLeg =
+                "M91 112 L74 139 L105 91";
+
+        } else {
+
+            rightLeg =
+                "M109 112 L126 139 L95 91";
+
+        }
+
+        arrow = `
+            <path
+                class="arrow"
+                d="M104 90 Q118 74 124 59"
+                marker-end="url(#arrowHead)"
+            />
+        `;
+
+    }
+
+
+    /* -----------------------------------------------
+       SLIP
+    ------------------------------------------------ */
+
+    if (
+        type === "slip-left"
+    ) {
+
+        arrow = `
+            <path
+                class="arrow"
+                d="M93 48 Q67 55 61 76"
+                marker-end="url(#arrowHead)"
+            />
+        `;
+
+    }
+
+
+    if (
+        type === "slip-right"
+    ) {
+
+        arrow = `
+            <path
+                class="arrow"
+                d="M107 48 Q133 55 139 76"
+                marker-end="url(#arrowHead)"
+            />
+        `;
+
+    }
+
+
+    /* -----------------------------------------------
+       ROLL
+    ------------------------------------------------ */
+
+    if (
+        type === "roll-left" ||
+        type === "roll-right"
+    ) {
+
+        arrow = `
+            <path
+                class="arrow"
+                d="M55 44 Q95 12 138 44"
+                marker-end="url(#arrowHead)"
+            />
+        `;
+
+    }
+
+
+    /* -----------------------------------------------
+       PIVOT
+    ------------------------------------------------ */
+
+    if (type === "pivot") {
+
+        arrow = `
+            <path
+                class="pivot"
+                d="M68 164 A55 55 0 0 1 145 164"
+                marker-end="url(#arrowHeadBlue)"
+            />
+        `;
+
+    }
+
+
+    return `
+
+    <svg
+        class="fighter-svg"
+        viewBox="0 0 190 185"
+        aria-label="${escapeHTML(move.ar)}"
+    >
+
+        <defs>
+
+            <marker
+                id="arrowHead"
+                markerWidth="8"
+                markerHeight="8"
+                refX="6"
+                refY="3"
+                orient="auto"
+            >
+
+                <path
+                    d="M0,0 L0,6 L7,3 z"
+                    fill="#7654e8"
+                />
+
+            </marker>
+
+
+            <marker
+                id="arrowHeadBlue"
+                markerWidth="8"
+                markerHeight="8"
+                refX="6"
+                refY="3"
+                orient="auto"
+            >
+
+                <path
+                    d="M0,0 L0,6 L7,3 z"
+                    fill="#4e8ee8"
+                />
+
+            </marker>
+
+        </defs>
+
+
+        <g
+            transform="${bodyTransform}"
+            class="${animationClass}"
+        >
+
+            <!-- head -->
+
+            <circle
+                class="head"
+                cx="100"
+                cy="42"
+                r="17"
+            />
+
+            <!-- hair -->
+
+            <path
+                class="hair"
+                d="
+                    M84 41
+                    Q84 20 101 20
+                    Q117 21 117 40
+                    L111 34
+                    Q101 27 88 36
+                    Z
+                "
+            />
+
+
+            <!-- neck -->
+
+            <path
+                class="skin"
+                d="M94 56 L94 65"
+            />
+
+            <path
+                class="skin"
+                d="M106 56 L106 65"
+            />
+
+
+            <!-- body -->
+
+            <path
+                class="body"
+                d="
+                    M82 63
+                    Q100 57 118 63
+                    L127 106
+                    Q116 116 100 116
+                    Q84 116 73 106
+                    Z
+                "
+            />
+
+
+            <!-- shorts -->
+
+            <path
+                class="shorts"
+                d="
+                    M74 105
+                    Q100 114 126 105
+                    L132 126
+                    Q116 132 101 125
+                    Q84 132 68 126
+                    Z
+                "
+            />
+
+
+            <!-- arms -->
+
+            <path
+                class="skin animated-part"
+                d="${leftArm}"
+            />
+
+            <path
+                class="skin animated-part"
+                d="${rightArm}"
+            />
+
+
+            <!-- gloves -->
+
+            <circle
+                class="glove"
+                cx="${
+                    move.side === "lead" &&
+                    (
+                        type === "punch" ||
+                        type === "hook" ||
+                        type === "uppercut"
+                    )
+                    ? "40"
+                    : "61"
+                }"
+                cy="${
+                    move.side === "lead" &&
+                    (
+                        type === "punch" ||
+                        type === "hook" ||
+                        type === "uppercut"
+                    )
+                    ? "75"
+                    : "111"
+                }"
+                r="7"
+            />
+
+            <circle
+                class="glove"
+                cx="${
+                    move.side === "rear" &&
+                    (
+                        type === "punch" ||
+                        type === "hook" ||
+                        type === "uppercut"
+                    )
+                    ? "162"
+                    : "143"
+                }"
+                cy="${
+                    move.side === "rear" &&
+                    (
+                        type === "punch" ||
+                        type === "hook" ||
+                        type === "uppercut"
+                    )
+                    ? "70"
+                    : "110"
+                }"
+                r="7"
+            />
+
+
+            <!-- legs -->
+
+            <path
+                class="leg animated-part"
+                d="${leftLeg}"
+            />
+
+            <path
+                class="leg animated-part"
+                d="${rightLeg}"
+            />
+
+
+            <!-- feet -->
+
+            <path
+                class="skin"
+                d="M68 168 L55 170"
+            />
+
+            <path
+                class="skin"
+                d="M134 168 L147 170"
+            />
+
+
+            ${arrow}
+
+
+            ${
+                move.target === "head"
+                    ? `
+                        <circle
+                            class="target"
+                            cx="100"
+                            cy="42"
+                            r="23"
+                        />
+                    `
+                    : ""
+            }
+
+
+            ${
+                move.target === "body" ||
+                move.target === "ribs"
+                    ? `
+                        <ellipse
+                            class="target"
+                            cx="100"
+                            cy="91"
+                            rx="30"
+                            ry="25"
+                        />
+                    `
+                    : ""
+            }
+
+
+            ${
+                move.target === "leg" ||
+                move.target === "inner-thigh" ||
+                move.target === "outer-thigh"
+                    ? `
+                        <ellipse
+                            class="target"
+                            cx="100"
+                            cy="130"
+                            rx="38"
+                            ry="16"
+                        />
+                    `
+                    : ""
+            }
+
+        </g>
+
+    </svg>
+
+    `;
+
+}
+
+
+/* =========================================================
+   RENDER MOVES
+========================================================= */
+
+function renderMoves() {
+
+    const grid =
+        document.getElementById("movesGrid");
+
+    if (!grid) return;
+
+
+    const search =
+        (
+            document
+                .getElementById("moveSearch")
+                ?.value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const level =
+        document
+            .getElementById("levelFilter")
+            ?.value || "all";
+
+
+    let list =
+        MOVES.filter(move => {
+
+            const categoryOK =
+                activeCategory === "الكل" ||
+                move.cat === activeCategory;
+
+
+            const levelOK =
+                level === "all" ||
+                move.level === level;
+
+
+            const searchOK =
+                !search ||
+                move.ar.toLowerCase().includes(search) ||
+                move.en.toLowerCase().includes(search) ||
+                move.cat.toLowerCase().includes(search);
+
+
+            return (
+                categoryOK &&
+                levelOK &&
+                searchOK
+            );
+
+        });
+
+
+    if (!list.length) {
+
+        grid.innerHTML = `
+
+            <div
+                class="empty-state"
+                style="grid-column:1/-1;"
+            >
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    ما لقيتش الحركة
+                </h3>
+
+                <p>
+                    جربي كلمة أخرى أو اختاري تصنيفاً مختلفاً.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        list
+            .map(move => {
+
+                const learned =
+                    !!state.learned[move.id];
+
+
+                return `
+
+                    <article
+                        class="move-card"
+                        data-id="${escapeHTML(move.id)}"
+                    >
+
+                        <div class="move-visual">
+
+                            <span class="move-level">
+                                ${escapeHTML(move.level)}
+                            </span>
+
+                            ${poseSVG(move,true)}
+
+                        </div>
+
+
+                        <div class="move-info">
+
+                            <h3>
+                                ${escapeHTML(move.ar)}
+                            </h3>
+
+                            <div class="english">
+                                ${escapeHTML(move.en)}
+                            </div>
+
+                            <p>
+                                ${escapeHTML(move.desc)}
+                            </p>
+
+
+                            <div class="move-actions">
+
+                                <button
+                                    style="
+                                        background:#eeeaff;
+                                        color:#5b3ec4;
+                                    "
+                                    onclick="openMove('${escapeHTML(move.id)}')"
+                                >
+                                    👁️ الحركة
+                                </button>
+
+
+                                <button
+                                    style="
+                                        background:#e8f8ef;
+                                        color:#16804d;
+                                    "
+                                    onclick="addMoveToBuilder('${escapeHTML(move.id)}')"
+                                >
+                                    ＋ Series
+                                </button>
+
+                            </div>
+
+
+                            ${
+                                learned
+                                    ? `
+                                        <div
+                                            style="
+                                                margin-top:8px;
+                                                color:#16804d;
+                                                font-size:9px;
+                                                font-weight:900;
+                                            "
+                                        >
+                                            ✓ تعلمتها
+                                        </div>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   OPEN MOVE
+========================================================= */
+
+function getMove(id) {
+
+    return MOVES.find(
+        move => move.id === id
+    );
+
+}
+
+
+function openMove(id) {
+
+    const move =
+        getMove(id);
+
+    if (!move) return;
+
+
+    document.getElementById(
+        "modalMoveName"
+    ).textContent =
+        move.ar;
+
+
+    document.getElementById(
+        "modalMoveVisual"
+    ).innerHTML =
+        poseSVG(move,true,true);
+
+
+    document.getElementById(
+        "modalMoveMeta"
+    ).innerHTML = `
+
+        <span class="meta-pill">
+            🇬🇧 ${escapeHTML(move.en)}
+        </span>
+
+        <span class="meta-pill">
+            ${escapeHTML(move.cat)}
+        </span>
+
+        <span class="meta-pill">
+            ${escapeHTML(move.level)}
+        </span>
+
+        <span class="meta-pill">
+            🎯 ${escapeHTML(move.target)}
+        </span>
+
+        <span class="meta-pill">
+            🦵 ${escapeHTML(move.side)}
+        </span>
+
+    `;
+
+
+    document.getElementById(
+        "modalMoveDescription"
+    ).textContent =
+        move.desc;
+
+
+    document.getElementById(
+        "modalAddSeriesBtn"
+    ).onclick = () => {
+
+        addMoveToBuilder(move.id);
+
+        closeModal("moveModal");
+
+        showToast(
+            "تمت إضافة الحركة للـ Series 🔥"
+        );
+
+    };
+
+
+    document.getElementById(
+        "modalLearnBtn"
+    ).onclick = () => {
+
+        toggleLearned(move.id);
+
+    };
+
+
+    openModal("moveModal");
+
+}
+
+
+/* =========================================================
+   LEARNED
+========================================================= */
+
+function toggleLearned(id) {
+
+    state.learned[id] =
+        !state.learned[id];
+
+    saveState();
+
+    renderMoves();
+
+    showToast(
+        state.learned[id]
+            ? "✓ تسجلت كحركة تعلمتيها"
+            : "تم إلغاء علامة التعلم"
+    );
+
+}
+
+
+/* =========================================================
+   SERIES BUILDER STATE
+========================================================= */
+
+let builder = [];
+
+let seriesSpeed = 1;
+
+let seriesTimer = null;
+
+let seriesPlaying = false;
+
+let seriesIndex = 0;
+
+
+/* =========================================================
+   ADD TO BUILDER
+========================================================= */
+
+function addMoveToBuilder(id) {
+
+    const move =
+        getMove(id);
+
+    if (!move) return;
+
+
+    builder.push(id);
+
+
+    saveBuilderSession();
+
+    renderBuilder();
+
+    showToast(
+        `＋ ${move.ar}`
+    );
+
+
+    showSection("series");
+
+}
+
+
+function removeBuilderItem(index) {
+
+    if (
+        index < 0 ||
+        index >= builder.length
+    ) return;
+
+
+    builder.splice(index,1);
+
+    saveBuilderSession();
+
+    renderBuilder();
+
+}
+
+
+function clearBuilder() {
+
+    stopSeriesPlayback();
+
+    builder = [];
+
+    saveBuilderSession();
+
+    renderBuilder();
+
+    showToast(
+        "تم مسح الـ Series الحالية"
+    );
+
+}
+
+
+/* =========================================================
+   BUILDER SESSION
+========================================================= */
+
+function saveBuilderSession() {
+
+    sessionStorage.setItem(
+        "boxing_builder",
+        JSON.stringify(builder)
+    );
+
+}
+
+
+function loadBuilderSession() {
+
+    try {
+
+        const saved =
+            sessionStorage.getItem(
+                "boxing_builder"
+            );
+
+        if (saved) {
+
+            const parsed =
+                JSON.parse(saved);
+
+            if (Array.isArray(parsed)) {
+
+                builder = parsed.filter(
+                    id => !!getMove(id)
+                );
+
+            }
+
+        }
+
+    } catch (error) {
+
+        builder = [];
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER BUILDER
+========================================================= */
+
+function renderBuilder() {
+
+    const strip =
+        document.getElementById(
+            "builderStrip"
+        );
+
+    if (!strip) return;
+
+
+    if (!builder.length) {
+
+        strip.innerHTML = `
+
+            <div class="series-empty">
+
+                لم تضيفي أي حركة بعد 🥊
+
+                <br>
+
+                اذهبي إلى قسم الحركات واضغطي
+                <strong>＋ Series</strong>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    strip.innerHTML =
+        builder
+            .map((id,index) => {
+
+                const move =
+                    getMove(id);
+
+                if (!move) return "";
+
+
+                return `
+
+                    <div class="series-mini-card">
+
+                        <button
+                            class="remove-mini"
+                            onclick="removeBuilderItem(${index})"
+                        >
+                            ×
+                        </button>
+
+
+                        <div class="mini-visual">
+
+                            ${poseSVG(move,true)}
+
+                        </div>
+
+
+                        <div class="mini-name">
+
+                            ${index + 1}.
+                            ${escapeHTML(move.ar)}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   SERIES SPEED
+========================================================= */
+
+function setSeriesSpeed(
+    speed,
+    button
+) {
+
+    seriesSpeed = speed;
+
+
+    document
+        .querySelectorAll(
+            ".series-speed button"
+        )
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    if (button) {
+
+        button.classList.add("active");
+
+    }
+
+
+    if (seriesPlaying) {
+
+        playCurrentSeries();
+
+    }
+
+}
+
+
+/* =========================================================
+   PLAY SERIES
+========================================================= */
+
+function playCurrentSeries() {
+
+    if (!builder.length) {
+
+        showToast(
+            "أضيفي حركات للـ Series أولاً 🥊"
+        );
+
+        return;
+
+    }
+
+
+    stopSeriesPlayback();
+
+
+    const player =
+        document.getElementById(
+            "seriesPlayer"
+        );
+
+
+    player.classList.remove("hidden");
+
+
+    seriesPlaying = true;
+
+    seriesIndex = 0;
+
+
+    showSeriesFrame();
+
+
+    const duration =
+        1500 / seriesSpeed;
+
+
+    seriesTimer =
+        setInterval(() => {
+
+            seriesIndex++;
+
+
+            if (
+                seriesIndex >=
+                builder.length
+            ) {
+
+                seriesIndex = 0;
+
+            }
+
+
+            showSeriesFrame();
+
+        },duration);
+
+}
+
+
+function showSeriesFrame() {
+
+    const id =
+        builder[seriesIndex];
+
+    const move =
+        getMove(id);
+
+    if (!move) return;
+
+
+    document.getElementById(
+        "seriesAnimationVisual"
+    ).innerHTML =
+        poseSVG(
+            move,
+            true,
+            true
+        );
+
+
+    document.getElementById(
+        "seriesCurrentLabel"
+    ).textContent =
+
+        `${seriesIndex + 1} / ${builder.length} — ${move.en}`;
+
+}
+
+
+function stopSeriesPlayback() {
+
+    if (seriesTimer) {
+
+        clearInterval(seriesTimer);
+
+        seriesTimer = null;
+
+    }
+
+
+    seriesPlaying = false;
+
+}
+
+
+/* =========================================================
+   SAVE SERIES
+========================================================= */
+
+function saveCurrentSeries() {
+
+    if (!builder.length) {
+
+        showToast(
+            "لا توجد حركات للحفظ"
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "seriesNameInput"
+    ).value =
+        `Series ${String(
+            state.series.length + 1
+        ).padStart(2,"0")}`;
+
+
+    openModal(
+        "saveSeriesModal"
+    );
+
+}
+
+
+function confirmSaveSeries() {
+
+    const input =
+        document.getElementById(
+            "seriesNameInput"
+        );
+
+
+    const name =
+        input.value.trim();
+
+
+    if (!name) {
+
+        showToast(
+            "اكتبي اسم الـ Series"
+        );
+
+        return;
+
+    }
+
+
+    const newSeries = {
+
+        id:
+            "series_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .slice(2,8),
+
+        name,
+
+        moves: [...builder],
+
+        createdAt:
+            new Date().toISOString()
+
+    };
+
+
+    state.series.unshift(
+        newSeries
+    );
+
+
+    saveState();
+
+    closeModal(
+        "saveSeriesModal"
+    );
+
+
+    renderSavedSeries();
+
+    renderTracking();
+
+    updateHomeStats();
+
+
+    showToast(
+        "💾 تم حفظ الـ Series"
+    );
+
+}
+
+
+/* =========================================================
+   SAVED SERIES
+========================================================= */
+
+function renderSavedSeries() {
+
+    const container =
+        document.getElementById(
+            "savedSeries"
+        );
+
+    if (!container) return;
+
+
+    if (!state.series.length) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🔥
+                </div>
+
+                <h3>
+                    لا توجد Series محفوظة
+                </h3>
+
+                <p>
+                    ابنِي أول Series من قسم الحركات.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        state.series
+            .map(series => {
+
+                const rating =
+                    state.ratings[series.id] ||
+                    {};
+
+
+                return `
+
+                    <article
+                        class="saved-series-card"
+                    >
+
+                        <div
+                            class="saved-series-header"
+                        >
+
+                            <div>
+
+                                <h3>
+                                    🔥
+                                    ${escapeHTML(series.name)}
+                                </h3>
+
+                                <small>
+                                    ${series.moves.length}
+                                    حركات
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="saved-series-visuals"
+                        >
+
+                            ${
+
+                                series.moves
+                                    .map(id => {
+
+                                        const move =
+                                            getMove(id);
+
+                                        if (!move)
+                                            return "";
+
+                                        return `
+
+                                            <div
+                                                class="saved-mini"
+                                                title="${escapeHTML(move.ar)}"
+                                            >
+                                                ${poseSVG(
+                                                    move,
+                                                    true
+                                                )}
+                                            </div>
+
+                                        `;
+
+                                    })
+                                    .join("")
+
+                            }
+
+                        </div>
+
+
+                        <div
+                            class="saved-series-actions"
+                        >
+
+                            <button
+                                class="btn btn-primary btn-small"
+                                onclick="playSavedSeries('${series.id}')"
+                            >
+                                ▶️ تشغيل
+                            </button>
+
+
+                            <button
+                                class="btn btn-secondary btn-small"
+                                onclick="loadSavedSeries('${series.id}')"
+                            >
+                                ✏️ تعديل
+                            </button>
+
+
+                            <button
+                                class="btn btn-success btn-small"
+                                onclick="openRating('${series.id}')"
+                            >
+                                📈 تقييم
+                            </button>
+
+
+                            <button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteSeries('${series.id}')"
+                            >
+                                🗑️
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   PLAY SAVED SERIES
+========================================================= */
+
+function playSavedSeries(id) {
+
+    const series =
+        state.series.find(
+            item => item.id === id
+        );
+
+
+    if (!series) return;
+
+
+    builder =
+        [...series.moves];
+
+    saveBuilderSession();
+
+    renderBuilder();
+
+    showSection("series");
+
+    setTimeout(() => {
+
+        playCurrentSeries();
+
+    },250);
+
+}
+
+
+/* =========================================================
+   LOAD SAVED SERIES
+========================================================= */
+
+function loadSavedSeries(id) {
+
+    const series =
+        state.series.find(
+            item => item.id === id
+        );
+
+
+    if (!series) return;
+
+
+    stopSeriesPlayback();
+
+    builder =
+        [...series.moves];
+
+    saveBuilderSession();
+
+    renderBuilder();
+
+    showToast(
+        "تم تحميل الـ Series للتعديل ✏️"
+    );
+
+}
+
+
+/* =========================================================
+   DELETE SERIES
+========================================================= */
+
+function deleteSeries(id) {
+
+    const series =
+        state.series.find(
+            item => item.id === id
+        );
+
+
+    if (!series) return;
+
+
+    const confirmed =
+        confirm(
+            `حذف "${series.name}"؟`
+        );
+
+
+    if (!confirmed) return;
+
+
+    state.series =
+        state.series.filter(
+            item => item.id !== id
+        );
+
+
+    delete state.ratings[id];
+
+
+    saveState();
+
+    renderSavedSeries();
+
+    renderTracking();
+
+    updateHomeStats();
+
+    showToast(
+        "تم حذف الـ Series"
+    );
+
+}
+
+
+/* =========================================================
+   HOME ANIMATION
+========================================================= */
+
+let homeSpeed = 1;
+
+let homeAnimationIndex = 0;
+
+
+function setHomeSpeed(
+    speed,
+    button
+) {
+
+    homeSpeed = speed;
+
+
+    document
+        .querySelectorAll(
+            "#section-home .speed-btn"
+        )
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    renderHomeAnimation();
+
+}
+
+
+function renderHomeAnimation() {
+
+    const visual =
+        document.getElementById(
+            "homeAnimationVisual"
+        );
+
+    if (!visual) return;
+
+
+    const move =
+        MOVES[
+            homeAnimationIndex %
+            MOVES.length
         ];
 
-        // Expand database to 200+ moves with variations
-        const additionalMoves = [
-            // More punches
-            ...Array.from({length: 40}, (_, i) => ({
-                id: `punch-var-${i}`,
-                arabic: [`ضربة سريعة ${i+1}`, `مجموعة ${i+1}`, `هجوم ${i+1}`][i%3] + " #" + (i+1),
-                english: `Punch Variation ${i+1}`,
-                category: "ضربات البوكس",
-                level: ["مبتدئ", "متوسط", "متقدم", "محترف"][i%4],
-                visual: {type: ["jab", "cross", "hook", "uppercut"][i%4], side: i%2==0?"left":"right"}
-            })),
-            // More kicks
-            ...Array.from({length: 50}, (_, i) => ({
-                id: `kick-var-${i}`,
-                arabic: [`ركلة ${i+1}`, `تقنية ${i+1}`, `ضربة قدم ${i+1}`][i%3] + " #" + (i+1),
-                english: `Kick Variation ${i+1}`,
-                category: "ضربات الأرجل",
-                level: ["مبتئئ", "متوسط", "متقدم", "محترف"][i%4],
-                visual: {type: ["front-kick", "side-kick", "roundhouse-kick", "spinning-kick"][i%4], side: i%2==0?"left":"right"}
-            })),
-            // More defenses
-            ...Array.from({length: 30}, (_, i) => ({
-                id: `defense-var-${i}`,
-                arabic: [`دفاع ${i+1}`, `حماية ${i+1}`, `تجنب ${i+1}`][i%3] + " #" + (i+1),
-                english: `Defense Technique ${i+1}`,
-                category: "حماية نفس",
-                level: ["مبتئئ", "متوسط", "متقدم"][i%3],
-                visual: {type: ["slip", "block", "parry", "duck"][i%4], direction: i%2==0?"left":"right"}
-            }))
-        ];
-        
-        movementDB.push(...additionalMoves);
-        
-        // ==================== STATE MANAGEMENT ====================
-        let currentCategory = "all";
-        let selectedMoves = [];
-        let seriesData = JSON.parse(localStorage.getItem('seriesData')) || [];
-        let trackingData = JSON.parse(localStorage.getItem('trackingData')) || {};
-        let gymData = JSON.parse(localStorage.getItem('gymData')) || {
-            schedule: [
-                {day: "الإثنين", time: "21:00 → 22:30", attended: false},
-                {day: "الأربعاء", time: "21:00 → 22:30", attended: false},
-                {day: "الجمعة", time: "21:00 → 22:30", attended: false}
-            ],
-            payments: {}
-        };
-        let customNames = JSON.parse(localStorage.getItem('customNames')) || {};
-        let animationSpeed = 1;
-        let isAnimating = true;
-        
-        // ==================== INITIALIZATION ====================
-        window.onload = function() {
-            renderCategories();
-            renderCards();
-            renderMoveSelector();
-            renderDictionary();
-            renderSavedSeries();
-            renderTracking();
-            renderSchedule();
-            renderPaymentTracker();
-            
-            // Set subscription start date
-            const savedDate = localStorage.getItem('subscriptionStart');
-            if(savedDate) {
-                document.getElementById('subscriptionStart').value = savedDate;
-            }
-        };
-        
-        // ==================== NAVIGATION ====================
-        function showSection(sectionId) {
-            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(`${sectionId}-section`).classList.add('active');
-            event.currentTarget.classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-        
-        // ==================== CATEGORY FILTER ====================
-        function renderCategories() {
-            const categories = ["all", "ضربات الأرجل", "ضربات البوكس", "ضربات اليد العادية", "ضربات الوجه", "حماية نفس", "انحناءات وهروب"];
-            const filterDiv = document.getElementById('categoryFilter');
-            
-            let html = '';
-            categories.forEach(cat => {
-                html += `<button class="category-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === 'all' ? 'الكل' : cat}</button>`;
-            });
-            filterDiv.innerHTML = html;
-        }
-        
-        function filterByCategory(category) {
-            currentCategory = category;
-            renderCategories();
-            renderCards();
-        }
-        
-        // ==================== CARD RENDERING ====================
-        function renderCards() {
-            const filtered = currentCategory === 'all' 
-                ? movementDB 
-                : movementDB.filter(m => m.category === currentCategory);
-            
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = filtered.map((move, index) => `
-                <div class="card" onclick="addToSeries('${move.id}')" style="cursor:pointer;">
-                    ${renderSVG(move.visual, true, index)}
-                    <h3>${move.arabic.trim()}</h3>
-                    <p>${move.english}</p>
-                    <span class="badge">${move.level}</span>
-                </div>
-            `).join('');
-        }
-        
-        // ==================== MOVE SELECTOR FOR SERIES ====================
-        function renderMoveSelector() {
-            const container = document.getElementById('moveSelector');
-            // Show only first 20 moves for selector performance
-            const movesToShow = movementDB.slice(0, 20);
-            
-            container.innerHTML = movesToShow.map(move => {
-                const isSelected = selectedMoves.some(m => m.id === move.id);
+
+    document.getElementById(
+        "homeAnimationName"
+    ).textContent =
+        move.en;
+
+
+    visual.innerHTML =
+        poseSVG(
+            move,
+            true,
+            true
+        );
+
+
+    visual.querySelectorAll(
+        ".animated-part"
+    )
+    .forEach(part => {
+
+        part.style.animationDuration =
+            `${1 / homeSpeed}s`;
+
+    });
+
+}
+
+
+setInterval(() => {
+
+    if (
+        document
+            .getElementById(
+                "section-home"
+            )
+            ?.classList
+            .contains("active")
+    ) {
+
+        homeAnimationIndex++;
+
+        renderHomeAnimation();
+
+    }
+
+},1400);
+
+
+/* =========================================================
+   DICTIONARY
+========================================================= */
+
+function renderDictionary() {
+
+    const container =
+        document.getElementById(
+            "dictionaryList"
+        );
+
+    if (!container) return;
+
+
+    const search =
+        (
+            document
+                .getElementById(
+                    "dictionarySearch"
+                )
+                ?.value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        MOVES.filter(move => {
+
+            if (!search) return true;
+
+
+            const custom =
+                state.customNames[
+                    move.id
+                ] || "";
+
+
+            return (
+
+                move.ar
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                move.en
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                custom
+                    .toLowerCase()
+                    .includes(search)
+
+            );
+
+        });
+
+
+    container.innerHTML =
+        list
+            .map(move => {
+
+                const custom =
+                    state.customNames[
+                        move.id
+                    ] || "لم يتم تحديد اسم خاص";
+
+
                 return `
-                    <div class="selector-card ${isSelected ? 'selected' : ''}" onclick="toggleMoveSelection('${move.id}')">
-                        <div class="add-btn">${isSelected ? '✓' : '+'}</div>
-                        ${renderSVG(move.visual, false, movementDB.indexOf(move))}
-                        <h4 style="font-size:0.8rem;">${move.arabic.trim().substring(0, 20)}...</h4>
-                        <span class="badge" style="font-size:0.65rem;">${move.level}</span>
+
+                    <div
+                        class="dictionary-row"
+                    >
+
+                        <div
+                            class="dictionary-main"
+                        >
+
+                            <strong>
+                                ${escapeHTML(move.ar)}
+                            </strong>
+
+                            <div
+                                class="standard"
+                            >
+                                ${escapeHTML(move.en)}
+                            </div>
+
+                            <small>
+                                اسم الكوتش:
+                                ${escapeHTML(custom)}
+                            </small>
+
+                        </div>
+
+
+                        <button
+                            class="dictionary-edit"
+                            onclick="editCoachName('${move.id}')"
+                        >
+                            ✏️ تعديل
+                        </button>
+
                     </div>
+
                 `;
-            }).join('');
-        }
-        
-        function toggleMoveSelection(moveId) {
-            const move = movementDB.find(m => m.id === moveId);
-            if(!move) return;
-            
-            const index = selectedMoves.findIndex(m => m.id === moveId);
-            if(index > -1) {
-                selectedMoves.splice(index, 1);
-            } else {
-                if(selectedMoves.length >= 8) {
-                    showToast('⚠️ الحد الأقصى 8 حركات في السلسلة');
-                    return;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   EDIT COACH NAME
+========================================================= */
+
+let editingDictionaryId = null;
+
+
+function editCoachName(id) {
+
+    const move =
+        getMove(id);
+
+    if (!move) return;
+
+
+    editingDictionaryId =
+        id;
+
+
+    document.getElementById(
+        "coachNameInput"
+    ).value =
+        state.customNames[id] || "";
+
+
+    openModal(
+        "dictionaryModal"
+    );
+
+}
+
+
+function saveCoachName() {
+
+    if (!editingDictionaryId)
+        return;
+
+
+    const value =
+        document
+            .getElementById(
+                "coachNameInput"
+            )
+            .value
+            .trim();
+
+
+    if (value) {
+
+        state.customNames[
+            editingDictionaryId
+        ] = value;
+
+    } else {
+
+        delete state.customNames[
+            editingDictionaryId
+        ];
+
+    }
+
+
+    saveState();
+
+    closeModal(
+        "dictionaryModal"
+    );
+
+
+    renderDictionary();
+
+
+    showToast(
+        "تم حفظ اسم الكوتش ✏️"
+    );
+
+}
+
+
+/* =========================================================
+   RATING SYSTEM
+========================================================= */
+
+const RATING_OPTIONS = [
+
+    {
+        value:1,
+        label:"🔴 ما زلت أتردد"
+    },
+
+    {
+        value:2,
+        label:"🟡 أعرفها لكن ببطء"
+    },
+
+    {
+        value:3,
+        label:"🟢 عادية"
+    },
+
+    {
+        value:4,
+        label:"🔵 سريعة"
+    },
+
+    {
+        value:5,
+        label:"⭐ سريعة جداً / تلقائية"
+    }
+
+];
+
+
+function ratingOptionsHTML(
+    selected
+) {
+
+    return RATING_OPTIONS
+        .map(option => `
+
+            <option
+                value="${option.value}"
+                ${
+                    Number(selected) ===
+                    option.value
+                        ? "selected"
+                        : ""
                 }
-                selectedMoves.push(move);
+            >
+                ${option.label}
+            </option>
+
+        `)
+        .join("");
+
+}
+
+
+let ratingSeriesId = null;
+
+
+function openRating(seriesId) {
+
+    const series =
+        state.series.find(
+            item => item.id === seriesId
+        );
+
+
+    if (!series) return;
+
+
+    ratingSeriesId =
+        seriesId;
+
+
+    const rating =
+        state.ratings[seriesId] ||
+        {
+
+            speed:3,
+            stability:3,
+            instinct:3,
+            memory:3
+
+        };
+
+
+    document.getElementById(
+        "ratingTitle"
+    ).textContent =
+        `📈 ${series.name}`;
+
+
+    document.getElementById(
+        "ratingSpeed"
+    ).innerHTML =
+        ratingOptionsHTML(
+            rating.speed
+        );
+
+
+    document.getElementById(
+        "ratingStability"
+    ).innerHTML =
+        ratingOptionsHTML(
+            rating.stability
+        );
+
+
+    document.getElementById(
+        "ratingInstinct"
+    ).innerHTML =
+        ratingOptionsHTML(
+            rating.instinct
+        );
+
+
+    document.getElementById(
+        "ratingMemory"
+    ).innerHTML =
+        ratingOptionsHTML(
+            rating.memory
+        );
+
+
+    openModal(
+        "ratingModal"
+    );
+
+}
+
+
+function saveRating() {
+
+    if (!ratingSeriesId)
+        return;
+
+
+    state.ratings[
+        ratingSeriesId
+    ] = {
+
+        speed:
+            Number(
+                document.getElementById(
+                    "ratingSpeed"
+                ).value
+            ),
+
+        stability:
+            Number(
+                document.getElementById(
+                    "ratingStability"
+                ).value
+            ),
+
+        instinct:
+            Number(
+                document.getElementById(
+                    "ratingInstinct"
+                ).value
+            ),
+
+        memory:
+            Number(
+                document.getElementById(
+                    "ratingMemory"
+                ).value
+            ),
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+
+    saveState();
+
+    closeModal(
+        "ratingModal"
+    );
+
+
+    renderTracking();
+
+    renderSavedSeries();
+
+
+    showToast(
+        "📈 تم تحديث التقييم"
+    );
+
+}
+
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+function ratingIcon(value) {
+
+    const found =
+        RATING_OPTIONS.find(
+            option =>
+                option.value ===
+                Number(value)
+        );
+
+
+    return found
+        ? found.label.split(" ")[0]
+        : "—";
+
+}
+
+
+function renderTracking() {
+
+    const container =
+        document.getElementById(
+            "trackingList"
+        );
+
+    if (!container) return;
+
+
+    if (!state.series.length) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📈
+                </div>
+
+                <h3>
+                    لا يوجد Tracking بعد
+                </h3>
+
+                <p>
+                    احفظي Series أولاً،
+                    وبعدها يمكنك تقييم السرعة
+                    والثبات والغريزة والذاكرة.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        state.series
+            .map(series => {
+
+                const rating =
+                    state.ratings[
+                        series.id
+                    ] ||
+                    {
+
+                        speed:0,
+                        stability:0,
+                        instinct:0,
+                        memory:0
+
+                    };
+
+
+                return `
+
+                    <div
+                        class="tracking-card"
+                    >
+
+                        <h3>
+                            🔥
+                            ${escapeHTML(series.name)}
+                        </h3>
+
+
+                        <div
+                            class="rating-grid"
+                        >
+
+                            <div
+                                class="rating-item"
+                            >
+
+                                <span>
+                                    السرعة
+                                </span>
+
+                                <div
+                                    class="rating-value"
+                                >
+                                    ${ratingIcon(
+                                        rating.speed
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="rating-item"
+                            >
+
+                                <span>
+                                    الثبات
+                                </span>
+
+                                <div
+                                    class="rating-value"
+                                >
+                                    ${ratingIcon(
+                                        rating.stability
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="rating-item"
+                            >
+
+                                <span>
+                                    الغريزة
+                                </span>
+
+                                <div
+                                    class="rating-value"
+                                >
+                                    ${ratingIcon(
+                                        rating.instinct
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="rating-item"
+                            >
+
+                                <span>
+                                    الذاكرة
+                                </span>
+
+                                <div
+                                    class="rating-value"
+                                >
+                                    ${ratingIcon(
+                                        rating.memory
+                                    )}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="btn btn-secondary btn-small"
+                            style="margin-top:10px;"
+                            onclick="openRating('${series.id}')"
+                        >
+                            ✏️ تعديل التقييم
+                        </button>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   CLASSES
+========================================================= */
+
+function renderClasses() {
+
+    const container =
+        document.getElementById(
+            "scheduleList"
+        );
+
+    if (!container) return;
+
+
+    const schedule =
+        Object.entries(
+            state.schedule
+        );
+
+
+    container.innerHTML =
+        schedule
+            .map(([key,classInfo]) => {
+
+                const present =
+                    !!state.attendance[key];
+
+
+                const details =
+                    state.classDetails[key] ||
+                    {
+
+                        movesCount:0,
+                        seriesCount:0
+
+                    };
+
+
+                return `
+
+                    <div
+                        class="class-card"
+                    >
+
+                        <div class="class-top">
+
+                            <div>
+
+                                <div
+                                    class="day-name"
+                                >
+                                    ${escapeHTML(
+                                        classInfo.day
+                                    )}
+                                </div>
+
+                                <div
+                                    class="class-time"
+                                >
+                                    ${escapeHTML(
+                                        classInfo.time
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                class="
+                                    attendance-btn
+                                    ${
+                                        present
+                                            ? "present"
+                                            : "absent"
+                                    }
+                                "
+                                onclick="toggleAttendance('${key}')"
+                            >
+
+                                ${
+                                    present
+                                        ? "✓ حضرت"
+                                        : "✕ لم أحضر"
+                                }
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="class-details"
+                        >
+
+                            <div
+                                class="class-stat"
+                            >
+
+                                <small>
+                                    الحركات التي تعلمتها
+                                </small>
+
+                                <strong>
+                                    ${details.movesCount}
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="class-stat"
+                            >
+
+                                <small>
+                                    Series أضفتها
+                                </small>
+
+                                <strong>
+                                    ${details.seriesCount}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="btn btn-secondary btn-small"
+                            style="margin-top:9px;"
+                            onclick="editClassDetails('${key}')"
+                        >
+                            ✏️ تعديل تفاصيل الحصة
+                        </button>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+function toggleAttendance(key) {
+
+    state.attendance[key] =
+        !state.attendance[key];
+
+
+    saveState();
+
+    renderClasses();
+
+    updateHomeStats();
+
+
+    showToast(
+        state.attendance[key]
+            ? "✓ تم تسجيل الحضور"
+            : "تم إلغاء الحضور"
+    );
+
+}
+
+
+function editClassDetails(key) {
+
+    const current =
+        state.classDetails[key] ||
+        {
+
+            movesCount:0,
+            seriesCount:0
+
+        };
+
+
+    const moves =
+        prompt(
+            "كم حركة تعلمتِ في هذه الحصة؟",
+            current.movesCount
+        );
+
+
+    if (moves === null)
+        return;
+
+
+    const series =
+        prompt(
+            "كم Series أضفتِ في هذه الحصة؟",
+            current.seriesCount
+        );
+
+
+    if (series === null)
+        return;
+
+
+    state.classDetails[key] = {
+
+        movesCount:
+            Math.max(
+                0,
+                Number(moves) || 0
+            ),
+
+        seriesCount:
+            Math.max(
+                0,
+                Number(series) || 0
+            )
+
+    };
+
+
+    saveState();
+
+    renderClasses();
+
+
+    showToast(
+        "تم تحديث تفاصيل الحصة 📅"
+    );
+
+}
+
+
+/* =========================================================
+   PAYMENTS
+========================================================= */
+
+function renderPayments() {
+
+    const container =
+        document.getElementById(
+            "paymentList"
+        );
+
+    if (!container) return;
+
+
+    if (!state.payments.length) {
+
+        container.innerHTML = `
+
+            <div
+                class="empty-state"
+                style="padding:20px;"
+            >
+
+                <div
+                    class="empty-icon"
+                    style="font-size:25px;"
+                >
+                    💳
+                </div>
+
+                <p>
+                    لم تتم إضافة أي شهر بعد.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        state.payments
+            .map((payment,index) => {
+
+                return `
+
+                    <div
+                        class="payment-row"
+                    >
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(
+                                    payment.label
+                                )}
+                            </strong>
+
+                            <span>
+                                — من 15/09/2026
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            class="
+                                payment-toggle
+                                ${
+                                    payment.paid
+                                        ? "paid"
+                                        : "unpaid"
+                                }
+                            "
+                            onclick="togglePayment(${index})"
+                        >
+
+                            ${
+                                payment.paid
+                                    ? "✓ تم الأداء"
+                                    : "لم يتم الأداء"
+                            }
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+function addNextPaymentMonth() {
+
+    let nextDate;
+
+
+    if (!state.payments.length) {
+
+        nextDate =
+            new Date(
+                "2026-09-15T00:00:00"
+            );
+
+    } else {
+
+        const last =
+            state.payments[
+                state.payments.length - 1
+            ];
+
+
+        nextDate =
+            new Date(
+                last.date
+            );
+
+
+        nextDate.setMonth(
+            nextDate.getMonth() + 1
+        );
+
+    }
+
+
+    const label =
+        nextDate.toLocaleDateString(
+            "fr-FR",
+            {
+                month:"long",
+                year:"numeric"
             }
-            
-            renderSelectedMoves();
-            renderMoveSelector();
-            showToast(selectedMoves.some(m => m.id === moveId) ? '➕ تمت الإضافة' : '➖ تم الإزالة');
+        );
+
+
+    state.payments.push({
+
+        date:
+            nextDate.toISOString(),
+
+        label,
+
+        paid:false
+
+    });
+
+
+    saveState();
+
+    renderPayments();
+
+
+    showToast(
+        "تمت إضافة شهر جديد 💳"
+    );
+
+}
+
+
+function togglePayment(index) {
+
+    if (
+        !state.payments[index]
+    ) return;
+
+
+    state.payments[index].paid =
+        !state.payments[index].paid;
+
+
+    saveState();
+
+    renderPayments();
+
+
+    showToast(
+        state.payments[index].paid
+            ? "✓ تم تسجيل الأداء"
+            : "تم إلغاء الأداء"
+    );
+
+}
+
+
+/* =========================================================
+   HOME STATS
+========================================================= */
+
+function updateHomeStats() {
+
+    const moveCount =
+        Object.values(
+            state.learned
+        )
+        .filter(Boolean)
+        .length;
+
+
+    const seriesCount =
+        state.series.length;
+
+
+    const classesCount =
+        Object.values(
+            state.attendance
+        )
+        .filter(Boolean)
+        .length;
+
+
+    document.getElementById(
+        "homeMoveCount"
+    ).textContent =
+        moveCount;
+
+
+    document.getElementById(
+        "homeSeriesCount"
+    ).textContent =
+        seriesCount;
+
+
+    document.getElementById(
+        "homeClassesCount"
+    ).textContent =
+        classesCount;
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function openSettings() {
+
+    openModal(
+        "settingsModal"
+    );
+
+}
+
+
+function exportData() {
+
+    const data =
+        JSON.stringify(
+            state,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [data],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+    a.download =
+        "boxing-memory-backup.json";
+
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+
+    showToast(
+        "📤 تم تصدير بياناتك"
+    );
+
+}
+
+
+function importData(event) {
+
+    const file =
+        event.target.files?.[0];
+
+
+    if (!file) return;
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = () => {
+
+        try {
+
+            const imported =
+                JSON.parse(
+                    reader.result
+                );
+
+
+            state = {
+
+                ...structuredClone(
+                    defaultState
+                ),
+
+                ...imported
+
+            };
+
+
+            saveState();
+
+
+            renderAll();
+
+            showToast(
+                "📥 تم استرجاع البيانات"
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(
+                "الملف غير صالح ❌"
+            );
+
         }
-        
-        // ==================== SVG ANIMATION GENERATOR - HUMAN FIGURE ====================
-        function renderSVG(visual, animate = true, seed = 0) {
-            const baseColor = '#6d4aff';
-            const accentColor = '#ff6b9d';
-            const skinColor = '#ffd5b5';
-            
-            // Unique animation timing based on seed
-            const delay = (seed % 10) * 0.2;
-            
-            let animationCSS = '';
-            let shapeDefs = '';
-            
-            // Build human figure SVG with proper anatomy
-            switch(visual.type) {
-                case 'jab':
-                    animationCSS = `.arm-${visual.side}{animation:jabArm ${0.3/(visual.side==='right'?1.5:1)}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line class="arm-${visual.side}" x1="100" y1="70" x2="${visual.side==='right'?180:20}" y2="70" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
-                        <line x1="100" y1="70" x2="${visual.side==='right'?20:180}" y2="70" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
-                    `;
-                    break;
-                case 'cross':
-                    animationCSS = `.arm-${visual.side}{animation:crossArm ${0.4/(visual.side==='right'?1:1.2)}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line class="arm-${visual.side}" x1="100" y1="70" x2="${visual.side==='right'?170:30}" y2="110" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
-                        <line x1="100" y1="70" x2="${visual.side==='right'?30:170}" y2="110" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
-                    `;
-                    break;
-                case 'hook':
-                    animationCSS = `.arm-${visual.side}{animation:hookArm ${0.8/(visual.side==='right'?1.2:1)}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <ellipse class="arm-${visual.side}" cx="100" cy="70" rx="40" ry="45" fill="none" stroke="${baseColor}" stroke-width="10"/>
-                    `;
-                    break;
-                case 'uppercut':
-                    animationCSS = `.arm-${visual.side}{animation:uppercutArm ${0.7}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line class="arm-${visual.side}" x1="100" y1="70" x2="100" y2="${visual.height==='low'?130:40}" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
-                    `;
-                    break;
-                case 'front-kick':
-                    animationCSS = `.leg-${visual.side}{animation:frontKick ${1.5}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line x1="90" y1="130" x2="80" y2="190" stroke="${baseColor}" stroke-width="8" stroke-linecap="round"/>
-                        <line class="leg-${visual.side}" x1="110" y1="130" x2="${visual.height==='high'?150:130}" y2="${visual.height==='high'?50:190}" stroke="${accentColor}" stroke-width="8" stroke-linecap="round"/>
-                    `;
-                    break;
-                case 'roundhouse-kick':
-                    const kickAngle = visual.height === 'high' ? 160 : visual.height === 'mid' ? 120 : 80;
-                    animationCSS = `.leg-${visual.side}{animation:roundhouseKick ${2}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line x1="90" y1="130" x2="${80-kickAngle/4}" y2="190" stroke="${baseColor}" stroke-width="8" stroke-linecap="round"/>
-                        <line class="leg-${visual.side}" x1="110" y1="130" x2="110+${kickAngle}" y2="190" stroke="${accentColor}" stroke-width="8" stroke-linecap="round"/>
-                    `;
-                    break;
-                case 'side-kick':
-                    animationCSS = `.leg-${visual.side}{animation:sideKick ${1.8}s infinite ease-in-out ${delay}s}`;
-                    shapeDefs = `
-                        <line class="leg-${visual.side}" x1="${visual.side==='right'?110:90}" y1="130" x2="${visual.side==='right'?180:20}" y
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+function resetAllData() {
+
+    const confirmed =
+        confirm(
+            "متأكدة أنك تريدين حذف كل البيانات؟"
+        );
+
+
+    if (!confirmed)
+        return;
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    sessionStorage.removeItem(
+        "boxing_builder"
+    );
+
+
+    state =
+        structuredClone(
+            defaultState
+        );
+
+
+    builder = [];
+
+
+    renderAll();
+
+    closeModal(
+        "settingsModal"
+    );
+
+
+    showToast(
+        "تم حذف البيانات"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function renderAll() {
+
+    renderCategories();
+
+    renderMoves();
+
+    renderBuilder();
+
+    renderSavedSeries();
+
+    renderDictionary();
+
+    renderTracking();
+
+    renderClasses();
+
+    renderPayments();
+
+    updateHomeStats();
+
+    renderHomeAnimation();
+
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+loadBuilderSession();
+
+renderAll();
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+if (
+    "serviceWorker" in navigator
+) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then(
+                    registration => {
+
+                        console.log(
+                            "Service Worker registered:",
+                            registration.scope
+                        );
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.warn(
+                            "Service Worker failed:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   KEYBOARD / ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key !== "Escape")
+            return;
+
+
+        document
+            .querySelectorAll(
+                ".modal-backdrop.open"
+            )
+            .forEach(modal => {
+
+                modal.classList.remove(
+                    "open"
+                );
+
+            });
+
+    }
+);
+
+
+/* =========================================================
+   PREVENT ACCIDENTAL FORM SUBMIT
+========================================================= */
+
+document.addEventListener(
+    "submit",
+    event => {
+
+        event.preventDefault();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
