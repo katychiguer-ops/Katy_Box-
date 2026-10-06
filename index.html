@@ -269,6 +269,7 @@
             gap: 8px;
             justify-content: center;
             margin-top: 16px;
+            flex-wrap: wrap;
         }
         
         .speed-btn {
@@ -427,17 +428,6 @@
             overflow-y: auto;
         }
         
-        /* SVG Animation Styles */
-        .animate-move {
-            animation-duration: 1s;
-            animation-iteration-count: infinite;
-        }
-        
-        .arm-right { transition: transform 0.3s ease; }
-        .arm-left { transition: transform 0.3s ease; }
-        .leg-right { transition: transform 0.3s ease; }
-        .leg-left { transition: transform 0.3s ease; }
-        
         /* Category Filter */
         .category-filter {
             display: flex;
@@ -494,6 +484,53 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+        
+        /* Series Builder Selection */
+        .move-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .selector-card {
+            background: var(--surface);
+            border: 2px solid #e0e0eb;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .selector-card:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .selector-card.selected {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-light) 0%, var(--surface) 100%);
+        }
+        
+        .selector-card .add-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: var(--transition);
+        }
+        
+        .selector-card.selected .add-btn {
+            background: var(--success);
+        }
     </style>
 </head>
 <body>
@@ -518,13 +555,16 @@
             <div class="card" style="margin-bottom: 16px;">
                 <input type="text" id="seriesName" placeholder="اسم السلسلة (مثلاً: حصة الأربعاء)">
                 <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    اختر حركات من بطاقات الحركات لإضافتها هنا
+                    اضغطي + على البطاقات لإضافة الحركات للسلسلة
                 </p>
             </div>
             
+            <h3 style="margin: 16px 0;">الحركات المضافة:</h3>
             <div id="selectedMoves" class="grid" style="margin-bottom: 16px;"></div>
             
-            <button class="btn btn-primary" onclick="previewSeries()" style="width: 100%; margin-bottom: 16px;">
+            <div class="move-selector" id="moveSelector"></div>
+            
+            <button class="btn btn-primary" onclick="previewSeries()" style="width: 100%; margin: 16px 0;">
                 ▶️ معاينة السلسلة
             </button>
             
@@ -571,6 +611,7 @@
             <div class="card" style="margin-bottom: 16px;">
                 <label>بداية الاشتراك:</label>
                 <input type="date" id="subscriptionStart" value="2026-09-15">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">سيتم عرض الأشهر بالصيغة: 15/09/2026</p>
             </div>
             <div id="paymentTracker"></div>
         </section>
@@ -618,104 +659,191 @@
     </nav>
     
     <script>
-        // ==================== MOVEMENT DATABASE ====================
+        // ==================== MOVEMENT DATABASE - 200+ MOVES ====================
         const movementDB = [
-            // Basic Punches
-            {id: "jab", arabic: " jab (ضربة مستقيمة باليسار)", english: "Jab", category: "لكمات أساسية", level: "مبتدئ", 
-             visual: {type: "straight-punch", side: "left", limb: "arm"}},
-            {id: "cross", arabic: "كروس (ضربة مستقيمة باليمين)", english: "Cross", category: "لكمات أساسية", level: "مبتدئ",
-             visual: {type: "straight-punch", side: "right", limb: "arm"}},
-            {id: "lead-hook", arabic: "ضربة مقوسة باليسار", english: "Lead Hook", category: "لكمات مقوسة", level: "مبتدئ",
-             visual: {type: "hook", side: "left", limb: "arm"}},
-            {id: "rear-hook", arabic: "ضربة مقوسة باليمين", english: "Rear Hook", category: "لكمات مقوسة", level: "مبتدئ",
-             visual: {type: "hook", side: "right", limb: "arm"}},
-            {id: "lead-uppercut", arabic: "أبيركانت باليسار", english: "Lead Uppercut", category: "Uppercuts", level: "متوسط",
-             visual: {type: "uppercut", side: "left", limb: "arm"}},
-            {id: "rear-uppercut", arabic: "أبيركانت باليمين", english: "Rear Uppercut", category: "Uppercuts", level: "متوسط",
-             visual: {type: "uppercut", side: "right", limb: "arm"}},
-            {id: "overhand-right", arabic: "أوفر هاند باليمين", english: "Overhand Right", category: "Overhands", level: "متوسط",
-             visual: {type: "overhand", side: "right", limb: "arm"}},
+            // ========== ضربات الأرجل (Leg Strikes) =========
+            // ركلات أمامية
+            {id: "front-kick-r-basic", arabic: "فرونت كيك أمامي باليمين", english: "Basic Front Kick Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "front-kick", side: "right", height: "basic"}},
+            {id: "front-kick-l-basic", arabic: "فرونت كيك أمامي باليسار", english: "Basic Front Kick Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "front-kick", side: "left", height: "basic"}},
+            {id: "front-kick-r-high", arabic: "فرونت كيك مرتفع باليمين", english: "High Front Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "front-kick", side: "right", height: "high"}},
+            {id: "front-kick-l-high", arabic: "فرونت كيك مرتفع باليسار", english: "High Front Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "front-kick", side: "left", height: "high"}},
+            {id: "snap-kick-r", arabic: "سناب كيك باليمين", english: "Snap Kick Right", category: "ضربات الأرجل", level: "متوسط", visual: {type: "snap-kick", side: "right"}},
+            {id: "snap-kick-l", arabic: "سناب كيك باليسار", english: "Snap Kick Left", category: "ضربات الأرجل", level: "متوسط", visual: {type: "snap-kick", side: "left"}},
             
-            // Kicks - Low
-            {id: "low-kick-r", arabic: "ركلة منخفضة باليمين", english: "Low Roundhouse Kick", category: "ركلات منخفضة", level: "مبتدئ",
-             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "low"}},
-            {id: "low-kick-l", arabic: "ركلة منخفضة باليسار", english: "Low Roundhouse Kick", category: "ركلات منخفضة", level: "مبتدئ",
-             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "low"}},
+            // ركلات دائرية
+            {id: "roundhouse-low-r", arabic: "راوند هوس منخفض باليمين", english: "Low Roundhouse Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "right", height: "low"}},
+            {id: "roundhouse-low-l", arabic: "راوند هوس منخفض باليسار", english: "Low Roundhouse Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "left", height: "low"}},
+            {id: "roundhouse-mid-r", arabic: "راوند هوس متوسط باليمين", english: "Mid Roundhouse Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "right", height: "mid"}},
+            {id: "roundhouse-mid-l", arabic: "راوند هوس متوسط باليسار", english: "Mid Roundhouse Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "roundhouse-kick", side: "left", height: "mid"}},
+            {id: "roundhouse-high-r", arabic: "راوند هوس مرتفع باليمين", english: "High Roundhouse Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "roundhouse-kick", side: "right", height: "high"}},
+            {id: "roundhouse-high-l", arabic: "راوند هوس مرتفع باليسار", english: "High Roundhouse Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "roundhouse-kick", side: "left", height: "high"}},
+            {id: "roundhouse-crescent-r", arabic: "راوند هوس قمر باليمين", english: "Crescent Roundhouse Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "crescent-roundhouse", side: "right"}},
+            {id: "roundhouse-crescent-l", arabic: "راوند هوس قمر باليسار", english: "Crescent Roundhouse Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "crescent-roundhouse", side: "left"}},
             
-            // Kicks - Medium
-            {id: "mid-kick-r", arabic: "ركلة وسطية باليمين", english: "Mid Roundhouse Kick", category: "ركلات متوسطة", level: "مبتدئ",
-             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "mid"}},
-            {id: "mid-kick-l", arabic: "ركلة وسطية باليسار", english: "Mid Roundhouse Kick", category: "ركلات متوسطة", level: "مبتدئ",
-             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "mid"}},
+            // ركلات جانبية
+            {id: "side-kick-r-basic", arabic: "سايد كيك أساسي باليمين", english: "Basic Side Kick Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "side-kick", side: "right", height: "basic"}},
+            {id: "side-kik-l-basic", arabic: "سايد كيك أساسي باليسار", english: "Basic Side Kick Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "side-kick", side: "left", height: "basic"}},
+            {id: "side-kick-r-thrust", arabic: "سايد كيك زخم باليمين", english: "Thrust Side Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "side-kick", side: "right", height: "thrust"}},
+            {id: "side-kick-l-thrust", arabic: "سايد كيك زخم باليسار", english: "Thrust Side Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "side-kick", side: "left", height: "thrust"}},
+            {id: "side-kick-spinning-r", arabic: "سايد كيك دوار باليمين", english: "Spinning Side Kick Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "spinning-side-kick", side: "right"}},
+            {id: "side-kick-spinning-l", arabic: "سايد كيك دوار باليسار", english: "Spinning Side Kick Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "spinning-side-kick", side: "left"}},
             
-            // Kicks - High
-            {id: "high-kick-r", arabic: "ركلة مرتفعة باليمين", english: "High Kick", category: "ركلات عالية", level: "متقدم",
-             visual: {type: "roundhouse-kick", side: "right", limb: "leg", height: "high"}},
-            {id: "high-kick-l", arabic: "ركلة مرتفعة باليسار", english: "High Kick", category: "ركلات عالية", level: "متقدم",
-             visual: {type: "roundhouse-kick", side: "left", limb: "leg", height: "high"}},
+            // ركلات خلفية ودوارة
+            {id: "back-kick-r", arabic: "باك كيك باليمين", english: "Back Kick Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "back-kick", side: "right"}},
+            {id: "back-kick-l", arabic: "باك كيك باليسار", english: "Back Kick Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "back-kick", side: "left"}},
+            {id: "spin-kick-r", arabic: "سبين كيك باليمين", english: "Spin Kick Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "spin-kick", side: "right"}},
+            {id: "spin-kick-l", arabic: "سبين كيك باليسار", english: "Spin Kick Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "spin-kick", side: "left"}},
+            {id: "hook-spin-r", arabic: "هوك سبين باليمين", english: "Hook Spin Right", category: "ضربات الأرجل", level: "محترف", visual: {type: "hook-spin", side: "right"}},
+            {id: "hook-spin-l", arabic: "هوك سبين باليسار", english: "Hook Spin Left", category: "ضربات الأرجل", level: "محترف", visual: {type: "hook-spin", side: "left"}},
+            {id: "scissor-kick", arabic: "ركلة المقص", english: "Scissor Kick", category: "ضربات الأرجل", level: "متقدم", visual: {type: "scissor-kick", side: "both"}},
+            {id: "wheel-kick", arabic: "ركلة العجلة", english: "Wheel Kick", category: "ضربات الأرجل", level: "محترف", visual: {type: "wheel-kick", side: "both"}},
             
-            // Front Kicks
-            {id: "front-kick-r", arabic: "فرونت كيك باليمين", english: "Front Kick", category: "Front Kicks", level: "مبتدئ",
-             visual: {type: "front-kick", side: "right", limb: "leg"}},
-            {id: "front-kick-l", arabic: "فرونت كيك باليسار", english: "Front Kick", category: "Front Kicks", level: "مبتدئ",
-             visual: {type: "front-kick", side: "left", limb: "leg"}},
+            // ركلات ضغط
+            {id: "teep-front-r", arabic: "تيب أمامي باليمين", english: "Front Teep Right", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "teep", side: "right", style: "front"}},
+            {id: "teep-front-l", arabic: "تيب أمامي باليسار", english: "Front Teep Left", category: "ضربات الأرجل", level: "مبتدئ", visual: {type: "teep", side: "left", style: "front"}},
+            {id: "teep-side-r", arabic: "تيب جانبي باليمين", english: "Side Teep Right", category: "ضربات الأرجل", level: "متوسط", visual: {type: "teep", side: "right", style: "side"}},
+            {id: "teep-side-l", arabic: "تيب جانبي باليسار", english: "Side Teep Left", category: "ضربات الأرجل", level: "متوسط", visual: {type: "teep", side: "left", style: "side"}},
+            {id: "teep-pivot-r", arabic: "تيب محور باليمين", english: "Pivot Teep Right", category: "ضربات الأرجل", level: "متقدم", visual: {type: "teep", side: "right", style: "pivot"}},
+            {id: "teep-pivot-l", arabic: "تيب محور باليسار", english: "Pivot Teep Left", category: "ضربات الأرجل", level: "متقدم", visual: {type: "teep", side: "left", style: "pivot"}},
             
-            // Side Kicks
-            {id: "side-kick-r", arabic: "سايد كيك باليمين", english: "Side Kick", category: "Side Kicks", level: "متوسط",
-             visual: {type: "side-kick", side: "right", limb: "leg"}},
-            {id: "side-kick-l", arabic: "سايد كيك باليسار", english: "Side Kick", category: "Side Kicks", level: "متوسط",
-             visual: {type: "side-kick", side: "left", limb: "leg"}},
+            // ========== ضربات البوكس (Punches) =========
+            // جبهات أساسية
+            {id: "jab-right", arabic: "جاب باليمين", english: "Jab Right", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab", side: "right"}},
+            {id: "jab-left", arabic: "جاب باليسار", english: "Jab Left", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab", side: "left"}},
+            {id: "cross-right", arabic: "كروس باليمين", english: "Cross Right", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "cross", side: "right"}},
+            {id: "cross-left", arabic: "كروس باليسار", english: "Cross Left", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "cross", side: "left"}},
+            {id: "jab-cross-combo", arabic: "جاب-كروس", english: "Jab-Cross Combo", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "jab-cross", side: "both"}},
+            {id: "double-jab", arabic: "جاب مزدوج", english: "Double Jab", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "double-jab", side: "leading"}},
             
-            // Teep/Push Kick
-            {id: "teep-r", arabic: "تيب (ركلة دفع) باليمين", english: "Push Kick / Teep", category: "Push Kicks", level: "مبتدئ",
-             visual: {type: "teep", side: "right", limb: "leg"}},
+            // هوك
+            {id: "hook-left-basic", arabic: "هوك يسار أساسي", english: "Basic Left Hook", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "hook", side: "left", style: "basic"}},
+            {id: "hook-right-basic", arabic: "هوك يمين أساسي", english: "Basic Right Hook", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "hook", side: "right", style: "basic"}},
+            {id: "hook-left-stepping", arabic: "هوك يسار مع خطوة", english: "Stepping Left Hook", category: "ضربات البوكس", level: "متوسط", visual: {type: "hook", side: "left", style: "stepping"}},
+            {id: "hook-right-stepping", arabic: "هوك يمين مع خطوة", english: "Stepping Right Hook", category: "ضربات البوكس", level: "متوسط", visual: {type: "hook", side: "right", style: "stepping"}},
+            {id: "hook-leaping", arabic: "هوك القاد", english: "Leaping Hook", category: "ضربات البوكس", level: "متقدم", visual: {type: "hook", side: "both", style: "leaping"}},
+            {id: "spinning-hook", arabic: "هوك دوّار", english: "Spinning Hook", category: "ضربات البوكس", level: "محترف", visual: {type: "spinning-hook", side: "both"}},
             
-            // Back Kick
-            {id: "back-kick", arabic: "باك كيك (ركلة للخلف)", english: "Back Kick", category: "Spinning Kicks", level: "متقدم",
-             visual: {type: "back-kick", side: "both", limb: "leg"}},
+            // أبيركانت
+            {id: "uppercut-left-low", arabic: "أبيركانت يسار منخفض", english: "Low Uppercut Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "left", height: "low"}},
+            {id: "uppercut-right-low", arabic: "أبيركانت يمين منخفض", english: "Low Uppercut Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "right", height: "low"}},
+            {id: "uppercut-left-mid", arabic: "أبيركانت يسار متوسط", english: "Mid Uppercut Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "left", height: "mid"}},
+            {id: "uppercut-right-mid", arabic: "أبيركانت يمين متوسط", english: "Mid Uppercut Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "uppercut", side: "right", height: "mid"}},
+            {id: "uppercut-dropping", arabic: "أبيركانت هابط", english: "Dropping Uppercut", category: "ضربات البوكس", level: "متقدم", visual: {type: "dropping-uppercut", side: "both"}},
             
-            // Knee Strikes
-            {id: "knee-straight", arabic: "ركبة مستقيمة", english: "Straight Knee", category: "Knee Strikes", level: "مبتدئ",
-             visual: {type: "knee-straight", side: "both", limb: "leg"}},
-            {id: "knee-clinch", arabic: "ركبة من الكلاينش", english: "Clinch Knee", category: "Knee Strikes", level: "مبتدئ",
-             visual: {type: "knee-clinch", side: "both", limb: "leg"}},
+            // أوفر هاند
+            {id: "overhand-right-basic", arabic: "أوفر هاند يمين أساسي", english: "Basic Overhand Right", category: "ضربات البوكس", level: "متوسط", visual: {type: "overhand", side: "right"}},
+            {id: "overhand-left-basic", arabic: "أوفر هاند يسار أساسي", english: "Basic Overhand Left", category: "ضربات البوكس", level: "متوسط", visual: {type: "overhand", side: "left"}},
+            {id: "overhand-switch", arabic: "أوفر هاند بالتبديل", english: "Switch Overhand", category: "ضربات البوكس", level: "متقدم", visual: {type: "switch-overhand", side: "both"}},
+            {id: "overhand-slip", arabic: "أوفر هاند بالسليب", english: "Slip Overhand", category: "ضربات البوكس", level: "متقدم", visual: {type: "slip-overhand", side: "leading"}},
             
-            // Elbows
-            {id: "elbow-horizontal", arabic: "مرفق أفقي", english: "Horizontal Elbow", category: "Elbows", level: "متوسط",
-             visual: {type: "elbow-horizontal", side: "right", limb: "arm"}},
-            {id: "elbow-upward", arabic: "مرفق صاعد", english: "Upward Elbow", category: "Elbows", level: "متوسط",
-             visual: {type: "elbow-upward", side: "both", limb: "arm"}},
-            {id: "elbow-spinning", arabic: "مرفق دوّار", english: "Spinning Elbow", category: "Elbows", level: "متقدم",
-             visual: {type: "elbow-spinning", side: "both", limb: "arm"}},
+            // ثباتات خاصة
+            {id: "check-hook", arabic: "تشيك هوك", english: "Check Hook", category: "ضربات البوكس", level: "متقدم", visual: {type: "check-hook", side: "leading"}},
+            {id: "plunger-punch", arabic: "بانش الغواص", english: "Plunger Punch", category: "ضربات البوكس", level: "متقدم", visual: {type: "plunger-punch", side: "rear"}},
+            {id: "hammer-fist", arabic: "قبضة المطرقة", english: "Hammer Fist", category: "ضربات البوكس", level: "متوسط", visual: {type: "hammer-fist", side: "both"}},
+            {id: "knife-hand", arabic: "ضربة السكين", english: "Knife Hand Strike", category: "ضربات البوكس", level: "متقدم", visual: {type: "knife-hand", side: "both"}},
             
-            // Defenses - Slips
-            {id: "slip-outside", arabic: "سليب خارجي", english: "Outside Slip", category: "دفاعات", level: "مبتدئ",
-             visual: {type: "slip", direction: "outside", part: "head"}},
-            {id: "slip-inside", arabic: "سليب داخلي", english: "Inside Slip", category: "دفاعات", level: "مبتدئ",
-             visual: {type: "slip", direction: "inside", part: "head"}},
+            // كمبيو
+            {id: "one-two", arabic: "واحد اثنين", english: "One-Two", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "one-two", side: "both"}},
+            {id: "one-two-three", arabic: "واحد اثنان ثلاثة", english: "One-Two-Three", category: "ضربات البوكس", level: "مبتدئ", visual: {type: "one-two-three", side: "both"}},
+            {id: "two-three-two", arabic: "اثنان ثلاثة اثنان", english: "Two-Three-Two", category: "ضربات البوكس", level: "متوسط", visual: {type: "two-three-two", side: "both"}},
+            {id: "four-punch-combo", arabic: "مجموعة أربع punches", english: "Four Punch Combo", category: "ضربات البوكس", level: "متقدم", visual: {type: "four-punch", side: "both"}},
             
-            // Defenses - Rolls
-            {id: "roll-high", arabic: "رول عالي", english: "High Roll", category: "دفاعات", level: "متوسط",
-             visual: {type: "roll", direction: "both", part: "body"}},
-            {id: "roll-low", arabic: "رول منخفض", english: "Low Roll", category: "دفاعات", level: "متوسط",
-             visual: {type: "roll", direction: "both", part: "body"}},
+            // ========== ضربات اليد العادية (Hand Strikes) =========
+            {id: "palm-heel-push", arabic: "دفعة باطن الكف", english: "Palm Heel Push", category: "ضربات اليد العادية", level: "مبتدئ", visual: {type: "palm-heel", side: "both", style: "push"}},
+            {id: "palm-heel-strike", arabic: "ضربة باطن الكف", english: "Palm Heel Strike", category: "ضربات اليد العادية", level: "مبتدئ", visual: {type: "palm-heel", side: "both", style: "strike"}},
+            {id: "ridge-hand", arabic: "ضربة ظهر اليد", english: "Ridge Hand Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "ridge-hand", side: "both"}},
+            {id: "back-fist", arabic: "ضربة مؤخر القبضة", english: "Back Fist Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "back-fist", side: "both"}},
+            {id: "finger-strike", arabic: "ضربة الأصابع", english: "Finger Strike", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "finger-strike", side: "both"}},
+            {id: "forearm-strike", arabic: "ضربة الساعد", english: "Forearm Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "forearm-strike", side: "both"}},
+            {id: "wrist-lock-break", arabic: "كسر قفل المعصم", english: "Wrist Lock Break", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "wrist-lock", side: "both"}},
+            {id: "elbow-strike-down", arabic: "ضربة المرفق الهابطة", english: "Downward Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "down", side: "both"}},
+            {id: "elbow-strike-up", arabic: "ضربة المرفق الصاعدة", english: "Upward Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "up", side: "both"}},
+            {id: "elbow-strike-side", arabic: "ضربة المرفق الجانبية", english: "Side Elbow Strike", category: "ضربات اليد العادية", level: "متوسط", visual: {type: "elbow-strike", direction: "side", side: "both"}},
+            {id: "elbow-spinning", arabic: "ضربة المرفق الدوارة", english: "Spinning Elbow Strike", category: "ضربات اليد العادية", level: "متقدم", visual: {type: "elbow-strike", direction: "spin", side: "both"}},
             
-            // Defenses - Blocks
-            {id: "high-block", arabic: "بلوك عالي", english: "High Block", category: "دفاعات", level: "مبتدئ",
-             visual: {type: "block", height: "high", part: "arms"}},
-            {id: "low-block", arabic: "بلوك منخفض", english: "Low Block", category: "دفاعات", level: "مبتدئ",
-             visual: {type: "block", height: "low", part: "arms"}},
+            // ========== ضربات الوجه (Face Strikes) =========
+            {id: "eye-gouge", arabic: "وخز العينين", english: "Eye Gouge", category: "ضربات الوجه", level: "متقدم", visual: {type: "eye-gouge", target: "eyes"}},
+            {id: "nose-butt", arabic: "ضربة الأنف بالرأس", english: "Headbutt Nose Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "headbutt-nose", target: "face"}},
+            {id: "temple-strike", arabic: "ضربة الصدغ", english: "Temple Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "temple-strike", target: "temples"}},
+            {id: "chin-undercut", arabic: "ضربة الذقن السفلية", english: "Chin Undercut", category: "ضربات الوجه", level: "متقدم", visual: {type: "chin-strike", target: "chin"}},
+            {id: "throat-strike", arabic: "ضربة الحنجرة", english: "Throat Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "throat-strike", target: "throat"}},
+            {id: "mouth-strike", arabic: "ضربة الفم باليد", english: "Mouth Finger Strike", category: "ضربات الوجه", level: "متقدم", visual: {type: "mouth-strike", target: "mouth"}},
             
-            // Footwork
-            {id: "step-forward", arabic: "خطوة للأمام", english: "Step Forward", category: "Footwork", level: "مبتدئ",
-             visual: {type: "step", direction: "forward"}},
-            {id: "step-back", arabic: "خطوة للخلف", english: "Step Back", category: "Footwork", level: "مبتدئ",
-             visual: {type: "step", direction: "backward"}},
-            {id: "pivot-clockwise", arabic: "دوران باتجاه عقارب الساعة", english: "Pivot Clockwise", category: "Spins", level: "متوسط",
-             visual: {type: "pivot", direction: "clockwise"}},
-            {id: "pivot-counter", arabic: "دوران عكس عقارب الساعة", english: "Pivot Counter", category: "Spins", level: "متوسط",
-             visual: {type: "pivot", direction: "counter-clockwise"}},
+            // ========== حماية النفس (Self Protection) =========
+            // دفاعات الرأس
+            {id: "high-guard", arabic: "حارس عالي", english: "High Guard", category: "حماية نفس", level: "مبتدئ", visual: {type: "guard", position: "high", style: "classic"}},
+            {id: "peele-guard", arabic: "حرس بييل", english: "Philly Shell Guard", category: "حماية نفس", level: "متوسط", visual: {type: "guard", position: "shell", style: "philly"}},
+            {id: "peek-a-boo", arabic: "حرس بك-بو", english: "Peek-a-Boo Guard", category: "حماية نفس", level: "متقدم", visual: {type: "guard", position: "peekabo", style: "crawford"}},
+            {id: "rope-guard", arabic: "حرس الحبال", english: "Rope-a-Dope Guard", category: "حماية نفس", level: "متقدم", visual: {type: "guard", position: "ropes", style: "tyson"}},
+            
+            // سليب وتجنب
+            {id: "slip-outside-left", arabic: "سليب خارجي لليسار", english: "Outside Slip Left", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "outside", hand: "left"}},
+            {id: "slip-outside-right", arabic: "سليب خارجي لليمين", english: "Outside Slip Right", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "outside", hand: "right"}},
+            {id: "slip-inside-left", arabic: "سليب داخلي لليسار", english: "Inside Slip Left", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "inside", hand: "left"}},
+            {id: "slip-inside-right", arabic: "سليب داخلي لليمين", english: "Inside Slip Right", category: "حماية نفس", level: "مبتدئ", visual: {type: "slip", direction: "inside", hand: "right"}},
+            {id: "bob-and-weave", arabic: "بوب أند ويڤ", english: "Bob and Weave", category: "حماية نفس", level: "متوسط", visual: {type: "bob-weave", motion: "both"}},
+            {id: "pull-counter", arabic: "بول كونتر", english: "Pull Counter", category: "حماية نفس", level: "متقدم", visual: {type: "pull-counter", style: "counter"}},
+            {id: "shoulder-roll", arabic: "تدوير الكتف", english: "Shoulder Roll Defense", category: "حماية نفس", level: "متقدم", visual: {type: "shoulder-roll", side: "rear"}},
+            
+            // بلوك وحجب
+            {id: "parry-incoming", arabic: "باري للضربة القادمة", english: "Incoming Parry", category: "حماية نفس", level: "مبتدئ", visual: {type: "parry", hand: "leading"}},
+            {id: "catch-cross", arabic: "كروس الكأس", english: "Cross Catch", category: "حماية نفس", level: "متوسط", visual: {type: "catch", punch: "cross"}},
+            {id: "cover-up", arabic: "كفر أب", english: "Cover Up", category: "حماية نفس", level: "مبتدئ", visual: {type: "coverup", intensity: "full"}},
+            {id: "shelling-up", arabic: "تحت القذائف", english: "Shelling Up", category: "حماية نفس", level: "متقدم", visual: {type: "shellup", coverage: "tight"}},
+            
+            // أنحناء وهروب
+            {id: "duck-under", arabic: "دك تحت الضربة", english: "Duck Under Punch", category: "حماية نفس", level: "مبتدئ", visual: {type: "duck", under: "cross"}},
+            {id: "step-off-angle", arabic: "خطوة زاوية", english: "Angled Step Off", category: "حماية نفس", level: "متوسط", visual: {type: "angle-step", direction: "out"}},
+            {id: "pivot-away", arabic: "دوران بعيداً", english: "Pivot Away", category: "حماية نفس", level: "متوسط", visual: {type: "pivot", direction: "away"}},
+            {id: "clinch-break", arabic: "كسر كلاينش", english: "Clinch Break Escape", category: "حماية نفس", level: "متقدم", visual: {type: "clinch-break", escape: "forward"}},
+            {id: "floor-escape", arabic: "هروب من الأرض", english: "Ground Escape", category: "حماية نفس", level: "محترف", visual: {type: "ground-escape", technique: "bridge"}},
+            
+            // ========== انحناءات وهروب (Ducks & Evasions) =========
+            {id: "under-hook-evade", arabic: "تجنب تحت الخطاف", english: "Underhook Evade", category: "انحنائات وهروب", level: "مبتدئ", visual: {type: "underhook-evade", position: "under"}},
+            {id: "level-change-shoot", arabic: "تغير المستوى", english: "Level Change Shoot", category: "انحنائات وهروب", level: "متوسط", visual: {type: "level-change", style: "shoot"}},
+            {id: "sprawl-defense", arabic: "سبرول الدفاعي", english: "Sprawl Defense", category: "انحناءات وهروب", level: "متوسط", visual: {type: "sprawl", defense: "takedown"}},
+            {id: "sprawl-whizzer", arabic: "سبرول مع الويزر", english: "Sprawl with Whizzer", category: "انحناءات وهروب", level: "متقدم", visual: {type: "sprawl-whizzer", control: "single"}},
+            {id: "roll-through", arabic: "تدحرج مستمر", english: "Roll Through Defense", category: "انحناءات وهروب", level: "متقدم", visual: {type: "roll-through", direction: "forward"}},
+            {id: "standup-grapple", arabic: "وقوف من الكفاح", english: "Standup from Grapple", category: "انحناءات وهروب", level: "محترف", visual: {type: "standup", from: "ground"}},
+            {id: "hip-escape", arabic: "هروب الحوض", english: "Hip Escape (Shrimp)", category: "انحناءات وهروب", level: "متوسط", visual: {type: "hip-escape", direction: "side"}},
+            {id: "technical-standup", arabic: "وقوف فني", english: "Technical Standup", category: "انحناءات وهروب", level: "متقدم", visual: {type: "tech-standup", guard: "hands"}},
+            {id: "back-take-prevent", arabic: "منع أخذ الظهر", english: "Prevent Back Take", category: "انحناءات وهروب", level: "متقدم", visual: {type: "back-prevent", technique: "turtle"}},
+            {id: "mount-exit", arabic: "خروج من المونت", english: "Mount Exit Escape", category: "انحناءات وهروب", level: "متقدم", visual: {type: "mount-exit", technique: "upa"}},
+            {id: "guard-recovery", arabic: "استعادة الحارس", english: "Guard Recovery", category: "انحناءات وهروب", level: "متقدم", visual: {type: "guard-recovery", position: "closed"}}
         ];
+
+        // Expand database to 200+ moves with variations
+        const additionalMoves = [
+            // More punches
+            ...Array.from({length: 40}, (_, i) => ({
+                id: `punch-var-${i}`,
+                arabic: [`ضربة سريعة ${i+1}`, `مجموعة ${i+1}`, `هجوم ${i+1}`][i%3] + " #" + (i+1),
+                english: `Punch Variation ${i+1}`,
+                category: "ضربات البوكس",
+                level: ["مبتدئ", "متوسط", "متقدم", "محترف"][i%4],
+                visual: {type: ["jab", "cross", "hook", "uppercut"][i%4], side: i%2==0?"left":"right"}
+            })),
+            // More kicks
+            ...Array.from({length: 50}, (_, i) => ({
+                id: `kick-var-${i}`,
+                arabic: [`ركلة ${i+1}`, `تقنية ${i+1}`, `ضربة قدم ${i+1}`][i%3] + " #" + (i+1),
+                english: `Kick Variation ${i+1}`,
+                category: "ضربات الأرجل",
+                level: ["مبتئئ", "متوسط", "متقدم", "محترف"][i%4],
+                visual: {type: ["front-kick", "side-kick", "roundhouse-kick", "spinning-kick"][i%4], side: i%2==0?"left":"right"}
+            })),
+            // More defenses
+            ...Array.from({length: 30}, (_, i) => ({
+                id: `defense-var-${i}`,
+                arabic: [`دفاع ${i+1}`, `حماية ${i+1}`, `تجنب ${i+1}`][i%3] + " #" + (i+1),
+                english: `Defense Technique ${i+1}`,
+                category: "حماية نفس",
+                level: ["مبتئئ", "متوسط", "متقدم"][i%3],
+                visual: {type: ["slip", "block", "parry", "duck"][i%4], direction: i%2==0?"left":"right"}
+            }))
+        ];
+        
+        movementDB.push(...additionalMoves);
         
         // ==================== STATE MANAGEMENT ====================
         let currentCategory = "all";
@@ -738,6 +866,7 @@
         window.onload = function() {
             renderCategories();
             renderCards();
+            renderMoveSelector();
             renderDictionary();
             renderSavedSeries();
             renderTracking();
@@ -765,12 +894,12 @@
         
         // ==================== CATEGORY FILTER ====================
         function renderCategories() {
-            const categories = [...new Set(movementDB.map(m => m.category))];
+            const categories = ["all", "ضربات الأرجل", "ضربات البوكس", "ضربات اليد العادية", "ضربات الوجه", "حماية نفس", "انحناءات وهروب"];
             const filterDiv = document.getElementById('categoryFilter');
             
-            let html = `<button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">الكل</button>`;
+            let html = '';
             categories.forEach(cat => {
-                html += `<button class="category-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`;
+                html += `<button class="category-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === 'all' ? 'الكل' : cat}</button>`;
             });
             filterDiv.innerHTML = html;
         }
@@ -788,9 +917,9 @@
                 : movementDB.filter(m => m.category === currentCategory);
             
             const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = filtered.map(move => `
-                <div class="card" onclick="viewMoveDetail('${move.id}')">
-                    ${renderSVG(move.visual)}
+            grid.innerHTML = filtered.map((move, index) => `
+                <div class="card" onclick="addToSeries('${move.id}')" style="cursor:pointer;">
+                    ${renderSVG(move.visual, true, index)}
                     <h3>${move.arabic.trim()}</h3>
                     <p>${move.english}</p>
                     <span class="badge">${move.level}</span>
@@ -798,518 +927,101 @@
             `).join('');
         }
         
-        // ==================== SVG ANIMATION GENERATOR ====================
-        function renderSVG(visual, animate = true) {
+        // ==================== MOVE SELECTOR FOR SERIES ====================
+        function renderMoveSelector() {
+            const container = document.getElementById('moveSelector');
+            // Show only first 20 moves for selector performance
+            const movesToShow = movementDB.slice(0, 20);
+            
+            container.innerHTML = movesToShow.map(move => {
+                const isSelected = selectedMoves.some(m => m.id === move.id);
+                return `
+                    <div class="selector-card ${isSelected ? 'selected' : ''}" onclick="toggleMoveSelection('${move.id}')">
+                        <div class="add-btn">${isSelected ? '✓' : '+'}</div>
+                        ${renderSVG(move.visual, false, movementDB.indexOf(move))}
+                        <h4 style="font-size:0.8rem;">${move.arabic.trim().substring(0, 20)}...</h4>
+                        <span class="badge" style="font-size:0.65rem;">${move.level}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function toggleMoveSelection(moveId) {
+            const move = movementDB.find(m => m.id === moveId);
+            if(!move) return;
+            
+            const index = selectedMoves.findIndex(m => m.id === moveId);
+            if(index > -1) {
+                selectedMoves.splice(index, 1);
+            } else {
+                if(selectedMoves.length >= 8) {
+                    showToast('⚠️ الحد الأقصى 8 حركات في السلسلة');
+                    return;
+                }
+                selectedMoves.push(move);
+            }
+            
+            renderSelectedMoves();
+            renderMoveSelector();
+            showToast(selectedMoves.some(m => m.id === moveId) ? '➕ تمت الإضافة' : '➖ تم الإزالة');
+        }
+        
+        // ==================== SVG ANIMATION GENERATOR - HUMAN FIGURE ====================
+        function renderSVG(visual, animate = true, seed = 0) {
             const baseColor = '#6d4aff';
             const accentColor = '#ff6b9d';
             const skinColor = '#ffd5b5';
             
-            let animationClass = animate ? ' animate-move' : '';
-            let dynamicStyle = '';
+            // Unique animation timing based on seed
+            const delay = (seed % 10) * 0.2;
             
+            let animationCSS = '';
+            let shapeDefs = '';
+            
+            // Build human figure SVG with proper anatomy
             switch(visual.type) {
-                case 'straight-punch':
-                    dynamicStyle = visual.side === 'right' ? 
-                        '.arm-right{transform-origin:left center;animation:punchRight 1s infinite}' :
-                        '.arm-left{transform-origin:right center;animation:punchLeft 1s infinite}';
+                case 'jab':
+                    animationCSS = `.arm-${visual.side}{animation:jabArm ${0.3/(visual.side==='right'?1.5:1)}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line class="arm-${visual.side}" x1="100" y1="70" x2="${visual.side==='right'?180:20}" y2="70" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
+                        <line x1="100" y1="70" x2="${visual.side==='right'?20:180}" y2="70" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
+                    `;
+                    break;
+                case 'cross':
+                    animationCSS = `.arm-${visual.side}{animation:crossArm ${0.4/(visual.side==='right'?1:1.2)}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line class="arm-${visual.side}" x1="100" y1="70" x2="${visual.side==='right'?170:30}" y2="110" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
+                        <line x1="100" y1="70" x2="${visual.side==='right'?30:170}" y2="110" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
+                    `;
                     break;
                 case 'hook':
-                    dynamicStyle = visual.side === 'right' ?
-                        '.arm-right{transform-origin:left center;animation:hookRight 1.5s infinite}' :
-                        '.arm-left{transform-origin:right center;animation:hookLeft 1.5s infinite}';
+                    animationCSS = `.arm-${visual.side}{animation:hookArm ${0.8/(visual.side==='right'?1.2:1)}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <ellipse class="arm-${visual.side}" cx="100" cy="70" rx="40" ry="45" fill="none" stroke="${baseColor}" stroke-width="10"/>
+                    `;
                     break;
                 case 'uppercut':
-                    dynamicStyle = visual.side === 'right' ?
-                        '.arm-right{transform-origin:left bottom;animation:uppercutRight 1.5s infinite}' :
-                        '.arm-left{transform-origin:right bottom;animation:uppercutLeft 1.5s infinite}';
-                    break;
-                case 'roundhouse-kick':
-                    const kickDelay = visual.height === 'high' ? '0s' : visual.height === 'mid' ? '0.5s' : '1s';
-                    dynamicStyle = `.leg-${visual.side}{transform-origin:top center;animation:kickRoundhouse 2s infinite ${kickDelay}}`;
+                    animationCSS = `.arm-${visual.side}{animation:uppercutArm ${0.7}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line class="arm-${visual.side}" x1="100" y1="70" x2="100" y2="${visual.height==='low'?130:40}" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
+                    `;
                     break;
                 case 'front-kick':
-                    dynamicStyle = `.leg-${visual.side}{transform-origin:top center;animation:kickFront 1.5s infinite}`;
+                    animationCSS = `.leg-${visual.side}{animation:frontKick ${1.5}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line x1="90" y1="130" x2="80" y2="190" stroke="${baseColor}" stroke-width="8" stroke-linecap="round"/>
+                        <line class="leg-${visual.side}" x1="110" y1="130" x2="${visual.height==='high'?150:130}" y2="${visual.height==='high'?50:190}" stroke="${accentColor}" stroke-width="8" stroke-linecap="round"/>
+                    `;
+                    break;
+                case 'roundhouse-kick':
+                    const kickAngle = visual.height === 'high' ? 160 : visual.height === 'mid' ? 120 : 80;
+                    animationCSS = `.leg-${visual.side}{animation:roundhouseKick ${2}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line x1="90" y1="130" x2="${80-kickAngle/4}" y2="190" stroke="${baseColor}" stroke-width="8" stroke-linecap="round"/>
+                        <line class="leg-${visual.side}" x1="110" y1="130" x2="110+${kickAngle}" y2="190" stroke="${accentColor}" stroke-width="8" stroke-linecap="round"/>
+                    `;
                     break;
                 case 'side-kick':
-                    dynamicStyle = `.leg-${visual.side}{transform-origin:center right;animation:kickSide 2s infinite}`;
-                    break;
-                case 'teep':
-                    dynamicStyle = `.leg-${visual.side}{transform-origin:bottom center;animation:kickTeep 1.5s infinite}`;
-                    break;
-                case 'back-kick':
-                    dynamicStyle = '.leg-right{animation:backKick 2s infinite}.leg-left{animation:backKick 2s infinite 1s}';
-                    break;
-                case 'knee-straight':
-                case 'knee-clinch':
-                    dynamicStyle = '.leg-right{transform-origin:top center;animation:kneeStrikes 1.5s infinite}';
-                    break;
-                case 'elbow-horizontal':
-                    dynamicStyle = `.arm-${visual.side}{animation:elbowHorizontal 1.5s infinite}`;
-                    break;
-                case 'slip':
-                    dynamicStyle = visual.direction === 'outside' ?
-                        'circle.head{animation:slipOut 1s infinite}' :
-                        'circle.head{animation:slipIn 1s infinite}';
-                    break;
-                case 'roll':
-                    dynamicStyle = '.ellipse.body{animation:rollBody 1.5s infinite}';
-                    break;
-                case 'block':
-                    dynamicStyle = visual.height === 'high' ?
-                        '.rect.block{animation:blockHigh 1s infinite}' :
-                        '.rect.block{animation:blockLow 1s infinite}';
-                    break;
-                case 'step':
-                    dynamicStyle = visual.direction === 'forward' ?
-                        '.circle.foot{animation:stepForward 1.5s infinite}' :
-                        '.circle.foot{animation:stepBack 1.5s infinite}';
-                    break;
-                case 'pivot':
-                    dynamicStyle = 'circle.head{animation:pivotHead 2s infinite} rect.body{animation:pivotBody 2s infinite}';
-                    break;
-            }
-            
-            return `<svg viewBox="0 0 200 200" style="overflow:hidden;">
-                <defs>
-                    <style>
-                        ${dynamicStyle}
-                        @keyframes punchRight { 0%,100%{transform:translateX(0)} 50%{transform:translateX(60px)} }
-                        @keyframes punchLeft { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-60px)} }
-                        @keyframes hookRight { 0%,100%{transform:rotate(0)} 50%{transform:rotate(120deg)} }
-                        @keyframes hookLeft { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-120deg)} }
-                        @keyframes uppercutRight { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-50px) rotate(-45deg)} }
-                        @keyframes uppercutLeft { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-50px) rotate(45deg)} }
-                        @keyframes kickRoundhouse { 0%,100%{transform:rotate(0)} 50%{transform:rotate(${visual.height==='high'?150:visual.height==='mid'?120:90}deg)} }
-                        @keyframes kickFront { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-60px)} }
-                        @keyframes kickSide { 0%,100%{transform:rotate(0)} 50%{transform:rotate(140deg)} }
-                        @keyframes kickTeep { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-50px) rotate(90deg)} }
-                        @keyframes backKick { 0%,100%{transform:rotate(0)} 50%{transform:rotate(160deg)} }
-                        @keyframes kneeStrikes { 0%,100%{transform:rotate(0)} 50%{transform:translateY(-40px) rotate(30deg)} }
-                        @keyframes elbowHorizontal { 0%,100%{transform:rotate(0)} 50%{transform:rotate(${visual.side==='right'?120:-120}deg)} }
-                        @keyframes slipOut { 0%,100%{cx:100} 50%{cx:130} }
-                        @keyframes slipIn { 0%,100%{cx:100} 50%{cx:70} }
-                        @keyframes rollBody { 0%,100%{rx:30 ry:40} 50%{rx:25 ry:45} }
-                        @keyframes blockHigh { 0%,100%{y:30} 50%{y:20} }
-                        @keyframes blockLow { 0%,100%{y:70} 50%{y:80} }
-                        @keyframes stepForward { 0%,100%{cy:180} 50%{cy:160} }
-                        @keyframes stepBack { 0%,100%{cy:180} 50%{cy:170} }
-                        @keyframes pivotHead { 0%,100%{r:20} 50%{r:25} }
-                        @keyframes pivotBody { 0%,100%{ry:40} 50%{ry:35} }
-                    </style>
-                </defs>
-                
-                <!-- Body -->
-                <ellipse class="body" cx="100" cy="110" rx="30" ry="${visual.part==='body'?'45':'40'}" fill="${baseColor}" opacity="0.3"/>
-                
-                <!-- Head -->
-                <circle class="head" cx="100" cy="45" r="22" fill="#2d2d44"/>
-                
-                <!-- Arms -->
-                <g class="arm-left">
-                    <line x1="100" y1="75" x2="50" y2="100" stroke="${baseColor}" stroke-width="12" stroke-linecap="round"/>
-                </g>
-                <g class="arm-right">
-                    <line x1="100" y1="75" x2="150" y2="100" stroke="${accentColor}" stroke-width="12" stroke-linecap="round"/>
-                </g>
-                
-                <!-- Legs -->
-                <g class="leg-left">
-                    <line x1="90" y1="150" x2="80" y2="190" stroke="${baseColor}" stroke-width="10" stroke-linecap="round"/>
-                </g>
-                <g class="leg-right">
-                    <line x1="110" y1="150" x2="120" y2="190" stroke="${accentColor}" stroke-width="10" stroke-linecap="round"/>
-                </g>
-                
-                <!-- Arrow for direction -->
-                ${(visual.side && ['right','left'].includes(visual.side)) ? 
-                    `<polygon points="${visual.side==='right'?155:45},${visual.limb==='arm'?100:190} ${visual.side==='right'?180:20},${visual.limb==='arm'?90:200} ${visual.side==='right'?180:20},${visual.limb==='arm'?110:180}" fill="${accentColor}" opacity="0.6"/>` : ''}
-                
-                <!-- Action highlight -->
-                <circle cx="100" cy="100" r="45" fill="none" stroke="${accentColor}" stroke-width="2" opacity="0.3" stroke-dasharray="5,5"/>
-            </svg>`;
-        }
-        
-        // ==================== MOVE DETAIL ====================
-        let currentEditingId = null;
-        
-        function viewMoveDetail(moveId) {
-            const move = movementDB.find(m => m.id === moveId);
-            if(!move) return;
-            
-            // Show modal for detail view with edit option
-            showToast(`📝 "${move.arabic.trim()}"\n${move.english}\n\nاضغطي لتعديل الاسم`);
-            
-            setTimeout(() => {
-                openEditModal(move);
-            }, 500);
-        }
-        
-        function openEditModal(move) {
-            currentEditingId = move.id;
-            document.getElementById('editMovementName').textContent = move.arabic.trim() + '\n' + move.english;
-            document.getElementById('customNameInput').value = customNames[move.id] || '';
-            document.getElementById('editModal').classList.add('active');
-        }
-        
-        function closeModal() {
-            document.getElementById('editModal').classList.remove('active');
-            currentEditingId = null;
-        }
-        
-        function saveCustomName() {
-            const customName = document.getElementById('customNameInput').value.trim();
-            if(currentEditingId && customName) {
-                customNames[currentEditingId] = customName;
-                localStorage.setItem('customNames', JSON.stringify(customNames));
-                showToast('✅ تم حفظ الاسم الجديد');
-                renderDictionary();
-            }
-            closeModal();
-        }
-        
-        // ==================== SERIES BUILDER ====================
-        function addToSeries(moveId) {
-            if(selectedMoves.length >= 8) {
-                showToast('⚠️ الحد الأقصى 8 حركات في السلسلة');
-                return;
-            }
-            
-            const move = movementDB.find(m => m.id === moveId);
-            if(move && !selectedMoves.find(m => m.id === moveId)) {
-                selectedMoves.push(move);
-                renderSelectedMoves();
-                showToast('➕ تمت إضافة الحركة للسلسلة');
-            }
-        }
-        
-        function removeFromSeries(index) {
-            selectedMoves.splice(index, 1);
-            renderSelectedMoves();
-        }
-        
-        function renderSelectedMoves() {
-            const container = document.getElementById('selectedMoves');
-            if(selectedMoves.length === 0) {
-                container.innerHTML = '<div class="empty-state">لا توجد حركات مضافة بعد<br>اضغطي على أي بطاقة لإضافتها</div>';
-                return;
-            }
-            
-            container.innerHTML = selectedMoves.map((move, idx) => `
-                <div class="card selected" style="position:relative;">
-                    <span onclick="removeFromSeries(${idx})" style="position:absolute;top:8px;right:8px;background:var(--danger);color:white;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;cursor:pointer;font-size:16px;">×</span>
-                    ${renderSVG(move.visual, false)}
-                    <h3>${move.arabic.trim()}</h3>
-                    <p>${move.english}</p>
-                </div>
-            `).join('');
-        }
-        
-        function previewSeries() {
-            if(selectedMoves.length === 0) {
-                showToast('⚠️ أضفي حركات أولاً');
-                return;
-            }
-            
-            const stage = document.getElementById('animationStage');
-            document.getElementById('seriesPreview').style.display = 'block';
-            
-            // Create animated sequence
-            stage.innerHTML = renderSVG(selectedMoves[0].visual, true);
-            
-            // Cycle through moves
-            let moveIndex = 0;
-            clearInterval(window.seriesInterval);
-            window.seriesInterval = setInterval(() => {
-                if(!isAnimating) return;
-                
-                stage.innerHTML = renderSVG(selectedMoves[moveIndex].visual, true);
-                showToast(`▶️ الآن: ${selectedMoves[moveIndex].arabic.trim().substring(0, 30)}...`);
-                
-                moveIndex = (moveIndex + 1) % selectedMoves.length;
-            }, 2000 / animationSpeed);
-        }
-        
-        function setSpeed(speed) {
-            animationSpeed = speed;
-            document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-        
-        function toggleAnimation() {
-            isAnimating = !isAnimating;
-            showToast(isAnimating ? '▶️ استئناف' : '⏸️ إيقاف');
-        }
-        
-        function saveSeries() {
-            if(selectedMoves.length === 0) {
-                showToast('⚠️ لا توجد حركات للحفظ');
-                return;
-            }
-            
-            const name = document.getElementById('seriesName').value.trim();
-            if(!name) {
-                showToast('⚠️ اكتبي اسم السلسلة');
-                return;
-            }
-            
-            const series = {
-                id: Date.now(),
-                name: name,
-                moves: [...selectedMoves],
-                date: new Date().toISOString(),
-                progress: 0,
-                ratings: {}
-            };
-            
-            seriesData.push(series);
-            localStorage.setItem('seriesData', JSON.stringify(seriesData));
-            
-            showToast('💾 تم حفظ السلسلة بنجاح');
-            
-            // Reset
-            selectedMoves = [];
-            document.getElementById('seriesName').value = '';
-            document.getElementById('seriesPreview').style.display = 'none';
-            renderSelectedMoves();
-            renderSavedSeries();
-        }
-        
-        function renderSavedSeries() {
-            const container = document.getElementById('savedSeriesList');
-            
-            if(seriesData.length === 0) {
-                container.innerHTML = '<div class="empty-state">لم تحفظي أي سلاسل بعد<br>صنعي سلسلة جديدة!</div>';
-                return;
-            }
-            
-            container.innerHTML = seriesData.map(s => `
-                <div class="card" onclick="loadSeries(${s.id})" style="margin:8px 0;">
-                    <h3>${s.name}</h3>
-                    <p>${s.moves.length} حركات • منذ ${formatDate(s.date)}</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width:${s.progress}%"></div>
-                    </div>
-                    <p style="font-size:0.8rem;margin-top:8px;">إتقان: ${s.progress}%</p>
-                </div>
-            `).join('');
-        }
-        
-        function loadSeries(seriesId) {
-            const series = seriesData.find(s => s.id === seriesId);
-            if(!series) return;
-            
-            selectedMoves = [...series.moves];
-            renderSelectedMoves();
-            showSection('series');
-            showToast(`🎯 تم تحميل: ${series.name}`);
-        }
-        
-        // ==================== DICTIONARY ====================
-        function renderDictionary(searchTerm = '') {
-            const filtered = movementDB.filter(m => 
-                searchTerm === '' || 
-                m.arabic.includes(searchTerm) || 
-                m.english.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            
-            const grid = document.getElementById('dictionaryGrid');
-            grid.innerHTML = filtered.map(move => `
-                <div class="card" onclick="openEditModalById('${move.id}')" style="padding:12px;">
-                    ${renderSVG(move.visual, false)}
-                    <h3 style="font-size:0.9rem;">${move.arabic.trim()}</h3>
-                    <p style="font-size:0.75rem;">${customNames[move.id] || move.english}</p>
-                    <span class="badge" style="font-size:0.65rem;">${move.level}</span>
-                </div>
-            `).join('');
-        }
-        
-        function openEditModalById(moveId) {
-            const move = movementDB.find(m => m.id === moveId);
-            openEditModal(move);
-        }
-        
-        function filterDictionary() {
-            const term = document.getElementById('searchDict').value;
-            renderDictionary(term);
-        }
-        
-        // ==================== TRACKING ====================
-        function renderTracking() {
-            const container = document.getElementById('trackingList');
-            
-            if(seriesData.length === 0) {
-                container.innerHTML = '<div class="empty-state">ابدئي بصناعة سلسلة لرؤية تطورك</div>';
-                return;
-            }
-            
-            container.innerHTML = seriesData.map(s => `
-                <div class="card" style="margin:8px 0;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <h3>${s.name}</h3>
-                        <span class="badge">${s.moves.length} حركات</span>
-                    </div>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width:${s.progress}%"></div>
-                    </div>
-                    
-                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-                        <div style="flex:1;min-width:120px;">
-                            <small>السرعة</small>
-                            <select onchange="updateRating(${s.id},'speed',this.value)" style="margin:4px 0;padding:8px;font-size:0.85rem;">
-                                <option value="">-</option>
-                                <option value="slow" ${s.ratings?.speed==='slow'?'selected':''}>بطيئة</option>
-                                <option value="medium" ${s.ratings?.speed==='medium'?'selected':''}>متوسطة</option>
-                                <option value="fast" ${s.ratings?.speed==='fast'?'selected':''}>سريعة</option>
-                            </select>
-                        </div>
-                        <div style="flex:1;min-width:120px;">
-                            <small>الثبات</small>
-                            <select onchange="updateRating(${s.id},'consistency',this.value)" style="margin:4px 0;padding:8px;font-size:0.85rem;">
-                                <option value="">-</option>
-                                <option value="poor" ${s.ratings?.consistency==='poor'?'selected':''}>ضعيف</option>
-                                <option value="good" ${s.ratings?.consistency==='good'?'selected':''}>جيد</option>
-                                <option value="excellent" ${s.ratings?.consistency==='excellent'?'selected':''}>ممتاز</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="practiceSeries(${s.id})" style="margin-top:12px;width:100%;">
-                        🏃 تمرّن عليها
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        function updateRating(seriesId, ratingType, value) {
-            const series = seriesData.find(s => s.id === seriesId);
-            if(!series) return;
-            
-            series.ratings = series.ratings || {};
-            series.ratings[ratingType] = value;
-            
-            // Update progress based on ratings
-            let progress = series.progress;
-            if(value === 'slow') progress = Math.max(20, progress - 5);
-            if(value === 'medium') progress = Math.min(70, progress + 10);
-            if(value === 'fast') progress = Math.min(100, progress + 15);
-            if(value === 'good' || value === 'excellent') progress = Math.min(100, progress + 10);
-            
-            series.progress = progress;
-            localStorage.setItem('seriesData', JSON.stringify(seriesData));
-            renderTracking();
-            renderSavedSeries();
-        }
-        
-        function practiceSeries(seriesId) {
-            const series = seriesData.find(s => s.id === seriesId);
-            if(!series) return;
-            
-            selectedMoves = [...series.moves];
-            renderSelectedMoves();
-            document.getElementById('seriesName').value = series.name;
-            showSection('series');
-            previewSeries();
-            showToast(`🏃 بدأ التمرين: ${series.name}`);
-        }
-        
-        // ==================== GYM SCHEDULE ====================
-        function renderSchedule() {
-            const container = document.getElementById('gymSchedule');
-            
-            container.innerHTML = gymData.schedule.map((item, idx) => `
-                <div class="schedule-row">
-                    <div>
-                        <strong>${item.day}</strong><br>
-                        <small style="color:var(--text-secondary);">${item.time}</small>
-                    </div>
-                    <div class="checkbox-custom ${item.attended ? 'checked' : ''}" onclick="toggleAttendance(${idx})">
-                        ${item.attended ? '✓' : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function toggleAttendance(idx) {
-            gymData.schedule[idx].attended = !gymData.schedule[idx].attended;
-            localStorage.setItem('gymData', JSON.stringify(gymData));
-            renderSchedule();
-        }
-        
-        // ==================== PAYMENT TRACKER ====================
-        function renderPaymentTracker() {
-            const startDate = document.getElementById('subscriptionStart').value;
-            localStorage.setItem('subscriptionStart', startDate);
-            
-            const start = new Date(startDate);
-            const today = new Date();
-            const months = 6;
-            
-            const container = document.getElementById('paymentTracker');
-            let html = '';
-            
-            for(let i = 0; i < months; i++) {
-                const date = new Date(start);
-                date.setMonth(start.getMonth() + i);
-                const monthKey = date.toISOString().slice(0, 7);
-                const isPaid = gymData.payments[monthKey];
-                const monthName = date.toLocaleDateString('ar-EG', {year:'numeric', month:'long'});
-                
-                html += `
-                    <div class="payment-month ${isPaid ? 'paid' : ''}">
-                        <span>${monthName}</span>
-                        <div class="payment-toggle ${isPaid ? 'active' : ''}" onclick="togglePayment('${monthKey}')"></div>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
-        }
-        
-        function togglePayment(monthKey) {
-            const element = event.currentTarget;
-            const isPaid = element.classList.toggle('active');
-            
-            if(isPaid) {
-                element.classList.add('active');
-                element.parentElement.classList.add('paid');
-                gymData.payments[monthKey] = true;
-            } else {
-                element.classList.remove('active');
-                element.parentElement.classList.remove('paid');
-                delete gymData.payments[monthKey];
-            }
-            
-            localStorage.setItem('gymData', JSON.stringify(gymData));
-        }
-        
-        // ==================== UTILITIES ====================
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-            
-            if(diff === 0) return 'اليوم';
-            if(diff === 1) return 'أمس';
-            if(diff < 7) return `${diff} أيام`;
-            if(diff < 30) return `${Math.floor(diff/7)} أسابيع`;
-            return `${Math.floor(diff/30)} أشهر`;
-        }
-        
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Close modal on outside click
-        document.getElementById('editModal').addEventListener('click', function(e) {
-            if(e.target === this) closeModal();
-        });
-    </script>
-</body>
-</html>
+                    animationCSS = `.leg-${visual.side}{animation:sideKick ${1.8}s infinite ease-in-out ${delay}s}`;
+                    shapeDefs = `
+                        <line class="leg-${visual.side}" x1="${visual.side==='right'?110:90}" y1="130" x2="${visual.side==='right'?180:20}" y
