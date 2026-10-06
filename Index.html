@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ذاكرة الكيك بوكسينغ</title>
+    
+    <!-- أيقونة التطبيق عند التثبيت على الهاتف -->
+    <link rel="icon" type="image/png" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
+    <link rel="apple-touch-icon" href="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kickboxing Memory">
+
+    <!-- Styles -->
+    <style>
+        :root {
+            --bg-dark: #12131C;
+            --card-bg: #1E202E;
+            --accent-red: #FF3B30;
+            --accent-gold: #FFCC00;
+            --accent-blue: #007AFF;
+            --text-main: #FFFFFF;
+            --text-sub: #A0A5BA;
+            --border-color: #2C2F45;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding-bottom: 90px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #1A1C2B 0%, var(--bg-dark) 100%);
+            padding: 20px 16px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-red);
+            object-fit: cover;
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(30, 32, 46, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 20px;
+            border-top: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            gap: 4px;
+            cursor: pointer;
+            width: 20%;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+
+        .nav-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* Main View Container */
+        .view {
+            display: none;
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Search & Filter */
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: #fff;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        /* Movement Card */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .move-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .move-card:active {
+            transform: scale(0.97);
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 130px;
+            background-color: #151622;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .move-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .move-sub {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        /* Series Builder */
+        .series-builder {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .sequence-display {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 0;
+            min-height: 100px;
+            align-items: center;
+        }
+
+        .seq-item {
+            min-width: 80px;
+            background: #151622;
+            border-radius: var(--radius-md);
+            padding: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .seq-item.active-playing {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+        }
+
+        .seq-item .remove-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--accent-red);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            background-color: var(--border-color);
+            color: #fff;
+        }
+
+        /* Player Controls */
+        .player-box {
+            background: #151622;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .speed-controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .speed-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .speed-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        /* Table Styles for Dictionary & Schedule */
+        .dict-list, .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dict-item, .schedule-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .edit-input {
+            background: #151622;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Badge status */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .status-good { background: rgba(52, 199, 89, 0.2); color: #34C759; }
+        .status-medium { background: rgba(255, 204, 0, 0.2); color: #FFCC00; }
+        .status-hard { background: rgba(255, 59, 48, 0.2); color: #FF3B30; }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .payment-card {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkbox-custom {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent-red);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <img src="AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png" alt="Profile" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'40\' fill=\'%23FF3B30\'/></svg>'">
+            <h1>ذاكرة الكيك بوكسينغ 🥊</h1>
+        </div>
+    </header>
+
+    <!-- App Views -->
+
+    <!-- VIEW 1: MOVEMENT CARDS -->
+    <section id="view-cards" class="view active">
+        <input type="text" class="search-box" id="search-cards" placeholder="بحث عن حركة (مثال: مستقيمة, Hook, ركلة)..." oninput="filterCards()">
+        <div class="card-grid" id="cards-container"></div>
+    </section>
+
+    <!-- VIEW 2: SERIES BUILDER & ANIMATED PLAYER -->
+    <section id="view-series" class="view">
+        <div class="series-builder">
+            <h3>🔥 صناعة سلسلة جديدة</h3>
+            <div class="sequence-display" id="builder-sequence">
+                <span style="color: var(--text-sub); font-size: 0.85rem;">إضغط على الحركات أسفله لإضافتها للسلسلة...</span>
+            </div>
+            <input type="text" id="series-name" class="search-box" style="margin-top:10px; margin-bottom: 5px;" placeholder="اسم السلسلة (مثلاً: Series 01 - حصة الأربعاء)">
+            <button class="btn" onclick="saveSeries()">💾 حفظ السلسلة</button>
+        </div>
+
+        <div class="player-box">
+            <h4>▶️ معينة الأنيميشن المتحرك</h4>
+            <div class="svg-container" id="player-svg-box" style="height: 180px; margin: 10px 0;">
+                <!-- Animated SVG Player Rendering -->
+            </div>
+            <div id="playing-now-title" style="font-weight: bold; color: var(--accent-gold); font-size: 0.9rem;">جاهز للتشغيل</div>
+            <div class="speed-controls">
+                <button class="btn btn-secondary" style="width:auto; margin:0;" onclick="playCurrentSequence()">▶️ تشغيل</button>
+                <button class="speed-btn active" onclick="setSpeed(1, this)">1x</button>
+                <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x 🐢</button>
+                <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x ⚡</button>
+            </div>
+        </div>
+
+        <h3 style="margin: 20px 0 10px;">اختر الحركات للإضافة:</h3>
+        <div class="card-grid" id="builder-cards-container"></div>
+    </section>
+
+    <!-- VIEW 3: DICTIONARY -->
+    <section id="view-dict" class="view">
+        <h3 style="margin-bottom: 12px;">📖 المعجم القابل للتعديل</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 15px;">يمكنك تعديل الاسم التكتيكي الذي يستخدمه مدربك الخاص لكل حركة:</p>
+        <div class="dict-list" id="dict-container"></div>
+    </section>
+
+    <!-- VIEW 4: TRACKING -->
+    <section id="view-tracking" class="view">
+        <h3 style="margin-bottom: 12px;">📈 تتبع مستوى إتقان الـ Series</h3>
+        <div class="dict-list" id="tracking-container"></div>
+    </section>
+
+    <!-- VIEW 5: SCHEDULE & PAYMENTS -->
+    <section id="view-schedule" class="view">
+        <h3 style="margin-bottom: 12px;">📅 سجل حصص الصالة</h3>
+        <div class="schedule-list" id="schedule-container"></div>
+
+        <h3 style="margin: 24px 0 12px;">💰 تتبع اشتراك الصالة</h3>
+        <div class="payment-grid" id="payment-container"></div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav>
+        <button class="nav-btn active" onclick="switchView('cards', this)">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+            البطاقات
+        </button>
+        <button class="nav-btn" onclick="switchView('series', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            السلسلة
+        </button>
+        <button class="nav-btn" onclick="switchView('dict', this)">
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            المعجم
+        </button>
+        <button class="nav-btn" onclick="switchView('tracking', this)">
+            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            التتبع
+        </button>
+        <button class="nav-btn" onclick="switchView('schedule', this)">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+            الصالة
+        </button>
+    </nav>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Move Database
+        const initialMovements = [
+            { id: "jab", arabic: "ضربة مستقيمة باليسار", english: "Jab", customName: "Jab", category: "لكمات", type: "punch-left" },
+            { id: "cross", arabic: "ضربة مستقيمة باليمين", english: "Cross / Straight Right", customName: "Cross", category: "لكمات", type: "punch-right" },
+            { id: "lead_hook", arabic: "ضربة مقوسة باليسار", english: "Lead Hook", customName: "Lead Hook", category: "لكمات", type: "hook-left" },
+            { id: "rear_hook", arabic: "ضربة مقوسة باليمين", english: "Rear Hook", customName: "Rear Hook", category: "لكمات", type: "hook-right" },
+            { id: "low_kick", arabic: "ركلة منخفضة باليمين", english: "Right Low Kick", customName: "Low Kick", category: "ركلات", type: "kick-low" },
+            { id: "high_kick", arabic: "ركلة مرتفعة باليمين", english: "Right High Kick", customName: "High Kick", category: "ركلات", type: "kick-high" },
+            { id: "front_teep", arabic: "ركلة دفع أمامية", english: "Push Kick / Teep", customName: "Teep", category: "ركلات", type: "kick-front" },
+            { id: "slip_left", arabic: "تادي مراوغة لليسار", english: "Slip Left", customName: "Slip Left", category: "دفاع", type: "slip-left" }
+        ];
+
+        let movements = JSON.parse(localStorage.getItem('kb_movements')) || initialMovements;
+        let savedSeries = JSON.parse(localStorage.getItem('kb_series')) || [];
+        let currentSequence = [];
+        let playSpeed = 1;
+        let isPlaying = false;
+
+        // Vector SVG Renderer Engine
+        function generateSVG(type, frame = 0) {
+            let armRight = "M 55 42 L 70 42";
+            let armLeft = "M 45 42 L 30 38";
+            let legRight = "M 53 60 L 55 85";
+            let legLeft = "M 47 60 L 45 85";
+            let arrow = "";
+
+            if (type === 'punch-right') {
+                let ext = frame * 15;
+                armRight = `M 55 42 L ${70 + ext} 40`;
+                arrow = `<path d="M 70 32 L 85 32" stroke="#FFCC00" stroke-width="3" marker-end="url(#arrow)" />`;
+            } else if (type === 'punch-left') {
+                let ext = frame * 15;
+                armLeft = `M 45 42 L ${30 - ext} 40`;
+                arrow = `<path d="M 30 32 L 15 32" stroke="#FFCC00" stroke-width="3" />`;
+            } else if (type === 'kick-low') {
+                let rot = frame * 20;
+                legRight = `M 53 60 L ${65 + rot} 75`;
+                arrow = `<path d="M 50 80 Q 65 85 75 75" fill="none" stroke="#FF3B30" stroke-width="3" />`;
+            } else if (type === 'kick-high') {
+                let ext = frame * 30;
+                legRight = `M 53 60 L ${60 + ext} ${45 - ext/2}`;
+                arrow = `<path d="M 50 70 Q 70 50 85 35" fill="none" stroke="#FF3B30" stroke-width="3" />`;
+            } else if (type === 'slip-left') {
+                let shift = frame * 8;
+                return `<svg viewBox="0 0 100 100" width="100%" height="100%">
+                    <circle cx="${50 - shift}" cy="25" r="8" fill="#FFF"/>
+                    <path d="M ${50 - shift} 33 L ${50 - shift} 60" stroke="#FFF" stroke-width="4"/>
+                    <path d="M ${50 - shift} 42 L 65 45" stroke="#FFF" stroke-width="3"/>
+                    <path d="M ${50 - shift} 42 L 35 45" stroke="#FFF" stroke-width="3"/>
+                    <path d="M 40 85 L 60 85" stroke="#007AFF" stroke-width="3" />
+                </svg>`;
+            }
+
+            return `
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <circle cx="50" cy="25" r="8" fill="#FFF"/>
+                <path d="M 50 33 L 50 60" stroke="#FFF" stroke-width="4"/>
+                <path d="${armLeft}" stroke="#007AFF" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="${armRight}" stroke="#FF3B30" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="${legLeft}" stroke="#FFF" stroke-width="3.5"/>
+                <path d="${legRight}" stroke="#FFCC00" stroke-width="3.5"/>
+                ${arrow}
+            </svg>`;
+        }
+
+        // Render Cards View
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            const builderContainer = document.getElementById('builder-cards-container');
+            container.innerHTML = '';
+            builderContainer.innerHTML = '';
+
+            movements.forEach(m => {
+                const cardHTML = `
+                    <div class="move-card" onclick="addToSequence('${m.id}')">
+                        <div class="svg-container">${generateSVG(m.type, 0)}</div>
+                        <div class="move-title">${m.customName || m.arabic}</div>
+                        <div class="move-sub">${m.english}</div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+                builderContainer.innerHTML += cardHTML;
+            });
+        }
+
+        // Search Filter
+        function filterCards() {
+            const val = document.getElementById('search-cards').value.toLowerCase();
+            const cards = document.querySelectorAll('#cards-container .move-card');
+            movements.forEach((m, idx) => {
+                const match = m.arabic.toLowerCase().includes(val) || m.english.toLowerCase().includes(val) || m.customName.toLowerCase().includes(val);
+                if (cards[idx]) cards[idx].style.display = match ? 'flex' : 'none';
+            });
+        }
+
+        // Builder Sequence Logic
+        function addToSequence(id) {
+            const move = movements.find(m => m.id === id);
+            if (!move) return;
+            currentSequence.push(move);
+            renderSequence();
+        }
+
+        function removeFromSequence(index) {
+            currentSequence.splice(index, 1);
+            renderSequence();
+        }
+
+        function renderSequence() {
+            const display = document.getElementById('builder-sequence');
+            if (currentSequence.length === 0) {
+                display.innerHTML = '<span style="color: var(--text-sub); font-size: 0.85rem;">إضغط على الحركات أسفله لإضافتها للسلسلة...</span>';
+                return;
+            }
+            display.innerHTML = '';
+            currentSequence.forEach((m, idx) => {
+                display.innerHTML += `
+                    <div class="seq-item" id="seq-item-${idx}">
+                        <button class="remove-btn" onclick="removeFromSequence(${idx})">✕</button>
+                        <div style="height:40px">${generateSVG(m.type, 0)}</div>
+                        <div style="font-size:0.7rem; font-weight:bold;">${m.customName}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // Animated Player Loop
+        async function playCurrentSequence() {
+            if (currentSequence.length === 0 || isPlaying) return;
+            isPlaying = true;
+            const playerBox = document.getElementById('player-svg-box');
+            const titleBox = document.getElementById('playing-now-title');
+
+            for (let i = 0; i < currentSequence.length; i++) {
+                const move = currentSequence[i];
+                titleBox.innerText = `▶️ الآن: ${move.customName} (${move.english})`;
+
+                // Highlight Active item in Sequence UI
+                document.querySelectorAll('.seq-item').forEach((el, idx) => {
+                    el.classList.toggle('active-playing', idx === i);
+                });
+
+                // Frame Animation
+                for (let frame = 0; frame <= 1; frame += 0.2) {
+                    playerBox.innerHTML = generateSVG(move.type, frame);
+                    await new Promise(r => setTimeout(r, 80 / playSpeed));
+                }
+                for (let frame = 1; frame >= 0; frame -= 0.2) {
+                    playerBox.innerHTML = generateSVG(move.type, frame);
+                    await new Promise(r => setTimeout(r, 60 / playSpeed));
+                }
+            }
+
+            titleBox.innerText = ' اكتملت السلسلة!';
+            playerBox.innerHTML = generateSVG('guard', 0);
+            document.querySelectorAll('.seq-item').forEach(el => el.classList.remove('active-playing'));
+            isPlaying = false;
+        }
+
+        function setSpeed(spd, btn) {
+            playSpeed = spd;
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function saveSeries() {
+            const nameInput = document.getElementById('series-name');
+            if (!nameInput.value || currentSequence.length === 0) {
+                alert('الرجاء إدخال اسم السلسلة وإضافة حركات إليها أولاً');
+                return;
+            }
+            const newSeries = {
+                id: Date.now(),
+                title: nameInput.value,
+                moves: [...currentSequence],
+                rating: { speed: 'متوسط', stability: 'جيد', reflex: 'قيد التفكير' }
+            };
+            savedSeries.push(newSeries);
+            localStorage.setItem('kb_series', JSON.stringify(savedSeries));
+            nameInput.value = '';
+            currentSequence = [];
+            renderSequence();
+            renderTracking();
+            alert('تم حفظ السلسلة بنجاح! 💾');
+        }
+
+        // Render Dictionary
+        function renderDictionary() {
+            const container = document.getElementById('dict-container');
+            container.innerHTML = '';
+            movements.forEach((m, idx) => {
+                container.innerHTML += `
+                    <div class="dict-item">
+                        <div>
+                            <strong>${m.arabic}</strong>
+                            <div style="font-size:0.75rem; color:var(--text-sub);">${m.english}</div>
+                        </div>
+                        <input type="text" class="edit-input" value="${m.customName}" onchange="updateCustomName(${idx}, this.value)">
+                    </div>
+                `;
+            });
+        }
+
+        function updateCustomName(index, val) {
+            movements[index].customName = val;
+            localStorage.setItem('kb_movements', JSON.stringify(movements));
+            renderCards();
+        }
+
+        // Render Tracking View
+        function renderTracking() {
+            const container = document.getElementById('tracking-container');
+            container.innerHTML = '';
+            if (savedSeries.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-sub); text-align:center;">لم تقومي بحفظ أي سلسلة بعد.</p>';
+                return;
+            }
+            savedSeries.forEach((s) => {
+                container.innerHTML += `
+                    <div class="dict-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <strong>${s.title}</strong>
+                            <span class="status-badge status-good">🟢 محفوظة</span>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-sub);">
+                            الحركات: ${s.moves.map(m => m.customName).join(' ➔ ')}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Schedule & Payments
+        function renderSchedule() {
+            const schedContainer = document.getElementById('schedule-container');
+            const payContainer = document.getElementById('payment-container');
+
+            const days = ['الإثنين', 'الأربعاء', 'الجمعة'];
+            schedContainer.innerHTML = '';
+            days.forEach(d => {
+                schedContainer.innerHTML += `
+                    <div class="schedule-item">
+                        <div>
+                            <strong>حصة يوم ${d}</strong>
+                            <div style="font-size:0.75rem; color:var(--text-sub);">21:00 ← 22:30</div>
+                        </div>
+                        <input type="checkbox" class="checkbox-custom">
+                    </div>
+                `;
+            });
+
+            const months = ['09/2026', '10/2026', '11/2026', '12/2026', '01/2027', '02/2027'];
+            payContainer.innerHTML = '';
+            months.forEach((m, idx) => {
+                payContainer.innerHTML += `
+                    <div class="payment-card">
+                        <span style="font-size:0.85rem; font-weight:bold;">${m}</span>
+                        <input type="checkbox" class="checkbox-custom" ${idx === 0 ? 'checked' : ''}>
+                    </div>
+                `;
+            });
+        }
+
+        // View Switcher Navigation
+        function switchView(viewKey, btn) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`view-${viewKey}`).classList.add('active');
+            if (btn) btn.classList.add('active');
+
+            if (viewKey === 'dict') renderDictionary();
+            if (viewKey === 'tracking') renderTracking();
+            if (viewKey === 'schedule') renderSchedule();
+        }
+
+        // App Initialization
+        window.onload = () => {
+            renderCards();
+            document.getElementById('player-svg-box').innerHTML = generateSVG('guard', 0);
+        };
+    </script>
+</body>
+</html>
+
