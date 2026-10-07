@@ -477,12 +477,7 @@ main {
 }
 
 .move-visual {
-    background:
-        radial-gradient(
-            circle at center,
-            #ffffff,
-            #f0edff
-        );
+    background: #f5f0e6;
     min-height: 180px;
     display: flex;
     align-items: center;
@@ -542,95 +537,156 @@ main {
 }
 
 /* =========================================================
-   SVG CHARACTER - NEW STYLE (COMIC/RETRO)
+   SVG CHARACTER — NEW RETRO BOXING STYLE
 ========================================================= */
 
 .fighter-svg {
     width: 100%;
-    max-width: 185px;
+    max-width: 220px;
     height: 170px;
     overflow: visible;
 }
 
-/* Common Styles for Fighters */
-.fighter-svg .skin {
-    fill: #f5d0b0; /* Skin tone */
-    stroke: #333;
-    stroke-width: 2;
+/* Red fighter (user) */
+.fighter-svg .red-skin {
+    fill: #f1c8a9;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .red-hair {
+    fill: #30253b;
+    stroke: #3b304e;
+    stroke-width: 1.5;
+}
+
+.fighter-svg .red-short {
+    fill: #c0392b;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .red-arm {
+    stroke: #3b304e;
+    stroke-width: 7;
     stroke-linecap: round;
     stroke-linejoin: round;
-}
-
-.fighter-svg .hair {
-    fill: #2c2c2c;
-}
-
-.fighter-svg .jersey {
-    stroke: #333;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.fighter-svg .shorts {
-    stroke: #333;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.fighter-svg .glove {
-    stroke: #333;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.fighter-svg .shoes {
-    fill: #333;
-    stroke: #333;
-    stroke-width: 2;
-}
-
-/* Arrows and Motion Lines */
-.fighter-svg .arrow-path {
     fill: none;
-    stroke: #333;
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-dasharray: 5,5; /* Dashed effect */
-    marker-end: url(#arrowHead);
 }
 
-.fighter-svg .motion-lines {
-    stroke: #333;
+.fighter-svg .red-leg {
+    stroke: #3b304e;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.fighter-svg .red-glove {
+    fill: #d4453a;
+    stroke: #3b304e;
+    stroke-width: 2;
+}
+
+.fighter-svg .red-shoe {
+    fill: #3b304e;
+    stroke: #3b304e;
+    stroke-width: 1.5;
+}
+
+/* Blue fighter (opponent) */
+.fighter-svg .blue-skin {
+    fill: #f1c8a9;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .blue-hair {
+    fill: #30253b;
+    stroke: #3b304e;
+    stroke-width: 1.5;
+}
+
+.fighter-svg .blue-short {
+    fill: #2c5f8a;
+    stroke: #3b304e;
+    stroke-width: 2.5;
+}
+
+.fighter-svg .blue-arm {
+    stroke: #3b304e;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.fighter-svg .blue-leg {
+    stroke: #3b304e;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.fighter-svg .blue-glove {
+    fill: #3a6b8f;
+    stroke: #3b304e;
+    stroke-width: 2;
+}
+
+.fighter-svg .blue-shoe {
+    fill: #3b304e;
+    stroke: #3b304e;
+    stroke-width: 1.5;
+}
+
+/* Motion / impact lines */
+.fighter-svg .motion-line {
+    stroke: #3b304e;
     stroke-width: 2;
     stroke-linecap: round;
-    opacity: 0.6;
+    fill: none;
+    opacity: 0.7;
 }
 
-/* Red Fighter Specifics */
-.fighter-red .jersey { fill: #e85d68; }
-.fighter-red .shorts { fill: #c0392b; }
-.fighter-red .glove { fill: #ff5d79; }
-
-/* Blue Fighter Specifics */
-.fighter-blue .jersey { fill: #4e8ee8; }
-.fighter-blue .shorts { fill: #2980b9; }
-.fighter-blue .glove { fill: #2980b9; }
-
-/* Animation Classes */
-.animate-punch-left { animation: punchLeftAnim 1s ease-in-out infinite; }
-.animate-punch-right { animation: punchRightAnim 1s ease-in-out infinite; }
-
-@keyframes punchLeftAnim {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(15px); }
+.fighter-svg .impact-star {
+    fill: #f3b83f;
+    stroke: #3b304e;
+    stroke-width: 1.5;
 }
 
-@keyframes punchRightAnim {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-15px); }
+.fighter-svg .impact-line {
+    stroke: #f3b83f;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+.fighter-svg .arrow {
+    stroke: #c0392b;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 7 5;
+}
+
+.fighter-svg .target {
+    fill: rgba(243,184,63,.15);
+    stroke: #f3b83f;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+}
+
+.fighter-svg .pivot {
+    fill: none;
+    stroke: #4e8ee8;
+    stroke-width: 2.5;
+    stroke-dasharray: 5 4;
+}
+
+.fighter-svg .animated-part {
+    transform-box: fill-box;
+    transform-origin: center;
 }
 
 /* =========================================================
@@ -695,7 +751,7 @@ main {
 }
 
 .modal-visual {
-    background: #f5f2ff;
+    background: #f5f0e6;
     border-radius: 24px;
     min-height: 280px;
     display: grid;
@@ -704,7 +760,7 @@ main {
 }
 
 .modal-visual .fighter-svg {
-    max-width: 300px;
+    max-width: 340px;
     height: 260px;
 }
 
@@ -754,8 +810,7 @@ main {
 }
 
 .animation-display {
-    background:
-        radial-gradient(circle,#ffffff,#f0edff);
+    background: #f5f0e6;
     border-radius: 20px;
     min-height: 300px;
     display: grid;
@@ -765,7 +820,7 @@ main {
 }
 
 .animation-display .fighter-svg {
-    max-width: 330px;
+    max-width: 360px;
     height: 290px;
 }
 
@@ -866,7 +921,7 @@ main {
 
 .series-mini-card .mini-visual {
     height: 82px;
-    background: #f2efff;
+    background: #f5f0e6;
     display: grid;
     place-items: center;
 }
@@ -972,7 +1027,7 @@ main {
     width: 75px;
     height: 65px;
     border-radius: 11px;
-    background: #f1effa;
+    background: #f5f0e6;
     overflow: hidden;
     display: grid;
     place-items: center;
@@ -1440,134 +1495,3 @@ main {
     0%,100% {
         transform: rotate(0deg);
     }
-
-    45% {
-        transform: rotate(-18deg) translate(12px,-12px);
-    }
-
-    60% {
-        transform: rotate(-20deg) translate(15px,-14px);
-    }
-}
-
-@keyframes kneeUp {
-    0%,100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
-    45% {
-        transform: translateY(-25px) rotate(-18deg);
-    }
-
-    60% {
-        transform: translateY(-28px) rotate(-20deg);
-    }
-}
-
-@keyframes slipLeft {
-    0%,100% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(-25px) rotate(-12deg);
-    }
-}
-
-@keyframes slipRight {
-    0%,100% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(25px) rotate(12deg);
-    }
-}
-
-@keyframes bodyRoll {
-    0%,100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateY(18px) rotate(20deg);
-    }
-}
-
-.animate-punch-left {
-    animation: punchForward 1s ease-in-out infinite;
-}
-
-.animate-punch-right {
-    animation: punchBack 1s ease-in-out infinite;
-}
-
-.animate-kick {
-    animation: kickForward 1s ease-in-out infinite;
-}
-
-.animate-knee {
-    animation: kneeUp 1s ease-in-out infinite;
-}
-
-.animate-slip-left {
-    animation: slipLeft 1s ease-in-out infinite;
-}
-
-.animate-slip-right {
-    animation: slipRight 1s ease-in-out infinite;
-}
-
-.animate-roll {
-    animation: bodyRoll 1s ease-in-out infinite;
-}
-
-/* =========================================================
-   SERIES ACTIVE
-========================================================= */
-
-.series-active {
-    border: 2px solid var(--purple) !important;
-    box-shadow:
-        0 0 0 4px rgba(118,84,232,.10),
-        0 15px 40px rgba(118,84,232,.16);
-}
-
-.series-playing-indicator {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: var(--purple);
-    color: white;
-    border-radius: 10px;
-    padding: 6px 9px;
-    font-size: 9px;
-    font-weight: 900;
-}
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading {
-    min-height: 180px;
-    display: grid;
-    place-items: center;
-}
-
-.spinner {
-    width: 34px;
-    height: 34px;
-    border: 4px solid #e9e3fa;
-    border-top-color: var(--purple);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-</style
