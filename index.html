@@ -4592,7 +4592,17 @@ function renderAll() {
 
 loadBuilderSession();
 
-renderAll();
+try {
+    renderAll();
+} catch (error) {
+    document.body.innerHTML = `
+        <div style="padding:30px;font-family:Arial;direction:ltr;background:white;color:#222;">
+            <h2>JavaScript Error</h2>
+            <pre style="white-space:pre-wrap;color:red;">${error.stack || error}</pre>
+        </div>
+    `;
+    console.error(error);
+}
 
 
 /* =========================================================
