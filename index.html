@@ -542,5056 +542,1668 @@ main {
 }
 
 /* =========================================================
-   SVG CHARACTER
+   SVG FIGHTER — REALISTIC CLASSIC CARTOON BOXING MEMORY
+   Pink = attacker
+   Black = defender
+   Female fighters with tied-back hair
+   Each move has its own clear anatomical pose
 ========================================================= */
 
-.fighter-svg {
-    width: 100%;
-    max-width: 185px;
-    height: 170px;
-    overflow: visible;
-}
-
-.fighter-svg .head {
-    fill: #f1c8a9;
-    stroke: #3b304e;
-    stroke-width: 2.5;
-}
-
-.fighter-svg .hair {
-    fill: #30253b;
-}
-
-.fighter-svg .body {
-    fill: #7654e8;
-    stroke: #3b304e;
-    stroke-width: 2.5;
-}
-
-.fighter-svg .shorts {
-    fill: #2d2840;
-    stroke: #3b304e;
-    stroke-width: 2.5;
-}
-
-.fighter-svg .skin {
-    stroke: #3b304e;
-    stroke-width: 6;
-    stroke-linecap: round;
-    fill: none;
-}
-
-.fighter-svg .leg {
-    stroke: #3b304e;
-    stroke-width: 7;
-    stroke-linecap: round;
-    fill: none;
-}
-
-.fighter-svg .glove {
-    fill: #ff5d79;
-    stroke: #3b304e;
-    stroke-width: 2;
-}
-
-.fighter-svg .arrow {
-    stroke: #7654e8;
-    stroke-width: 3;
-    fill: none;
-    stroke-linecap: round;
-    stroke-dasharray: 7 5;
-}
-
-.fighter-svg .target {
-    fill: rgba(255,93,121,.15);
-    stroke: #ff5d79;
-    stroke-width: 2;
-    stroke-dasharray: 4 4;
-}
-
-.fighter-svg .pivot {
-    fill: none;
-    stroke: #4e8ee8;
-    stroke-width: 2.5;
-    stroke-dasharray: 5 4;
-}
-
-.fighter-svg .animated-part {
-    transform-box: fill-box;
-    transform-origin: center;
-}
-
-/* =========================================================
-   MOVE DETAIL MODAL
-========================================================= */
-
-.modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(26,20,43,.58);
-    z-index: 500;
-    display: none;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0;
-}
-
-.modal-backdrop.open {
-    display: flex;
-}
-
-.modal {
-    width: min(760px,100%);
-    max-height: 94vh;
-    overflow-y: auto;
-    background: white;
-    border-radius: 30px 30px 0 0;
-    padding: 18px;
-    animation: modalIn .22s ease;
-}
-
-@keyframes modalIn {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-.modal-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.modal-head h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.close-btn {
-    border: none;
-    background: var(--purple-light);
-    color: var(--purple);
-    width: 38px;
-    height: 38px;
-    border-radius: 13px;
-    font-size: 20px;
-}
-
-.modal-visual {
-    background: #f5f2ff;
-    border-radius: 24px;
-    min-height: 280px;
-    display: grid;
-    place-items: center;
-    margin: 10px 0 15px;
-}
-
-.modal-visual .fighter-svg {
-    max-width: 300px;
-    height: 260px;
-}
-
-.detail-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-bottom: 12px;
-}
-
-.meta-pill {
-    background: var(--purple-light);
-    color: var(--purple-dark);
-    border-radius: 20px;
-    padding: 7px 10px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.detail-description {
-    color: #56515f;
-    font-size: 13px;
-    line-height: 1.9;
-    background: #faf9fd;
-    border-radius: 16px;
-    padding: 13px;
-}
-
-.modal-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 13px;
-}
-
-/* =========================================================
-   ANIMATION CONTROLS
-========================================================= */
-
-.animation-panel {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 14px;
-    box-shadow: var(--shadow);
-    margin-bottom: 15px;
-}
-
-.animation-display {
-    background:
-        radial-gradient(circle,#ffffff,#f0edff);
-    border-radius: 20px;
-    min-height: 300px;
-    display: grid;
-    place-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.animation-display .fighter-svg {
-    max-width: 330px;
-    height: 290px;
-}
-
-.animation-label {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: center;
-}
-
-.animation-label span {
-    background: rgba(255,255,255,.92);
-    padding: 7px 10px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 850;
-    box-shadow: 0 4px 15px rgba(0,0,0,.05);
-}
-
-.speed-controls {
-    display: flex;
-    gap: 7px;
-    margin-top: 12px;
-}
-
-.speed-btn {
-    flex: 1;
-    border: 1px solid var(--border);
-    background: white;
-    color: var(--muted);
-    padding: 9px 5px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 800;
-}
-
-.speed-btn.active {
-    background: var(--purple);
-    color: white;
-    border-color: var(--purple);
-}
-
-/* =========================================================
-   SERIES BUILDER
-========================================================= */
-
-.series-builder {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 23px;
-    padding: 15px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-}
-
-.series-builder h3 {
-    margin: 0 0 5px;
-}
-
-.series-builder p {
-    margin: 0 0 12px;
-    color: var(--muted);
-    font-size: 11px;
-}
-
-.series-strip {
-    min-height: 125px;
-    border: 2px dashed #dcd5f5;
-    background: #faf9ff;
-    border-radius: 17px;
-    padding: 10px;
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    align-items: center;
-}
-
-.series-empty {
-    min-width: 100%;
-    text-align: center;
-    color: #aaa4b5;
-    font-size: 11px;
-}
-
-.series-mini-card {
-    min-width: 110px;
-    width: 110px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
-}
-
-.series-mini-card .mini-visual {
-    height: 82px;
-    background: #f2efff;
-    display: grid;
-    place-items: center;
-}
-
-.series-mini-card .mini-visual .fighter-svg {
-    width: 100px;
-    height: 78px;
-}
-
-.series-mini-card .mini-name {
-    padding: 7px;
-    font-size: 9px;
-    font-weight: 850;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.remove-mini {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 23px;
-    height: 23px;
-    border: none;
-    border-radius: 8px;
-    background: rgba(255,255,255,.95);
-    color: var(--red);
-    font-weight: 900;
-}
-
-.series-tools {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.series-speed {
-    display: flex;
-    gap: 5px;
-    margin-top: 9px;
-}
-
-.series-speed button {
-    flex: 1;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 10px;
-    padding: 7px 2px;
-    font-size: 10px;
-}
-
-.series-speed button.active {
-    background: var(--purple);
-    color: white;
-}
-
-/* =========================================================
-   SAVED SERIES
-========================================================= */
-
-.saved-series {
-    display: grid;
-    gap: 12px;
-}
-
-.saved-series-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 21px;
-    padding: 14px;
-    box-shadow: var(--shadow);
-}
-
-.saved-series-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: center;
-}
-
-.saved-series-header h3 {
-    margin: 0;
-    font-size: 14px;
-}
-
-.saved-series-header small {
-    color: var(--muted);
-    font-size: 9px;
-}
-
-.saved-series-visuals {
-    display: flex;
-    gap: 5px;
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.saved-mini {
-    min-width: 75px;
-    width: 75px;
-    height: 65px;
-    border-radius: 11px;
-    background: #f1effa;
-    overflow: hidden;
-    display: grid;
-    place-items: center;
-}
-
-.saved-mini .fighter-svg {
-    width: 70px;
-    height: 60px;
-}
-
-.saved-series-actions {
-    display: flex;
-    gap: 6px;
-}
-
-/* =========================================================
-   DICTIONARY
-========================================================= */
-
-.dictionary-list {
-    display: grid;
-    gap: 9px;
-}
-
-.dictionary-row {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 17px;
-    padding: 12px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: center;
-}
-
-.dictionary-main strong {
-    display: block;
-    font-size: 13px;
-}
-
-.dictionary-main .standard {
-    direction: ltr;
-    text-align: left;
-    color: var(--purple);
-    font-size: 11px;
-    font-weight: 850;
-    margin-top: 3px;
-}
-
-.dictionary-main small {
-    display: block;
-    color: var(--muted);
-    font-size: 9px;
-    margin-top: 3px;
-}
-
-.dictionary-edit {
-    border: none;
-    background: var(--purple-light);
-    color: var(--purple-dark);
-    border-radius: 11px;
-    padding: 8px 10px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-/* =========================================================
-   TRACKING
-========================================================= */
-
-.tracking-list {
-    display: grid;
-    gap: 12px;
-}
-
-.tracking-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 21px;
-    padding: 14px;
-    box-shadow: var(--shadow);
-}
-
-.tracking-card h3 {
-    margin: 0 0 8px;
-    font-size: 14px;
-}
-
-.rating-grid {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 6px;
-}
-
-.rating-item {
-    background: #faf9fd;
-    border-radius: 12px;
-    padding: 8px 4px;
-    text-align: center;
-}
-
-.rating-item span {
-    display: block;
-    font-size: 9px;
-    color: var(--muted);
-    margin-bottom: 4px;
-}
-
-.rating-value {
-    font-size: 15px;
-}
-
-/* =========================================================
-   CLASSES
-========================================================= */
-
-.schedule-list {
-    display: grid;
-    gap: 10px;
-}
-
-.class-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 14px;
-    box-shadow: var(--shadow);
-}
-
-.class-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.day-name {
-    font-size: 16px;
-    font-weight: 950;
-}
-
-.class-time {
-    color: var(--purple);
-    font-weight: 800;
-    font-size: 11px;
-}
-
-.attendance-btn {
-    border: none;
-    border-radius: 12px;
-    padding: 8px 11px;
-    font-size: 10px;
-    font-weight: 900;
-}
-
-.attendance-btn.present {
-    background: var(--green-light);
-    color: var(--green);
-}
-
-.attendance-btn.absent {
-    background: var(--red-light);
-    color: var(--red);
-}
-
-.class-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 7px;
-    margin-top: 11px;
-}
-
-.class-stat {
-    background: #faf9fd;
-    border-radius: 12px;
-    padding: 9px;
-}
-
-.class-stat small {
-    display: block;
-    color: var(--muted);
-    font-size: 9px;
-}
-
-.class-stat strong {
-    font-size: 15px;
-}
-
-/* =========================================================
-   PAYMENT
-========================================================= */
-
-.payment-box {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 15px;
-    box-shadow: var(--shadow);
-    margin-top: 15px;
-}
-
-.payment-box h3 {
-    margin: 0 0 5px;
-}
-
-.payment-box p {
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.6;
-}
-
-.payment-list {
-    display: grid;
-    gap: 8px;
-}
-
-.payment-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    background: #faf9fd;
-    border-radius: 13px;
-    padding: 10px;
-}
-
-.payment-row strong {
-    font-size: 11px;
-}
-
-.payment-row span {
-    font-size: 10px;
-}
-
-.payment-toggle {
-    border: none;
-    border-radius: 10px;
-    padding: 7px 10px;
-    font-size: 9px;
-    font-weight: 850;
-}
-
-.payment-toggle.paid {
-    background: var(--green-light);
-    color: var(--green);
-}
-
-.payment-toggle.unpaid {
-    background: var(--red-light);
-    color: var(--red);
-}
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    background: rgba(255,255,255,.96);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    padding:
-        7px
-        max(7px, env(safe-area-inset-right))
-        calc(7px + env(safe-area-inset-bottom))
-        max(7px, env(safe-area-inset-left));
-}
-
-.nav-inner {
-    max-width: 760px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(5,1fr);
-    gap: 4px;
-}
-
-.nav-btn {
-    border: none;
-    background: transparent;
-    color: #8d8797;
-    border-radius: 14px;
-    padding: 7px 2px;
-    font-size: 9px;
-    font-weight: 750;
-}
-
-.nav-btn .nav-icon {
-    display: block;
-    font-size: 20px;
-    line-height: 22px;
-    margin-bottom: 2px;
-}
-
-.nav-btn.active {
-    color: var(--purple);
-    background: var(--purple-light);
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-    position: fixed;
-    left: 50%;
-    bottom: 92px;
-    transform: translateX(-50%) translateY(20px);
-    background: #282334;
-    color: white;
-    padding: 11px 16px;
-    border-radius: 14px;
-    font-size: 11px;
-    font-weight: 750;
-    opacity: 0;
-    pointer-events: none;
-    transition: .25s ease;
-    z-index: 1000;
-    white-space: nowrap;
-    max-width: 90vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* =========================================================
-   EMPTY STATE
-========================================================= */
-
-.empty-state {
-    background: white;
-    border: 1px dashed #d9d3e8;
-    border-radius: 20px;
-    padding: 35px 20px;
-    text-align: center;
-    color: var(--muted);
-}
-
-.empty-state .empty-icon {
-    font-size: 35px;
-    margin-bottom: 10px;
-}
-
-.empty-state h3 {
-    margin: 0 0 5px;
-    color: var(--text);
-    font-size: 15px;
-}
-
-.empty-state p {
-    margin: 0;
-    font-size: 11px;
-    line-height: 1.7;
-}
-
-/* =========================================================
-   FORMS
-========================================================= */
-
-.form-group {
-    margin-bottom: 12px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 10px;
-    font-weight: 850;
-    margin-bottom: 6px;
-}
-
-.form-control {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 13px;
-    padding: 10px 11px;
-    outline: none;
-}
-
-.form-control:focus {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(118,84,232,.09);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (min-width: 650px) {
-
-    .moves-grid {
-        grid-template-columns: repeat(3,minmax(0,1fr));
-    }
-
-    .dashboard-grid {
-        grid-template-columns: repeat(4,1fr);
-    }
-
-    .modal-backdrop {
-        align-items: center;
-        padding: 20px;
-    }
-
-    .modal {
-        border-radius: 30px;
-        max-height: 90vh;
-    }
-}
-
-@media (min-width: 1000px) {
-
-    main {
-        padding: 25px;
-    }
-
-    .moves-grid {
-        grid-template-columns: repeat(4,minmax(0,1fr));
-    }
-
-    .hero {
-        padding: 35px;
-    }
-}
-
-/* =========================================================
-   REAL MOVEMENT ANIMATION
-========================================================= */
-
-@keyframes punchForward {
-    0%,100% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    45% {
-        transform: translateX(22px) rotate(-3deg);
-    }
-
-    60% {
-        transform: translateX(25px) rotate(-4deg);
-    }
-}
-
-@keyframes punchBack {
-    0%,100% {
-        transform: translateX(0);
-    }
-
-    45% {
-        transform: translateX(-22px);
-    }
-
-    60% {
-        transform: translateX(-25px);
-    }
-}
-
-@keyframes kickForward {
-    0%,100% {
-        transform: rotate(0deg);
-    }
-
-    45% {
-        transform: rotate(-18deg) translate(12px,-12px);
-    }
-
-    60% {
-        transform: rotate(-20deg) translate(15px,-14px);
-    }
-}
-
-@keyframes kneeUp {
-    0%,100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
-    45% {
-        transform: translateY(-25px) rotate(-18deg);
-    }
-
-    60% {
-        transform: translateY(-28px) rotate(-20deg);
-    }
-}
-
-@keyframes slipLeft {
-    0%,100% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(-25px) rotate(-12deg);
-    }
-}
-
-@keyframes slipRight {
-    0%,100% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(25px) rotate(12deg);
-    }
-}
-
-@keyframes bodyRoll {
-    0%,100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateY(18px) rotate(20deg);
-    }
-}
-
-.animate-punch-left {
-    animation: punchForward 1s ease-in-out infinite;
-}
-
-.animate-punch-right {
-    animation: punchBack 1s ease-in-out infinite;
-}
-
-.animate-kick {
-    animation: kickForward 1s ease-in-out infinite;
-}
-
-.animate-knee {
-    animation: kneeUp 1s ease-in-out infinite;
-}
-
-.animate-slip-left {
-    animation: slipLeft 1s ease-in-out infinite;
-}
-
-.animate-slip-right {
-    animation: slipRight 1s ease-in-out infinite;
-}
-
-.animate-roll {
-    animation: bodyRoll 1s ease-in-out infinite;
-}
-
-/* =========================================================
-   SERIES ACTIVE
-========================================================= */
-
-.series-active {
-    border: 2px solid var(--purple) !important;
-    box-shadow:
-        0 0 0 4px rgba(118,84,232,.10),
-        0 15px 40px rgba(118,84,232,.16);
-}
-
-.series-playing-indicator {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: var(--purple);
-    color: white;
-    border-radius: 10px;
-    padding: 6px 9px;
-    font-size: 9px;
-    font-weight: 900;
-}
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading {
-    min-height: 180px;
-    display: grid;
-    place-items: center;
-}
-
-.spinner {
-    width: 34px;
-    height: 34px;
-    border: 4px solid #e9e3fa;
-    border-top-color: var(--purple);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-</style>
-</head>
-
-<body>
-
-<!-- =======================================================
-     HEADER
-======================================================= -->
-
-<header class="app-header">
-
-    <div class="header-inner">
-
-        <div class="brand">
-
-            <img
-                class="brand-icon"
-                src="./AED5A342-A9AB-4969-88BA-3C9E7AF7949F.png"
-                alt="Boxing Memory"
-            >
-
-            <div class="brand-text">
-
-                <h1>🥊 Boxing Memory</h1>
-
-                <p>
-                    ذاكرتي البصرية للكيك بوكسينغ
-                </p>
-
-            </div>
-
-        </div>
-
-        <button
-            class="header-action"
-            onclick="openSettings()"
-            aria-label="الإعدادات"
-        >
-            ⚙️
-        </button>
-
-    </div>
-
-</header>
-
-
-<!-- =======================================================
-     MAIN
-======================================================= -->
-
-<main>
-
-
-<!-- =======================================================
-     HOME
-======================================================= -->
-
-<section
-    id="section-home"
-    class="section active"
->
-
-    <div class="hero">
-
-        <div class="hero-content">
-
-            <h2>
-                ذاكرتي للكيك بوكسينغ 🥊
-            </h2>
-
-            <p>
-                كل حركة تعلمتها في الجيم،
-                أحفظها بصرياً، أتدرب عليها،
-                وأبني منها الـ Series الخاصة بي.
-            </p>
-
-            <div class="hero-stats">
-
-                <div class="hero-stat">
-                    <strong id="homeMoveCount">0</strong>
-                    <span>حركة</span>
-                </div>
-
-                <div class="hero-stat">
-                    <strong id="homeSeriesCount">0</strong>
-                    <span>Series</span>
-                </div>
-
-                <div class="hero-stat">
-                    <strong id="homeClassesCount">0</strong>
-                    <span>حصص</span>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-
-        <div
-            class="dashboard-card"
-            onclick="showSection('moves')"
-        >
-
-            <div class="icon">🥊</div>
-
-            <h3>
-                الحركات
-            </h3>
-
-            <p>
-                مكتبة بصرية للحركات
-                من الأساسيات إلى المتقدمة.
-            </p>
-
-        </div>
-
-
-        <div
-            class="dashboard-card"
-            onclick="showSection('series')"
-        >
-
-            <div class="icon">🔥</div>
-
-            <h3>
-                Series
-            </h3>
-
-            <p>
-                ركبي حركاتك بالترتيب
-                وشغليها كأنها حصة.
-            </p>
-
-        </div>
-
-
-        <div
-            class="dashboard-card"
-            onclick="showSection('dictionary')"
-        >
-
-            <div class="icon">📖</div>
-
-            <h3>
-                Dictionary
-            </h3>
-
-            <p>
-                العربي + المصطلح الإنجليزي
-                مع اسم الكوتش الخاص بك.
-            </p>
-
-        </div>
-
-
-        <div
-            class="dashboard-card"
-            onclick="showSection('tracking')"
-        >
-
-            <div class="icon">📈</div>
-
-            <h3>
-                Tracking
-            </h3>
-
-            <p>
-                السرعة والثبات والغريزة
-                والذاكرة لكل Series.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="animation-panel">
-
-        <div class="animation-display">
-
-            <div class="animation-label">
-
-                <span>
-                    🎬 آخر حركة
-                </span>
-
-                <span id="homeAnimationName">
-                    Jab
-                </span>
-
-            </div>
-
-            <div id="homeAnimationVisual"></div>
-
-        </div>
-
-        <div class="speed-controls">
-
-            <button
-                class="speed-btn"
-                onclick="setHomeSpeed(0.5,this)"
-            >
-                🐢 0.5×
-            </button>
-
-            <button
-                class="speed-btn active"
-                onclick="setHomeSpeed(1,this)"
-            >
-                ▶️ 1×
-            </button>
-
-            <button
-                class="speed-btn"
-                onclick="setHomeSpeed(1.5,this)"
-            >
-                ⚡ 1.5×
-            </button>
-
-            <button
-                class="speed-btn"
-                onclick="setHomeSpeed(2,this)"
-            >
-                ⚡ 2×
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =======================================================
-     MOVES
-======================================================= -->
-
-<section
-    id="section-moves"
-    class="section"
->
-
-    <h2 class="section-title">
-        🥊 الحركات
-    </h2>
-
-    <p class="section-subtitle">
-        اختاري أي حركة باش تشوفيها بصرياً،
-        الاسم بالعربية والإنجليزية،
-        الاتجاه والعضو المستعمل،
-        وتقدري تضيفيها مباشرة للـ Series.
-    </p>
-
-
-    <div class="toolbar">
-
-        <div class="search-box">
-
-            <span>🔎</span>
-
-            <input
-                id="moveSearch"
-                type="search"
-                placeholder="ابحثي عن حركة..."
-                oninput="renderMoves()"
-            >
-
-        </div>
-
-
-        <select
-            id="levelFilter"
-            class="select-control"
-            onchange="renderMoves()"
-        >
-
-            <option value="all">
-                كل المستويات
-            </option>
-
-            <option value="أساسي">
-                أساسي
-            </option>
-
-            <option value="متوسط">
-                متوسط
-            </option>
-
-            <option value="متقدم">
-                متقدم
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div
-        id="moveCategories"
-        class="chips"
-    ></div>
-
-
-    <div
-        id="movesGrid"
-        class="moves-grid"
-    ></div>
-
-</section>
-
-
-<!-- =======================================================
-     SERIES
-======================================================= -->
-
-<section
-    id="section-series"
-    class="section"
->
-
-    <h2 class="section-title">
-        🔥 Series Builder
-    </h2>
-
-    <p class="section-subtitle">
-        اختاري الحركات بالترتيب.
-        كل بطاقة تبقى ظاهرة بصورتها،
-        وبعدها شغلي السلسلة حركة وراء حركة.
-    </p>
-
-
-    <div class="series-builder">
-
-        <h3>
-            Series الحالية
-        </h3>
-
-        <p>
-            أضيفي الحركات من مكتبة الحركات بواسطة +.
-        </p>
-
-
-        <div
-            id="builderStrip"
-            class="series-strip"
-        >
-
-            <div class="series-empty">
-                لم تضيفي أي حركة بعد 🥊
-            </div>
-
-        </div>
-
-
-        <div class="series-speed">
-
-            <button
-                class="active"
-                onclick="setSeriesSpeed(0.5,this)"
-            >
-                🐢 0.5×
-            </button>
-
-            <button
-                onclick="setSeriesSpeed(1,this)"
-            >
-                ▶️ 1×
-            </button>
-
-            <button
-                onclick="setSeriesSpeed(1.5,this)"
-            >
-                ⚡ 1.5×
-            </button>
-
-            <button
-                onclick="setSeriesSpeed(2,this)"
-            >
-                ⚡ 2×
-            </button>
-
-        </div>
-
-
-        <div class="series-tools">
-
-            <button
-                class="btn btn-primary"
-                onclick="playCurrentSeries()"
-            >
-                ▶️ تشغيل Series
-            </button>
-
-            <button
-                class="btn btn-secondary"
-                onclick="stopSeriesPlayback()"
-            >
-                ⏹️ إيقاف
-            </button>
-
-            <button
-                class="btn btn-success"
-                onclick="saveCurrentSeries()"
-            >
-                💾 حفظ Series
-            </button>
-
-            <button
-                class="btn btn-danger"
-                onclick="clearBuilder()"
-            >
-                🗑️ مسح
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="seriesPlayer"
-        class="animation-panel hidden"
-    >
-
-        <div class="animation-display">
-
-            <div class="animation-label">
-
-                <span>
-                    🎬 تشغيل Series
-                </span>
-
-                <span id="seriesCurrentLabel">
-                    1 / 1
-                </span>
-
-            </div>
-
-            <div id="seriesAnimationVisual"></div>
-
-        </div>
-
-    </div>
-
-
-    <h3 style="margin:20px 0 10px;">
-        💾 Series المحفوظة
-    </h3>
-
-    <div
-        id="savedSeries"
-        class="saved-series"
-    ></div>
-
-</section>
-
-
-<!-- =======================================================
-     DICTIONARY
-======================================================= -->
-
-<section
-    id="section-dictionary"
-    class="section"
->
-
-    <h2 class="section-title">
-        📖 Dictionary
-    </h2>
-
-    <p class="section-subtitle">
-        المصطلح القياسي بالإنجليزية يبقى محفوظاً،
-        ويمكنك إضافة اسم الكوتش أو الاسم الذي تستعملينه
-        أنتِ في الجيم.
-    </p>
-
-
-    <div class="toolbar">
-
-        <div class="search-box">
-
-            <span>🔎</span>
-
-            <input
-                id="dictionarySearch"
-                type="search"
-                placeholder="ابحثي..."
-                oninput="renderDictionary()"
-            >
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="dictionaryList"
-        class="dictionary-list"
-    ></div>
-
-</section>
-
-
-<!-- =======================================================
-     TRACKING
-======================================================= -->
-
-<section
-    id="section-tracking"
-    class="section"
->
-
-    <h2 class="section-title">
-        📈 Tracking
-    </h2>
-
-    <p class="section-subtitle">
-        تابعي تطورك في كل Series.
-        التقييم قابل للتعديل مع الوقت.
-    </p>
-
-
-    <div
-        id="trackingList"
-        class="tracking-list"
-    ></div>
-
-</section>
-
-
-<!-- =======================================================
-     CLASSES
-======================================================= -->
-
-<section
-    id="section-classes"
-    class="section"
->
-
-    <h2 class="section-title">
-        📅 Gym Classes
-    </h2>
-
-    <p class="section-subtitle">
-        الجدول الأساسي:
-        الإثنين، الأربعاء، الجمعة
-        من 21:00 إلى 22:30.
-    </p>
-
-
-    <div
-        id="scheduleList"
-        class="schedule-list"
-    ></div>
-
-
-    <div class="payment-box">
-
-        <h3>
-            💳 تتبع الأداء الشهري
-        </h3>
-
-        <p>
-            يبدأ التتبع من 15/09/2026.
-            علّمي الشهر عندما يتم الأداء.
-        </p>
-
-
-        <button
-            class="btn btn-primary btn-small"
-            onclick="addNextPaymentMonth()"
-        >
-            ＋ إضافة شهر
-        </button>
-
-
-        <div
-            id="paymentList"
-            class="payment-list"
-            style="margin-top:12px;"
-        ></div>
-
-    </div>
-
-</section>
-
-</main>
-
-
-<!-- =======================================================
-     BOTTOM NAV
-======================================================= -->
-
-<nav class="bottom-nav">
-
-    <div class="nav-inner">
-
-        <button
-            class="nav-btn active"
-            data-section="home"
-            onclick="showSection('home')"
-        >
-            <span class="nav-icon">🏠</span>
-            الرئيسية
-        </button>
-
-        <button
-            class="nav-btn"
-            data-section="moves"
-            onclick="showSection('moves')"
-        >
-            <span class="nav-icon">🥊</span>
-            الحركات
-        </button>
-
-        <button
-            class="nav-btn"
-            data-section="series"
-            onclick="showSection('series')"
-        >
-            <span class="nav-icon">🔥</span>
-            Series
-        </button>
-
-        <button
-            class="nav-btn"
-            data-section="dictionary"
-            onclick="showSection('dictionary')"
-        >
-            <span class="nav-icon">📖</span>
-            القاموس
-        </button>
-
-        <button
-            class="nav-btn"
-            data-section="classes"
-            onclick="showSection('classes')"
-        >
-            <span class="nav-icon">📅</span>
-            الحصص
-        </button>
-
-    </div>
-
-</nav>
-
-
-<!-- =======================================================
-     MOVE MODAL
-======================================================= -->
-
-<div
-    id="moveModal"
-    class="modal-backdrop"
-    onclick="closeModalOutside(event,'moveModal')"
->
-
-    <div class="modal">
-
-        <div class="modal-head">
-
-            <h2 id="modalMoveName">
-                الحركة
-            </h2>
-
-            <button
-                class="close-btn"
-                onclick="closeModal('moveModal')"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div
-            id="modalMoveVisual"
-            class="modal-visual"
-        ></div>
-
-
-        <div
-            id="modalMoveMeta"
-            class="detail-meta"
-        ></div>
-
-
-        <div
-            id="modalMoveDescription"
-            class="detail-description"
-        ></div>
-
-
-        <div class="modal-actions">
-
-            <button
-                id="modalAddSeriesBtn"
-                class="btn btn-primary"
-            >
-                ＋ أضيفي للـ Series
-            </button>
-
-            <button
-                id="modalLearnBtn"
-                class="btn btn-success"
-            >
-                ✓ تعلمتها
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     SAVE SERIES MODAL
-======================================================= -->
-
-<div
-    id="saveSeriesModal"
-    class="modal-backdrop"
-    onclick="closeModalOutside(event,'saveSeriesModal')"
->
-
-    <div class="modal">
-
-        <div class="modal-head">
-
-            <h2>
-                💾 حفظ Series
-            </h2>
-
-            <button
-                class="close-btn"
-                onclick="closeModal('saveSeriesModal')"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                اسم الـ Series
-            </label>
-
-            <input
-                id="seriesNameInput"
-                class="form-control"
-                placeholder="مثلاً: Series 01 — حصة الأربعاء"
-            >
-
-        </div>
-
-
-        <button
-            class="btn btn-primary"
-            style="width:100%;"
-            onclick="confirmSaveSeries()"
-        >
-            💾 حفظ
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     RATING MODAL
-======================================================= -->
-
-<div
-    id="ratingModal"
-    class="modal-backdrop"
-    onclick="closeModalOutside(event,'ratingModal')"
->
-
-    <div class="modal">
-
-        <div class="modal-head">
-
-            <h2 id="ratingTitle">
-                📈 تقييم Series
-            </h2>
-
-            <button
-                class="close-btn"
-                onclick="closeModal('ratingModal')"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                ⚡ السرعة
-            </label>
-
-            <select
-                id="ratingSpeed"
-                class="form-control"
-            ></select>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                🧍 الثبات
-            </label>
-
-            <select
-                id="ratingStability"
-                class="form-control"
-            ></select>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                🧠 الغريزة
-            </label>
-
-            <select
-                id="ratingInstinct"
-                class="form-control"
-            ></select>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                🧠 الذاكرة
-            </label>
-
-            <select
-                id="ratingMemory"
-                class="form-control"
-            ></select>
-
-        </div>
-
-
-        <button
-            class="btn btn-primary"
-            style="width:100%;"
-            onclick="saveRating()"
-        >
-            💾 حفظ التقييم
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     DICTIONARY MODAL
-======================================================= -->
-
-<div
-    id="dictionaryModal"
-    class="modal-backdrop"
-    onclick="closeModalOutside(event,'dictionaryModal')"
->
-
-    <div class="modal">
-
-        <div class="modal-head">
-
-            <h2>
-                ✏️ تعديل اسم الكوتش
-            </h2>
-
-            <button
-                class="close-btn"
-                onclick="closeModal('dictionaryModal')"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                الاسم الذي يستعمله الكوتش
-            </label>
-
-            <input
-                id="coachNameInput"
-                class="form-control"
-            >
-
-        </div>
-
-
-        <button
-            class="btn btn-primary"
-            style="width:100%;"
-            onclick="saveCoachName()"
-        >
-            💾 حفظ
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     SETTINGS MODAL
-======================================================= -->
-
-<div
-    id="settingsModal"
-    class="modal-backdrop"
-    onclick="closeModalOutside(event,'settingsModal')"
->
-
-    <div class="modal">
-
-        <div class="modal-head">
-
-            <h2>
-                ⚙️ الإعدادات
-            </h2>
-
-            <button
-                class="close-btn"
-                onclick="closeModal('settingsModal')"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="detail-description">
-
-            <strong>
-                Boxing Memory
-            </strong>
-
-            <br><br>
-
-            كل بياناتك يتم حفظها داخل الهاتف
-            باستخدام LocalStorage.
-
-            <br><br>
-
-            يمكنك إغلاق التطبيق وفتحه من جديد
-            وستبقى Series والتقييمات والحصص محفوظة.
-
-        </div>
-
-
-        <div
-            style="
-                display:grid;
-                gap:8px;
-                margin-top:12px;
-            "
-        >
-
-            <button
-                class="btn btn-secondary"
-                onclick="exportData()"
-            >
-                📤 تصدير بياناتي
-            </button>
-
-            <button
-                class="btn btn-secondary"
-                onclick="document.getElementById('importFile').click()"
-            >
-                📥 استرجاع بيانات
-            </button>
-
-            <input
-                id="importFile"
-                type="file"
-                accept=".json"
-                style="display:none;"
-                onchange="importData(event)"
-            >
-
-            <button
-                class="btn btn-danger"
-                onclick="resetAllData()"
-            >
-                🗑️ حذف كل البيانات
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     TOAST
-======================================================= -->
-
-<div
-    id="toast"
-    class="toast"
->
-    تم الحفظ ❤️
-</div>
-
-
-<script>
-
-/* =========================================================
-   STORAGE
-========================================================= */
-
-const STORAGE_KEY = "boxing_memory_v2";
-
-
-const defaultState = {
-
-    customNames: {},
-
-    series: [],
-
-    ratings: {},
-
-    learned: {},
-
-    attendance: {},
-
-    classDetails: {},
-
-    payments: [],
-
-    schedule: {
-
-        monday: {
-            day: "الإثنين",
-            time: "21:00 → 22:30"
-        },
-
-        wednesday: {
-            day: "الأربعاء",
-            time: "21:00 → 22:30"
-        },
-
-        friday: {
-            day: "الجمعة",
-            time: "21:00 → 22:30"
-        }
-
-    }
-
-};
-
-
-let state = loadState();
-
-
-function loadState() {
-
-    try {
-
-        const saved =
-            localStorage.getItem(STORAGE_KEY);
-
-        if (!saved) {
-
-            return structuredClone(defaultState);
-
-        }
-
-        const parsed =
-            JSON.parse(saved);
-
-        return {
-
-            ...structuredClone(defaultState),
-
-            ...parsed,
-
-            schedule: {
-                ...defaultState.schedule,
-                ...(parsed.schedule || {})
-            }
-
-        };
-
-    } catch (error) {
-
-        console.error(
-            "Storage error:",
-            error
-        );
-
-        return structuredClone(defaultState);
-
-    }
-
-}
-
-
-function saveState() {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(state)
-    );
-
-}
-
-
-/* =========================================================
-   UTILITY
-========================================================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-}
-
-
-function showToast(message) {
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    clearTimeout(window.toastTimer);
-
-    window.toastTimer =
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        },2200);
-
-}
-
-
-function openModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.add("open");
-
-}
-
-
-function closeModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.remove("open");
-
-}
-
-
-function closeModalOutside(event,id) {
-
-    if (event.target.id === id) {
-
-        closeModal(id);
-
-    }
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function showSection(sectionName) {
-
-    document
-        .querySelectorAll(".section")
-        .forEach(section => {
-
-            section.classList.remove("active");
-
-        });
-
-
-    const target =
-        document.getElementById(
-            "section-" + sectionName
-        );
-
-
-    if (!target) return;
-
-
-    target.classList.add("active");
-
-
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.section === sectionName
-            );
-
-        });
-
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-
-    if (sectionName === "moves") {
-
-        renderCategories();
-        renderMoves();
-
-    }
-
-    if (sectionName === "series") {
-
-        renderBuilder();
-        renderSavedSeries();
-
-    }
-
-    if (sectionName === "dictionary") {
-
-        renderDictionary();
-
-    }
-
-    if (sectionName === "tracking") {
-
-        renderTracking();
-
-    }
-
-    if (sectionName === "classes") {
-
-        renderClasses();
-        renderPayments();
-
-    }
-
-}
-
-
-/* =========================================================
-   MOVEMENT DATABASE
-========================================================= */
-
-const MOVES = [
-
-/* ---------------------------------------------------------
-   BASIC PUNCHES
---------------------------------------------------------- */
-
-{
-    id:"jab",
-    ar:"الـ Jab — اللكمة الأمامية",
-    en:"Jab",
-    cat:"لكمات",
-    level:"أساسي",
-    type:"punch",
-    side:"lead",
-    target:"head",
-    desc:"لكمة مستقيمة سريعة باليد الأمامية من وضع الحراسة. الهدف الأساسي هو الرأس أو الوجه، مع رجوع اليد مباشرة للحراسة."
-},
-
-{
-    id:"cross",
-    ar:"الـ Cross — اللكمة الخلفية",
-    en:"Cross",
-    cat:"لكمات",
-    level:"أساسي",
-    type:"punch",
-    side:"rear",
-    target:"head",
-    desc:"لكمة مستقيمة باليد الخلفية مع دوران الورك والكتف للمساعدة في توليد القوة."
-},
-
-{
-    id:"lead-body-punch",
-    ar:"Jab إلى الجسم",
-    en:"Lead Body Jab",
-    cat:"لكمات الجسم",
-    level:"أساسي",
-    type:"body-punch",
-    side:"lead",
-    target:"body",
-    desc:"لكمة مستقيمة باليد الأمامية نحو الجسم مع خفض مستوى الجسم بشكل مضبوط."
-},
-
-{
-    id:"rear-body-cross",
-    ar:"Cross إلى الجسم",
-    en:"Rear Body Cross",
-    cat:"لكمات الجسم",
-    level:"أساسي",
-    type:"body-punch",
-    side:"rear",
-    target:"body",
-    desc:"الـ Cross موجه إلى منطقة الجسم بدلاً من الرأس."
-},
-
-{
-    id:"double-jab",
-    ar:"Jab مزدوج",
-    en:"Double Jab",
-    cat:"لكمات",
-    level:"أساسي",
-    type:"combo",
-    side:"lead",
-    target:"head",
-    desc:"لكمتان متتاليتان باليد الأمامية، تستخدمان للمسافة والضغط."
-},
-
-{
-    id:"jab-cross",
-    ar:"Jab ثم Cross",
-    en:"Jab-Cross",
-    cat:"Combinations",
-    level:"أساسي",
-    type:"combo",
-    side:"both",
-    target:"head",
-    desc:"التركيبة الأساسية: Jab باليد الأمامية ثم Cross باليد الخلفية."
-},
-
-{
-    id:"cross-jab",
-    ar:"Cross ثم Jab",
-    en:"Cross-Jab",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo",
-    side:"both",
-    target:"head",
-    desc:"Cross باليد الخلفية ثم العودة بالـ Jab باليد الأمامية."
-},
-
-/* ---------------------------------------------------------
-   HOOKS
---------------------------------------------------------- */
-
-{
-    id:"lead-hook",
-    ar:"Hook أمامية",
-    en:"Lead Hook",
-    cat:"لكمات مقوسة",
-    level:"أساسي",
-    type:"hook",
-    side:"lead",
-    target:"head",
-    desc:"لكمة مقوسة باليد الأمامية مع دوران الجسم والقدم للحصول على القوة."
-},
-
-{
-    id:"rear-hook",
-    ar:"Hook خلفية",
-    en:"Rear Hook",
-    cat:"لكمات مقوسة",
-    level:"متوسط",
-    type:"hook",
-    side:"rear",
-    target:"head",
-    desc:"Hook باليد الخلفية بعد دوران الجسم والكتف."
-},
-
-{
-    id:"lead-body-hook",
-    ar:"Hook أمامية للجسم",
-    en:"Lead Body Hook",
-    cat:"لكمات الجسم",
-    level:"متوسط",
-    type:"body-hook",
-    side:"lead",
-    target:"body",
-    desc:"Hook موجهة إلى جانب الجسم أو منطقة الأضلاع."
-},
-
-{
-    id:"rear-body-hook",
-    ar:"Hook خلفية للجسم",
-    en:"Rear Body Hook",
-    cat:"لكمات الجسم",
-    level:"متوسط",
-    type:"body-hook",
-    side:"rear",
-    target:"body",
-    desc:"Hook باليد الخلفية موجهة إلى الجسم."
-},
-
-/* ---------------------------------------------------------
-   UPPERCUTS
---------------------------------------------------------- */
-
-{
-    id:"lead-uppercut",
-    ar:"Uppercut أمامية",
-    en:"Lead Uppercut",
-    cat:"Uppercuts",
-    level:"أساسي",
-    type:"uppercut",
-    side:"lead",
-    target:"head",
-    desc:"Uppercut قصيرة باليد الأمامية من مستوى منخفض إلى الأعلى."
-},
-
-{
-    id:"rear-uppercut",
-    ar:"Uppercut خلفية",
-    en:"Rear Uppercut",
-    cat:"Uppercuts",
-    level:"أساسي",
-    type:"uppercut",
-    side:"rear",
-    target:"head",
-    desc:"Uppercut باليد الخلفية مع استخدام الرجل والورك لتوليد القوة."
-},
-
-{
-    id:"lead-body-uppercut",
-    ar:"Uppercut أمامية للجسم",
-    en:"Lead Body Uppercut",
-    cat:"لكمات الجسم",
-    level:"متوسط",
-    type:"body-uppercut",
-    side:"lead",
-    target:"body",
-    desc:"Uppercut قصيرة تستهدف الجسم من مسافة قريبة."
-},
-
-{
-    id:"rear-body-uppercut",
-    ar:"Uppercut خلفية للجسم",
-    en:"Rear Body Uppercut",
-    cat:"لكمات الجسم",
-    level:"متوسط",
-    type:"body-uppercut",
-    side:"rear",
-    target:"body",
-    desc:"Uppercut باليد الخلفية تستهدف الجسم."
-},
-
-/* ---------------------------------------------------------
-   OVERHANDS
---------------------------------------------------------- */
-
-{
-    id:"rear-overhand",
-    ar:"Overhand خلفية",
-    en:"Rear Overhand",
-    cat:"لكمات",
-    level:"متوسط",
-    type:"overhand",
-    side:"rear",
-    target:"head",
-    desc:"لكمة دائرية من الأعلى إلى الأسفل باليد الخلفية، غالباً لتجاوز الحراسة."
-},
-
-{
-    id:"lead-overhand",
-    ar:"Overhand أمامية",
-    en:"Lead Overhand",
-    cat:"لكمات",
-    level:"متقدم",
-    type:"overhand",
-    side:"lead",
-    target:"head",
-    desc:"Overhand باليد الأمامية مع ميل ودوران الجسم."
-},
-
-/* ---------------------------------------------------------
-   LOW KICKS
---------------------------------------------------------- */
-
-{
-    id:"lead-low-round",
-    ar:"Low Kick أمامية",
-    en:"Lead Low Round Kick",
-    cat:"ركلات منخفضة",
-    level:"أساسي",
-    type:"low-kick",
-    side:"lead",
-    target:"leg",
-    desc:"ركلة دائرية بالرجل الأمامية تستهدف الفخذ أو الساق."
-},
-
-{
-    id:"rear-low-round",
-    ar:"Low Kick خلفية",
-    en:"Rear Low Round Kick",
-    cat:"ركلات منخفضة",
-    level:"أساسي",
-    type:"low-kick",
-    side:"rear",
-    target:"leg",
-    desc:"ركلة دائرية قوية بالرجل الخلفية تستهدف الرجل."
-},
-
-{
-    id:"inside-low-kick",
-    ar:"Inside Low Kick",
-    en:"Inside Low Kick",
-    cat:"ركلات منخفضة",
-    level:"أساسي",
-    type:"inside-low",
-    side:"lead",
-    target:"inner-thigh",
-    desc:"ركلة منخفضة من الداخل إلى الفخذ الداخلي."
-},
-
-{
-    id:"outside-low-kick",
-    ar:"Outside Low Kick",
-    en:"Outside Low Kick",
-    cat:"ركلات منخفضة",
-    level:"أساسي",
-    type:"outside-low",
-    side:"rear",
-    target:"outer-thigh",
-    desc:"ركلة منخفضة من الخارج نحو الفخذ الخارجي."
-},
-
-/* ---------------------------------------------------------
-   BODY KICKS
---------------------------------------------------------- */
-
-{
-    id:"lead-body-round",
-    ar:"ركلة دائرية أمامية للجسم",
-    en:"Lead Body Round Kick",
-    cat:"ركلات متوسطة",
-    level:"متوسط",
-    type:"body-kick",
-    side:"lead",
-    target:"body",
-    desc:"ركلة دائرية بالرجل الأمامية تستهدف الجسم أو الأضلاع."
-},
-
-{
-    id:"rear-body-round",
-    ar:"ركلة دائرية خلفية للجسم",
-    en:"Rear Body Round Kick",
-    cat:"ركلات متوسطة",
-    level:"أساسي",
-    type:"body-kick",
-    side:"rear",
-    target:"body",
-    desc:"ركلة دائرية بالرجل الخلفية إلى الجسم."
-},
-
-{
-    id:"lead-rib-kick",
-    ar:"ركلة أمامية للأضلاع",
-    en:"Lead Rib Kick",
-    cat:"ركلات متوسطة",
-    level:"متوسط",
-    type:"body-kick",
-    side:"lead",
-    target:"ribs",
-    desc:"ركلة دائرية تستهدف الأضلاع من الجهة الأمامية."
-},
-
-{
-    id:"rear-rib-kick",
-    ar:"ركلة خلفية للأضلاع",
-    en:"Rear Rib Kick",
-    cat:"ركلات متوسطة",
-    level:"متوسط",
-    type:"body-kick",
-    side:"rear",
-    target:"ribs",
-    desc:"ركلة قوية بالرجل الخلفية إلى منطقة الأضلاع."
-},
-
-/* ---------------------------------------------------------
-   HIGH KICKS
---------------------------------------------------------- */
-
-{
-    id:"lead-high-round",
-    ar:"High Kick أمامية",
-    en:"Lead High Round Kick",
-    cat:"ركلات عالية",
-    level:"متقدم",
-    type:"high-kick",
-    side:"lead",
-    target:"head",
-    desc:"ركلة دائرية عالية بالرجل الأمامية تستهدف الرأس."
-},
-
-{
-    id:"rear-high-round",
-    ar:"High Kick خلفية",
-    en:"Rear High Round Kick",
-    cat:"ركلات عالية",
-    level:"متقدم",
-    type:"high-kick",
-    side:"rear",
-    target:"head",
-    desc:"ركلة دائرية عالية بالرجل الخلفية."
-},
-
-/* ---------------------------------------------------------
-   FRONT KICKS / TEEP
---------------------------------------------------------- */
-
-{
-    id:"lead-front-kick",
-    ar:"Front Kick أمامية",
-    en:"Lead Front Kick",
-    cat:"Front Kick / Teep",
-    level:"أساسي",
-    type:"front-kick",
-    side:"lead",
-    target:"body",
-    desc:"ركلة مستقيمة بالرجل الأمامية لدفع الخصم أو ضرب الجسم."
-},
-
-{
-    id:"rear-front-kick",
-    ar:"Front Kick خلفية",
-    en:"Rear Front Kick",
-    cat:"Front Kick / Teep",
-    level:"أساسي",
-    type:"front-kick",
-    side:"rear",
-    target:"body",
-    desc:"Front Kick بالرجل الخلفية مع رفع الركبة ثم الدفع إلى الأمام."
-},
-
-{
-    id:"lead-teep",
-    ar:"Teep أمامية",
-    en:"Lead Teep",
-    cat:"Front Kick / Teep",
-    level:"أساسي",
-    type:"teep",
-    side:"lead",
-    target:"body",
-    desc:"Teep بالقدم الأمامية للتحكم في المسافة وإبعاد الخصم."
-},
-
-{
-    id:"rear-teep",
-    ar:"Teep خلفية",
-    en:"Rear Teep",
-    cat:"Front Kick / Teep",
-    level:"أساسي",
-    type:"teep",
-    side:"rear",
-    target:"body",
-    desc:"Teep بالرجل الخلفية مع دفع مباشر إلى الجسم."
-},
-
-/* ---------------------------------------------------------
-   SIDE KICKS
---------------------------------------------------------- */
-
-{
-    id:"lead-side-kick",
-    ar:"Side Kick أمامية",
-    en:"Lead Side Kick",
-    cat:"Side Kicks",
-    level:"متوسط",
-    type:"side-kick",
-    side:"lead",
-    target:"body",
-    desc:"ركلة جانبية بالرجل الأمامية مع إدخال الركبة ثم مد القدم."
-},
-
-{
-    id:"rear-side-kick",
-    ar:"Side Kick خلفية",
-    en:"Rear Side Kick",
-    cat:"Side Kicks",
-    level:"متقدم",
-    type:"side-kick",
-    side:"rear",
-    target:"body",
-    desc:"Side Kick من الرجل الخلفية مع دوران الجسم."
-},
-
-/* ---------------------------------------------------------
-   BACK KICKS
---------------------------------------------------------- */
-
-{
-    id:"back-kick",
-    ar:"Back Kick",
-    en:"Back Kick",
-    cat:"Back Kicks",
-    level:"متقدم",
-    type:"back-kick",
-    side:"rear",
-    target:"body",
-    desc:"ركلة مباشرة إلى الخلف بعد توجيه الظهر نحو الخصم."
-},
-
-{
-    id:"spinning-back-kick",
-    ar:"Spinning Back Kick",
-    en:"Spinning Back Kick",
-    cat:"ركلات دورانية",
-    level:"متقدم",
-    type:"spinning-back-kick",
-    side:"rear",
-    target:"body",
-    desc:"دوران للخلف ثم مد الرجل بقوة نحو الهدف."
-},
-
-/* ---------------------------------------------------------
-   SPINNING KICKS
---------------------------------------------------------- */
-
-{
-    id:"spinning-hook-kick",
-    ar:"Spinning Hook Kick",
-    en:"Spinning Hook Kick",
-    cat:"ركلات دورانية",
-    level:"متقدم",
-    type:"spinning-hook",
-    side:"rear",
-    target:"head",
-    desc:"ركلة دورانية يمر فيها الساق حول الهدف قبل الوصول إليه."
-},
-
-{
-    id:"spinning-wheel-kick",
-    ar:"Spinning Wheel Kick",
-    en:"Spinning Wheel Kick",
-    cat:"ركلات دورانية",
-    level:"متقدم",
-    type:"spinning-hook",
-    side:"rear",
-    target:"head",
-    desc:"ركلة دورانية واسعة وعالية تشبه حركة العجلة."
-},
-
-/* ---------------------------------------------------------
-   KNEES
---------------------------------------------------------- */
-
-{
-    id:"lead-knee",
-    ar:"ركبة أمامية",
-    en:"Lead Knee",
-    cat:"ركب",
-    level:"أساسي",
-    type:"knee",
-    side:"lead",
-    target:"body",
-    desc:"ركبة بالرجل الأمامية إلى الجسم من المسافة القريبة."
-},
-
-{
-    id:"rear-knee",
-    ar:"ركبة خلفية",
-    en:"Rear Knee",
-    cat:"ركب",
-    level:"أساسي",
-    type:"knee",
-    side:"rear",
-    target:"body",
-    desc:"ركبة بالرجل الخلفية مع دفع الورك إلى الأمام."
-},
-
-{
-    id:"straight-knee",
-    ar:"Straight Knee",
-    en:"Straight Knee",
-    cat:"ركب",
-    level:"متوسط",
-    type:"knee",
-    side:"rear",
-    target:"body",
-    desc:"ركبة مباشرة إلى الأمام نحو الجسم."
-},
-
-{
-    id:"diagonal-knee",
-    ar:"Diagonal Knee",
-    en:"Diagonal Knee",
-    cat:"ركب",
-    level:"متوسط",
-    type:"knee",
-    side:"lead",
-    target:"body",
-    desc:"ركبة قطرية نحو الجسم أو الأضلاع."
-},
-
-/* ---------------------------------------------------------
-   ELBOWS
---------------------------------------------------------- */
-
-{
-    id:"lead-horizontal-elbow",
-    ar:"كوع أفقي أمامي",
-    en:"Lead Horizontal Elbow",
-    cat:"أكواع",
-    level:"متوسط",
-    type:"elbow",
-    side:"lead",
-    target:"head",
-    desc:"كوع أفقي بالذراع الأمامية مع دوران الجسم."
-},
-
-{
-    id:"rear-horizontal-elbow",
-    ar:"كوع أفقي خلفي",
-    en:"Rear Horizontal Elbow",
-    cat:"أكواع",
-    level:"متوسط",
-    type:"elbow",
-    side:"rear",
-    target:"head",
-    desc:"كوع أفقي بالذراع الخلفية."
-},
-
-{
-    id:"lead-upward-elbow",
-    ar:"كوع صاعد أمامي",
-    en:"Lead Upward Elbow",
-    cat:"أكواع",
-    level:"متقدم",
-    type:"elbow",
-    side:"lead",
-    target:"head",
-    desc:"كوع صاعد من الأسفل إلى الأعلى."
-},
-
-{
-    id:"rear-upward-elbow",
-    ar:"كوع صاعد خلفي",
-    en:"Rear Upward Elbow",
-    cat:"أكواع",
-    level:"متقدم",
-    type:"elbow",
-    side:"rear",
-    target:"head",
-    desc:"كوع صاعد بالذراع الخلفية."
-},
-
-/* ---------------------------------------------------------
-   DEFENSE
---------------------------------------------------------- */
-
-{
-    id:"high-guard",
-    ar:"High Guard",
-    en:"High Guard",
-    cat:"دفاعات",
-    level:"أساسي",
-    type:"guard",
-    side:"both",
-    target:"head",
-    desc:"رفع اليدين للحماية من اللكمات القادمة إلى الرأس."
-},
-
-{
-    id:"long-guard",
-    ar:"Long Guard",
-    en:"Long Guard",
-    cat:"دفاعات",
-    level:"متوسط",
-    type:"guard",
-    side:"lead",
-    target:"head",
-    desc:"Guard طويلة باستخدام اليد الأمامية للتحكم في المسافة."
-},
-
-{
-    id:"shell-guard",
-    ar:"Shell Guard",
-    en:"Shell Guard",
-    cat:"دفاعات",
-    level:"متوسط",
-    type:"shell",
-    side:"both",
-    target:"head",
-    desc:"وضعية دفاعية تغطي الرأس والجسم مع حماية الذقن."
-},
-
-{
-    id:"parry-jab",
-    ar:"صد الـ Jab",
-    en:"Jab Parry",
-    cat:"دفاعات",
-    level:"أساسي",
-    type:"parry",
-    side:"lead",
-    target:"head",
-    desc:"إبعاد لكمة الـ Jab بحركة صغيرة باليد."
-},
-
-{
-    id:"parry-cross",
-    ar:"صد الـ Cross",
-    en:"Cross Parry",
-    cat:"دفاعات",
-    level:"أساسي",
-    type:"parry",
-    side:"rear",
-    target:"head",
-    desc:"صد أو تحويل مسار الـ Cross القادمة."
-},
-
-{
-    id:"lead-leg-check",
-    ar:"Check بالرجل الأمامية",
-    en:"Lead Leg Check",
-    cat:"دفاعات",
-    level:"أساسي",
-    type:"check",
-    side:"lead",
-    target:"leg",
-    desc:"رفع الساق للحماية من الركلات المنخفضة."
-},
-
-{
-    id:"rear-leg-check",
-    ar:"Check بالرجل الخلفية",
-    en:"Rear Leg Check",
-    cat:"دفاعات",
-    level:"أساسي",
-    type:"check",
-    side:"rear",
-    target:"leg",
-    desc:"رفع الرجل الخلفية لاعتراض الركلة."
-},
-
-/* ---------------------------------------------------------
-   SLIPS
---------------------------------------------------------- */
-
-{
-    id:"slip-left",
-    ar:"Slip إلى اليسار",
-    en:"Slip Left",
-    cat:"Slips",
-    level:"أساسي",
-    type:"slip-left",
-    side:"left",
-    target:"head",
-    desc:"تحريك الرأس والجسم قليلاً إلى اليسار لتجاوز اللكمة."
-},
-
-{
-    id:"slip-right",
-    ar:"Slip إلى اليمين",
-    en:"Slip Right",
-    cat:"Slips",
-    level:"أساسي",
-    type:"slip-right",
-    side:"right",
-    target:"head",
-    desc:"تحريك الرأس والجسم قليلاً إلى اليمين لتجاوز اللكمة."
-},
-
-{
-    id:"double-slip",
-    ar:"Double Slip",
-    en:"Double Slip",
-    cat:"Slips",
-    level:"متوسط",
-    type:"double-slip",
-    side:"both",
-    target:"head",
-    desc:"Slip متتابع في اتجاهين لتجنب أكثر من لكمة."
-},
-
-/* ---------------------------------------------------------
-   ROLLS
---------------------------------------------------------- */
-
-{
-    id:"roll-left",
-    ar:"Roll إلى اليسار",
-    en:"Roll Left",
-    cat:"Rolls",
-    level:"متوسط",
-    type:"roll-left",
-    side:"left",
-    target:"head",
-    desc:"خفض الجسم والدوران تحت اللكمة المقوسة."
-},
-
-{
-    id:"roll-right",
-    ar:"Roll إلى اليمين",
-    en:"Roll Right",
-    cat:"Rolls",
-    level:"متوسط",
-    type:"roll-right",
-    side:"right",
-    target:"head",
-    desc:"خفض الجسم والدوران إلى الجهة الأخرى."
-},
-
-/* ---------------------------------------------------------
-   FOOTWORK
---------------------------------------------------------- */
-
-{
-    id:"forward-step",
-    ar:"خطوة للأمام",
-    en:"Forward Step",
-    cat:"Footwork",
-    level:"أساسي",
-    type:"step-forward",
-    side:"both",
-    target:"space",
-    desc:"التقدم خطوة مع الحفاظ على التوازن ووضعية الحراسة."
-},
-
-{
-    id:"back-step",
-    ar:"خطوة للخلف",
-    en:"Back Step",
-    cat:"Footwork",
-    level:"أساسي",
-    type:"step-back",
-    side:"both",
-    target:"space",
-    desc:"الابتعاد خطوة مع المحافظة على التوازن والحراسة."
-},
-
-{
-    id:"left-step",
-    ar:"خطوة إلى اليسار",
-    en:"Left Step",
-    cat:"Footwork",
-    level:"أساسي",
-    type:"step-left",
-    side:"both",
-    target:"space",
-    desc:"التحرك جانبياً إلى اليسار دون فقدان الحراسة."
-},
-
-{
-    id:"right-step",
-    ar:"خطوة إلى اليمين",
-    en:"Right Step",
-    cat:"Footwork",
-    level:"أساسي",
-    type:"step-right",
-    side:"both",
-    target:"space",
-    desc:"التحرك جانبياً إلى اليمين مع الحفاظ على التوازن."
-},
-
-{
-    id:"lead-pivot",
-    ar:"Pivot أمامي",
-    en:"Lead Pivot",
-    cat:"Footwork",
-    level:"متوسط",
-    type:"pivot",
-    side:"lead",
-    target:"space",
-    desc:"الدوران حول الرجل الأمامية لتغيير الزاوية."
-},
-
-{
-    id:"rear-pivot",
-    ar:"Pivot خلفي",
-    en:"Rear Pivot",
-    cat:"Footwork",
-    level:"متوسط",
-    type:"pivot",
-    side:"rear",
-    target:"space",
-    desc:"الدوران وتغيير الزاوية باستخدام الرجل الخلفية."
-},
-
-/* ---------------------------------------------------------
-   COUNTERS
---------------------------------------------------------- */
-
-{
-    id:"jab-cross-counter",
-    ar:"Jab → Cross كـ Counter",
-    en:"Jab-Cross Counter",
-    cat:"Counters",
-    level:"متوسط",
-    type:"counter",
-    side:"both",
-    target:"head",
-    desc:"الرد بتركيبة Jab-Cross بعد تفادي أو صد هجوم الخصم."
-},
-
-{
-    id:"slip-cross",
-    ar:"Slip → Cross",
-    en:"Slip-Cross",
-    cat:"Counters",
-    level:"متوسط",
-    type:"counter",
-    side:"rear",
-    target:"head",
-    desc:"Slip ثم الرد مباشرة بالـ Cross."
-},
-
-{
-    id:"parry-cross-counter",
-    ar:"Parry → Cross",
-    en:"Parry-Cross Counter",
-    cat:"Counters",
-    level:"متوسط",
-    type:"counter",
-    side:"rear",
-    target:"head",
-    desc:"صد اللكمة ثم الرد بالـ Cross."
-},
-
-{
-    id:"check-return",
-    ar:"Check → Return",
-    en:"Check and Return",
-    cat:"Counters",
-    level:"متوسط",
-    type:"counter-kick",
-    side:"rear",
-    target:"leg",
-    desc:"رفع الساق لاعتراض الركلة ثم الرد بركلة."
-},
-
-/* ---------------------------------------------------------
-   FEINTS
---------------------------------------------------------- */
-
-{
-    id:"jab-feint",
-    ar:"تمويه Jab",
-    en:"Jab Feint",
-    cat:"Feints",
-    level:"أساسي",
-    type:"feint",
-    side:"lead",
-    target:"head",
-    desc:"حركة توحي ببدء الـ Jab بهدف إجبار الخصم على رد فعل."
-},
-
-{
-    id:"level-change-feint",
-    ar:"تمويه تغيير المستوى",
-    en:"Level Change Feint",
-    cat:"Feints",
-    level:"متوسط",
-    type:"level-feint",
-    side:"both",
-    target:"body",
-    desc:"تغيير مستوى الجسم لإيهام الخصم بهجوم نحو الجسم."
-},
-
-{
-    id:"kick-feint",
-    ar:"تمويه الركلة",
-    en:"Kick Feint",
-    cat:"Feints",
-    level:"متوسط",
-    type:"kick-feint",
-    side:"rear",
-    target:"leg",
-    desc:"إظهار بداية حركة الركلة دون إكمالها."
-},
-
-/* ---------------------------------------------------------
-   COMBINATIONS
---------------------------------------------------------- */
-
-{
-    id:"one-two",
-    ar:"1-2",
-    en:"One-Two",
-    cat:"Combinations",
-    level:"أساسي",
-    type:"combo",
-    side:"both",
-    target:"head",
-    desc:"Jab ثم Cross."
-},
-
-{
-    id:"one-two-hook",
-    ar:"1-2-3",
-    en:"One-Two-Three",
-    cat:"Combinations",
-    level:"أساسي",
-    type:"combo",
-    side:"both",
-    target:"head",
-    desc:"Jab ثم Cross ثم Lead Hook."
-},
-
-{
-    id:"one-two-low",
-    ar:"1-2 → Low Kick",
-    en:"Jab-Cross-Low Kick",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo-kick",
-    side:"both",
-    target:"leg",
-    desc:"Jab ثم Cross ثم Low Kick بالرجل الخلفية."
-},
-
-{
-    id:"jab-low",
-    ar:"Jab → Low Kick",
-    en:"Jab-Low Kick",
-    cat:"Combinations",
-    level:"أساسي",
-    type:"combo-kick",
-    side:"both",
-    target:"leg",
-    desc:"Jab لفتح المسافة ثم Low Kick."
-},
-
-{
-    id:"cross-hook-low",
-    ar:"Cross → Hook → Low Kick",
-    en:"Cross-Hook-Low Kick",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo-kick",
-    side:"both",
-    target:"leg",
-    desc:"Cross ثم Hook ثم Low Kick."
-},
-
-{
-    id:"jab-cross-body-hook",
-    ar:"Jab → Cross → Body Hook",
-    en:"Jab-Cross-Body Hook",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo",
-    side:"both",
-    target:"body",
-    desc:"تركيبة تنقل الهجوم من الرأس إلى الجسم."
-},
-
-{
-    id:"jab-cross-high-kick",
-    ar:"Jab → Cross → High Kick",
-    en:"Jab-Cross-High Kick",
-    cat:"Combinations",
-    level:"متقدم",
-    type:"combo-kick",
-    side:"both",
-    target:"head",
-    desc:"Jab ثم Cross لفتح الحراسة ثم High Kick."
-},
-
-{
-    id:"jab-teep",
-    ar:"Jab → Teep",
-    en:"Jab-Teep",
-    cat:"Combinations",
-    level:"أساسي",
-    type:"combo-kick",
-    side:"both",
-    target:"body",
-    desc:"Jab ثم Teep للتحكم في المسافة."
-},
-
-{
-    id:"jab-cross-rear-knee",
-    ar:"Jab → Cross → Rear Knee",
-    en:"Jab-Cross-Rear Knee",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo-knee",
-    side:"both",
-    target:"body",
-    desc:"Jab ثم Cross ثم ركبة خلفية."
-},
-
-{
-    id:"hook-cross-hook",
-    ar:"Hook → Cross → Hook",
-    en:"Hook-Cross-Hook",
-    cat:"Combinations",
-    level:"متوسط",
-    type:"combo",
-    side:"both",
-    target:"head",
-    desc:"تركيبة ثلاثية من اللكمات المقوسة والمستقيمة."
-}
-
-];
-
-
-/* =========================================================
-   CATEGORY STATE
-========================================================= */
-
-let activeCategory = "الكل";
-
-
-/* =========================================================
-   RENDER CATEGORIES
-========================================================= */
-
-function renderCategories() {
-
-    const container =
-        document.getElementById("moveCategories");
-
-    if (!container) return;
-
-
-    const categories = [
-
-        "الكل",
-
-        ...new Set(
-            MOVES.map(move => move.cat)
-        )
-
-    ];
-
-
-    container.innerHTML =
-        categories
-            .map(category => `
-
-                <button
-                    class="chip ${
-                        activeCategory === category
-                            ? "active"
-                            : ""
-                    }"
-                    onclick="setMoveCategory('${escapeHTML(category)}')"
-                >
-                    ${escapeHTML(category)}
-                </button>
-
-            `)
-            .join("");
-
-}
-
-
-function setMoveCategory(category) {
-
-    activeCategory = category;
-
-    renderCategories();
-    renderMoves();
-
-}
-
-
-/* =========================================================
-   SVG FIGHTER
-========================================================= */
-
-function poseSVG(
-    move,
-    animated = false,
-    active = false
-) {
-
-    /* =========================================================
-   HUMAN FIGHTER SVG — FULL POSE SYSTEM
-   واضح كبشر + شعر + جسم + قفازات + شورت + أحذية
-   وكل حركة لها وضعية مختلفة
-========================================================= */
-
-const type = move?.type || "guard";
-const side = move?.side || "lead";
-
-let animationClass = "";
-
-if (animated) {
+function poseSVG(move, animated = false, active = false) {
+
+    const type = move?.type || "guard";
+    const side = move?.side || "lead";
+
+    const skin = "#E7AD86";
+    const skinLight = "#F3C3A1";
+    const skinDark = "#C98261";
+
+    const outline = "#30283D";
+
+    const pink = "#F05A78";
+    const pinkDark = "#C83F5C";
+
+    const black = "#25232B";
+    const blackLight = "#3C3945";
+
+    const glovePink = "#FF4F70";
+    const gloveBlack = "#17161B";
+
+    const shoe = "#F7F5FA";
+    const shoeDark = "#CFC9D8";
+
+    let attacker = true;
+
+    /*
+       The SVG is designed as a paired scene:
+       Pink fighter = attacker
+       Black fighter = defender
+    */
+
+    const isDefense =
+        [
+            "guard",
+            "shell",
+            "parry",
+            "check",
+            "slip-left",
+            "slip-right",
+            "roll-left",
+            "roll-right"
+        ].includes(type);
+
+    let pinkPose = {
+        x: 72,
+        y: 0,
+        rotate: 0
+    };
+
+    let blackPose = {
+        x: 0,
+        y: 0,
+        rotate: 0
+    };
+
+    let pinkHead = {
+        x: 69,
+        y: 39,
+        rotate: 0
+    };
+
+    let blackHead = {
+        x: 145,
+        y: 39,
+        rotate: 0
+    };
+
+    let pinkLeftArm = `
+        M55 69
+        Q48 76 44 89
+        L39 101
+    `;
+
+    let pinkRightArm = `
+        M84 69
+        Q91 76 96 88
+        L101 100
+    `;
+
+    let blackLeftArm = `
+        M131 69
+        Q124 76 119 88
+        L114 100
+    `;
+
+    let blackRightArm = `
+        M160 69
+        Q167 76 172 88
+        L177 100
+    `;
+
+    let pinkLeftGlove = [39,101,0];
+    let pinkRightGlove = [101,100,0];
+
+    let blackLeftGlove = [114,100,0];
+    let blackRightGlove = [177,100,0];
+
+    let pinkLeftLeg = `
+        M58 116
+        L49 144
+        L42 169
+    `;
+
+    let pinkRightLeg = `
+        M82 116
+        L91 144
+        L99 169
+    `;
+
+    let blackLeftLeg = `
+        M134 116
+        L125 144
+        L117 169
+    `;
+
+    let blackRightLeg = `
+        M158 116
+        L167 144
+        L175 169
+    `;
+
+    let pinkLeftFoot = `
+        M42 168
+        Q32 168 25 173
+        L45 175
+    `;
+
+    let pinkRightFoot = `
+        M99 168
+        Q109 168 116 173
+        L96 175
+    `;
+
+    let blackLeftFoot = `
+        M117 168
+        Q107 168 100 173
+        L120 175
+    `;
+
+    let blackRightFoot = `
+        M175 168
+        Q185 168 192 173
+        L172 175
+    `;
+
+    let pinkBodyTransform = "";
+    let blackBodyTransform = "";
+
+    let pinkHeadTransform = "";
+    let blackHeadTransform = "";
+
+    let motion = "";
+    let impact = "";
+
+    /* =====================================================
+       GUARD
+    ===================================================== */
 
     if (
-        type.includes("punch") ||
-        type === "jab" ||
-        type === "cross" ||
+        type === "guard" ||
+        type === "high-guard"
+    ) {
+
+        blackLeftArm = `
+            M131 69
+            Q123 69 119 78
+            L123 91
+        `;
+
+        blackRightArm = `
+            M160 69
+            Q168 69 172 78
+            L168 91
+        `;
+
+        blackLeftGlove = [123,91,0];
+        blackRightGlove = [168,91,0];
+
+        motion = `
+            <path
+                class="motion-line black-motion"
+                d="M126 92 Q145 80 164 92"
+            />
+        `;
+    }
+
+    /* =====================================================
+       JAB
+    ===================================================== */
+
+    if (type === "jab") {
+
+        pinkBodyTransform =
+            side === "lead"
+                ? "rotate(-5 69 95)"
+                : "rotate(4 69 95)";
+
+        pinkHeadTransform =
+            side === "lead"
+                ? "rotate(-4 69 39)"
+                : "rotate(4 69 39)";
+
+        if (side === "lead") {
+
+            pinkLeftArm = `
+                M55 69
+                Q47 68 39 65
+                L15 58
+            `;
+
+            pinkLeftGlove = [12,57,-8];
+
+            pinkRightArm = `
+                M84 69
+                Q91 75 96 87
+                L101 99
+            `;
+
+            pinkRightGlove = [101,99,0];
+
+            blackLeftArm = `
+                M131 69
+                Q123 72 120 82
+                L123 93
+            `;
+
+            blackRightArm = `
+                M160 69
+                Q168 72 171 82
+                L168 93
+            `;
+
+            blackLeftGlove = [123,93,0];
+            blackRightGlove = [168,93,0];
+
+            motion = `
+                <path
+                    class="motion-line"
+                    d="M19 51 L5 47"
+                    marker-end="url(#arrowHeadPink)"
+                />
+                <path
+                    class="motion-line thin"
+                    d="M24 58 L6 58"
+                />
+                <path
+                    class="motion-line thin"
+                    d="M27 65 L8 69"
+                />
+            `;
+
+            impact = `
+                <g class="impact-pink">
+                    <path d="M10 45 L3 39"/>
+                    <path d="M8 55 L0 54"/>
+                    <path d="M10 65 L3 70"/>
+                </g>
+            `;
+        }
+    }
+
+    /* =====================================================
+       CROSS
+    ===================================================== */
+
+    if (type === "cross" || type === "punch") {
+
+        pinkBodyTransform = "rotate(-8 69 95)";
+        pinkHeadTransform = "rotate(-6 69 39)";
+
+        if (side === "rear") {
+
+            pinkRightArm = `
+                M84 69
+                Q94 64 104 66
+                L133 55
+            `;
+
+            pinkRightGlove = [136,54,-12];
+
+            pinkLeftArm = `
+                M55 69
+                Q48 75 43 87
+                L39 99
+            `;
+
+            pinkLeftGlove = [39,99,0];
+
+            motion = `
+                <path
+                    class="motion-line"
+                    d="M130 49 L153 40"
+                    marker-end="url(#arrowHeadPink)"
+                />
+                <path
+                    class="motion-line thin"
+                    d="M124 56 L149 51"
+                />
+            `;
+
+            impact = `
+                <g class="impact-pink">
+                    <path d="M139 43 L146 35"/>
+                    <path d="M145 49 L155 46"/>
+                    <path d="M143 56 L153 61"/>
+                </g>
+            `;
+        }
+    }
+
+    /* =====================================================
+       HOOK
+    ===================================================== */
+
+    if (
         type === "hook" ||
+        type === "body-hook"
+    ) {
+
+        pinkBodyTransform = "rotate(-7 69 95)";
+        pinkHeadTransform = "rotate(-5 69 39)";
+
+        if (side === "lead") {
+
+            pinkLeftArm = `
+                M55 69
+                Q45 70 39 78
+                Q32 87 23 91
+                Q15 94 10 87
+            `;
+
+            pinkLeftGlove = [9,87,-20];
+
+            pinkRightArm = `
+                M84 69
+                Q91 75 96 88
+                L101 99
+            `;
+
+            pinkRightGlove = [101,99,0];
+
+            motion = `
+                <path
+                    class="motion-line"
+                    d="M14 82
+                       Q4 70 10 57"
+                    marker-end="url(#arrowHeadPink)"
+                />
+                <path
+                    class="motion-line thin"
+                    d="M19 89 Q5 84 3 72"
+                />
+            `;
+
+            impact = `
+                <g class="impact-pink">
+                    <path d="M8 81 L0 77"/>
+                    <path d="M8 90 L0 92"/>
+                    <path d="M13 98 L6 103"/>
+                </g>
+            `;
+        }
+    }
+
+    /* =====================================================
+       UPPERCUT
+    ===================================================== */
+
+    if (
         type === "uppercut" ||
-        type === "overhand" ||
-        type === "body-punch" ||
-        type === "body-hook" ||
         type === "body-uppercut"
     ) {
 
-        animationClass =
-            side === "lead"
-                ? "animate-punch-left"
-                : "animate-punch-right";
+        pinkBodyTransform = "rotate(-4 69 95)";
 
-    } else if (
-        type.includes("kick") ||
-        type === "teep" ||
-        type === "front-kick" ||
-        type === "side-kick"
+        if (side === "lead") {
+
+            pinkLeftArm = `
+                M55 69
+                Q46 79 40 94
+                Q37 83 39 72
+                Q40 62 47 55
+            `;
+
+            pinkLeftGlove = [48,53,-8];
+
+            pinkRightArm = `
+                M84 69
+                Q92 76 97 89
+                L102 99
+            `;
+
+            pinkRightGlove = [102,99,0];
+
+            motion = `
+                <path
+                    class="motion-line"
+                    d="M43 75
+                       Q31 56 43 40"
+                    marker-end="url(#arrowHeadPink)"
+                />
+                <path
+                    class="motion-line thin"
+                    d="M49 80 Q40 57 51 43"
+                />
+            `;
+
+            impact = `
+                <g class="impact-pink">
+                    <path d="M45 42 L40 33"/>
+                    <path d="M52 43 L53 33"/>
+                    <path d="M59 47 L64 39"/>
+                </g>
+            `;
+        }
+    }
+
+    /* =====================================================
+       LOW / BODY / HIGH KICKS
+    ===================================================== */
+
+    if (
+        type === "low-kick" ||
+        type === "inside-low" ||
+        type === "outside-low"
     ) {
 
-        animationClass = "animate-kick";
+        if (side === "lead") {
 
-    } else if (type === "knee") {
+            pinkLeftLeg = `
+                M58 116
+                Q46 126 38 137
+                L15 130
+            `;
 
-        animationClass = "animate-knee";
+            pinkLeftFoot = `
+                M15 130
+                L4 126
+                Q0 128 4 132
+                L17 137
+            `;
 
-    } else if (type === "slip-left") {
+        } else {
 
-        animationClass = "animate-slip-left";
+            pinkRightLeg = `
+                M82 116
+                Q94 126 102 137
+                L125 130
+            `;
 
-    } else if (type === "slip-right") {
+            pinkRightFoot = `
+                M125 130
+                L136 126
+                Q140 128 136 132
+                L123 137
+            `;
+        }
 
-        animationClass = "animate-slip-right";
+        motion = `
+            <path
+                class="motion-line"
+                d="${
+                    side === "lead"
+                        ? "M18 122 L2 117"
+                        : "M122 122 L138 117"
+                }"
+                marker-end="url(#arrowHeadPink)"
+            />
+        `;
+    }
 
-    } else if (
+    /* =====================================================
+       BODY / HIGH ROUND KICK
+    ===================================================== */
+
+    if (
+        type === "body-kick" ||
+        type === "high-kick" ||
+        type === "round-kick"
+    ) {
+
+        if (side === "lead") {
+
+            pinkLeftLeg = `
+                M58 116
+                Q43 119 35 110
+                L48 ${
+                    type === "high-kick"
+                        ? 58
+                        : 82
+                }
+            `;
+
+            pinkLeftFoot = `
+                M48 ${
+                    type === "high-kick"
+                        ? 58
+                        : 82
+                }
+                L39 ${
+                    type === "high-kick"
+                        ? 47
+                        : 72
+                }
+                Q35 ${
+                    type === "high-kick"
+                        ? 44
+                        : 69
+                } 39 ${
+                    type === "high-kick"
+                        ? 41
+                        : 67
+                }
+                L54 ${
+                    type === "high-kick"
+                        ? 53
+                        : 78
+                }
+            `;
+
+        } else {
+
+            pinkRightLeg = `
+                M82 116
+                Q97 119 105 110
+                L92 ${
+                    type === "high-kick"
+                        ? 58
+                        : 82
+                }
+            `;
+
+            pinkRightFoot = `
+                M92 ${
+                    type === "high-kick"
+                        ? 58
+                        : 82
+                }
+                L101 ${
+                    type === "high-kick"
+                        ? 47
+                        : 72
+                }
+                Q105 ${
+                    type === "high-kick"
+                        ? 44
+                        : 69
+                } 101 ${
+                    type === "high-kick"
+                        ? 41
+                        : 67
+                }
+                L86 ${
+                    type === "high-kick"
+                        ? 53
+                        : 78
+                }
+            `;
+        }
+
+        motion = `
+            <path
+                class="motion-line"
+                d="${
+                    side === "lead"
+                        ? "M51 76 Q34 56 18 48"
+                        : "M89 76 Q106 56 122 48"
+                }"
+                marker-end="url(#arrowHeadPink)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       FRONT KICK / TEEP
+    ===================================================== */
+
+    if (
+        type === "front-kick" ||
+        type === "teep"
+    ) {
+
+        if (side === "lead") {
+
+            pinkLeftLeg = `
+                M58 116
+                Q47 124 37 132
+                L11 128
+            `;
+
+            pinkLeftFoot = `
+                M11 128
+                L0 125
+                Q-4 127 0 132
+                L12 136
+            `;
+
+        } else {
+
+            pinkRightLeg = `
+                M82 116
+                Q93 124 103 132
+                L129 128
+            `;
+
+            pinkRightFoot = `
+                M129 128
+                L140 125
+                Q144 127 140 132
+                L128 136
+            `;
+        }
+
+        motion = `
+            <path
+                class="motion-line"
+                d="${
+                    side === "lead"
+                        ? "M12 119 L0 115"
+                        : "M128 119 L140 115"
+                }"
+                marker-end="url(#arrowHeadPink)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       SIDE KICK
+    ===================================================== */
+
+    if (type === "side-kick") {
+
+        if (side === "lead") {
+
+            pinkLeftLeg = `
+                M58 116
+                Q45 129 37 143
+                L9 127
+            `;
+
+            pinkLeftFoot = `
+                M9 127
+                L-3 117
+                Q-6 116 -7 121
+                L7 134
+            `;
+
+        } else {
+
+            pinkRightLeg = `
+                M82 116
+                Q95 129 103 143
+                L131 127
+            `;
+
+            pinkRightFoot = `
+                M131 127
+                L143 117
+                Q146 116 147 121
+                L133 134
+            `;
+        }
+
+        motion = `
+            <path
+                class="motion-line"
+                d="${
+                    side === "lead"
+                        ? "M11 119 L0 107"
+                        : "M129 119 L140 107"
+                }"
+                marker-end="url(#arrowHeadPink)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       KNEE
+    ===================================================== */
+
+    if (type === "knee") {
+
+        if (side === "lead") {
+
+            pinkLeftLeg = `
+                M58 116
+                Q43 126 40 143
+                Q52 126 68 102
+            `;
+
+            pinkLeftFoot = `
+                M68 102
+                L76 95
+                L69 107
+            `;
+
+        } else {
+
+            pinkRightLeg = `
+                M82 116
+                Q97 126 100 143
+                Q88 126 72 102
+            `;
+
+            pinkRightFoot = `
+                M72 102
+                L64 95
+                L71 107
+            `;
+        }
+
+        pinkBodyTransform = "rotate(-4 69 95)";
+
+        motion = `
+            <path
+                class="motion-line"
+                d="${
+                    side === "lead"
+                        ? "M66 105 Q78 82 89 67"
+                        : "M74 105 Q62 82 51 67"
+                }"
+                marker-end="url(#arrowHeadPink)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       SLIP LEFT
+    ===================================================== */
+
+    if (type === "slip-left") {
+
+        pinkHeadTransform =
+            "translate(-12 9) rotate(-10 69 39)";
+
+        pinkBodyTransform =
+            "translate(-8 5) rotate(-8 69 95)";
+
+        motion = `
+            <path
+                class="motion-line black-motion"
+                d="M111 45 Q92 52 84 69"
+                marker-end="url(#arrowHeadBlack)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       SLIP RIGHT
+    ===================================================== */
+
+    if (type === "slip-right") {
+
+        pinkHeadTransform =
+            "translate(12 9) rotate(10 69 39)";
+
+        pinkBodyTransform =
+            "translate(8 5) rotate(8 69 95)";
+
+        motion = `
+            <path
+                class="motion-line black-motion"
+                d="M27 45 Q46 52 54 69"
+                marker-end="url(#arrowHeadBlack)"
+            />
+        `;
+    }
+
+    /* =====================================================
+       ROLL
+    ===================================================== */
+
+    if (
         type === "roll-left" ||
         type === "roll-right"
     ) {
 
-        animationClass = "animate-roll";
+        pinkHeadTransform =
+            type === "roll-left"
+                ? "translate(-10 24) rotate(-15 69 39)"
+                : "translate(10 24) rotate(15 69 39)";
 
-    } else if (type === "pivot") {
+        pinkBodyTransform =
+            type === "roll-left"
+                ? "rotate(-13 69 95)"
+                : "rotate(13 69 95)";
 
-        animationClass = "animate-pivot";
-    }
-}
-
-
-/* =========================================================
-   COLORS
-========================================================= */
-
-const skin = "#e7ad86";
-const skinDark = "#c98261";
-const skinLight = "#f1c5a3";
-
-const hair = "#30253b";
-const hairLight = "#49395c";
-
-const shirt = "#7654e8";
-const shirtDark = "#5940bd";
-
-const shorts = "#28233b";
-const shortsLight = "#3b3452";
-
-const gloveRed = "#e94b5f";
-const gloveBlue = "#4e8ee8";
-
-const shoe = "#f4f2fa";
-const shoeDark = "#cfc9df";
-
-const outline = "#30283d";
-
-
-/* =========================================================
-   DEFAULT HUMAN BODY
-========================================================= */
-
-let headX = 100;
-let headY = 39;
-
-let torsoTransform = "";
-let headTransform = "";
-
-let leftArm = `
-    M86 70
-    Q77 72 70 83
-    L57 103
-`;
-
-let rightArm = `
-    M114 70
-    Q123 72 130 83
-    L143 103
-`;
-
-let leftLeg = `
-    M88 116
-    L78 143
-    L69 168
-`;
-
-let rightLeg = `
-    M112 116
-    L122 143
-    L132 168
-`;
-
-let leftFoot = `
-    M69 168
-    Q59 167 51 172
-    L70 174
-`;
-
-let rightFoot = `
-    M132 168
-    Q142 167 150 172
-    L131 174
-`;
-
-let leftGloveX = 57;
-let leftGloveY = 103;
-
-let rightGloveX = 143;
-let rightGloveY = 103;
-
-let leftGloveRotation = 0;
-let rightGloveRotation = 0;
-
-let arrow = "";
-let impact = "";
-
-
-/* =========================================================
-   GUARD
-========================================================= */
-
-if (type === "guard" || type === "block") {
-
-    leftArm = `
-        M87 70
-        Q78 75 72 87
-        L68 96
-    `;
-
-    rightArm = `
-        M113 70
-        Q122 75 128 87
-        L132 96
-    `;
-
-    leftGloveX = 68;
-    leftGloveY = 96;
-
-    rightGloveX = 132;
-    rightGloveY = 96;
-}
-
-
-/* =========================================================
-   JAB
-========================================================= */
-
-if (type === "jab") {
-
-    if (side === "lead") {
-
-        leftArm = `
-            M87 70
-            Q75 70 63 72
-            L37 61
-        `;
-
-        leftGloveX = 35;
-        leftGloveY = 60;
-
-        rightArm = `
-            M113 70
-            Q122 74 128 87
-            L134 98
-        `;
-
-        rightGloveX = 134;
-        rightGloveY = 98;
-
-        torsoTransform = "rotate(-5 100 95)";
-        headTransform = "rotate(-4 100 40)";
-
-        arrow = `
+        motion = `
             <path
-                class="motion-line"
-                d="M40 53 L17 43"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M46 62 L21 57"
-            />
-            <path
-                class="motion-line thin"
-                d="M48 69 L25 70"
-            />
-        `;
-
-    } else {
-
-        rightArm = `
-            M113 70
-            Q125 70 137 72
-            L163 61
-        `;
-
-        rightGloveX = 165;
-        rightGloveY = 60;
-
-        leftArm = `
-            M87 70
-            Q78 74 72 87
-            L66 98
-        `;
-
-        leftGloveX = 66;
-        leftGloveY = 98;
-
-        torsoTransform = "rotate(5 100 95)";
-        headTransform = "rotate(4 100 40)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M160 53 L183 43"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M154 62 L179 57"
-            />
-            <path
-                class="motion-line thin"
-                d="M152 69 L175 70"
+                class="motion-line black-motion"
+                d="M35 40 Q69 12 103 40"
+                marker-end="url(#arrowHeadBlack)"
             />
         `;
     }
-}
 
+    /* =====================================================
+       CHECK
+    ===================================================== */
 
-/* =========================================================
-   CROSS
-========================================================= */
+    if (type === "check") {
 
-if (type === "cross" || type === "punch") {
-
-    if (side === "lead") {
-
-        leftArm = `
-            M87 70
-            Q76 71 65 78
-            L39 72
+        pinkLeftLeg = `
+            M58 116
+            Q49 127 50 139
+            Q62 130 66 119
         `;
 
-        leftGloveX = 37;
-        leftGloveY = 71;
-
-        rightArm = `
-            M113 70
-            Q127 65 139 68
-            L162 55
+        pinkLeftFoot = `
+            M66 119
+            L72 113
+            L68 122
         `;
 
-        rightGloveX = 164;
-        rightGloveY = 54;
-
-        torsoTransform = "rotate(-8 100 95)";
-        headTransform = "rotate(-6 100 40)";
-
-        arrow = `
+        motion = `
             <path
                 class="motion-line"
-                d="M155 48 L181 36"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M150 57 L176 49"
-            />
-            <path
-                class="motion-line thin"
-                d="M145 63 L170 61"
-            />
-        `;
-
-    } else {
-
-        rightArm = `
-            M113 70
-            Q124 71 135 78
-            L161 72
-        `;
-
-        rightGloveX = 163;
-        rightGloveY = 71;
-
-        leftArm = `
-            M87 70
-            Q73 65 61 68
-            L38 55
-        `;
-
-        leftGloveX = 36;
-        leftGloveY = 54;
-
-        torsoTransform = "rotate(8 100 95)";
-        headTransform = "rotate(6 100 40)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M45 48 L19 36"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M50 57 L24 49"
-            />
-            <path
-                class="motion-line thin"
-                d="M55 63 L30 61"
+                d="M67 125 Q58 108 51 99"
+                marker-end="url(#arrowHeadPink)"
             />
         `;
     }
-}
 
+    /* =====================================================
+       PARRY
+    ===================================================== */
 
-/* =========================================================
-   HOOK
-========================================================= */
+    if (type === "parry") {
 
-if (type === "hook" || type === "body-hook") {
-
-    if (side === "lead") {
-
-        leftArm = `
-            M87 70
-            Q75 72 67 82
-            L57 96
-            Q47 103 37 94
+        blackLeftArm = `
+            M131 69
+            Q120 69 110 65
+            L101 58
         `;
 
-        leftGloveX = 35;
-        leftGloveY = 93;
+        blackLeftGlove = [99,57,-15];
 
-        rightArm = `
-            M113 70
-            Q123 76 129 88
-            L135 98
-        `;
-
-        rightGloveX = 135;
-        rightGloveY = 98;
-
-        torsoTransform = "rotate(-7 100 95)";
-        headTransform = "rotate(-5 100 40)";
-
-        arrow = `
+        motion = `
             <path
-                class="motion-line"
-                d="M40 84
-                   Q23 72 29 57"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M45 91 Q27 83 25 70"
-            />
-            <path
-                class="motion-line thin"
-                d="M51 97 Q35 94 29 84"
-            />
-        `;
-
-    } else {
-
-        rightArm = `
-            M113 70
-            Q125 72 133 82
-            L143 96
-            Q153 103 163 94
-        `;
-
-        rightGloveX = 165;
-        rightGloveY = 93;
-
-        leftArm = `
-            M87 70
-            Q77 76 71 88
-            L65 98
-        `;
-
-        leftGloveX = 65;
-        leftGloveY = 98;
-
-        torsoTransform = "rotate(7 100 95)";
-        headTransform = "rotate(5 100 40)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M160 84
-                   Q177 72 171 57"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M155 91 Q173 83 175 70"
-            />
-            <path
-                class="motion-line thin"
-                d="M149 97 Q165 94 171 84"
+                class="motion-line black-motion"
+                d="M107 62 Q96 52 88 49"
+                marker-end="url(#arrowHeadBlack)"
             />
         `;
     }
-}
 
+    /* =====================================================
+       TARGET
+    ===================================================== */
 
-/* =========================================================
-   UPPERCUT
-========================================================= */
+    let target = "";
 
-if (type === "uppercut" || type === "body-uppercut") {
+    if (move.target === "head") {
 
-    if (side === "lead") {
-
-        leftArm = `
-            M87 70
-            Q76 79 68 94
-            L62 76
-            Q60 68 64 61
-        `;
-
-        leftGloveX = 63;
-        leftGloveY = 59;
-
-        rightArm = `
-            M113 70
-            Q123 76 130 89
-            L135 99
-        `;
-
-        rightGloveX = 135;
-        rightGloveY = 99;
-
-        torsoTransform = "rotate(-5 100 95)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M59 76
-                   Q48 57 61 43"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M65 82 Q54 60 69 46"
-            />
-            <path
-                class="motion-line thin"
-                d="M71 87 Q65 65 75 51"
-            />
-        `;
-
-    } else {
-
-        rightArm = `
-            M113 70
-            Q124 79 132 94
-            L138 76
-            Q140 68 136 61
-        `;
-
-        rightGloveX = 137;
-        rightGloveY = 59;
-
-        leftArm = `
-            M87 70
-            Q77 76 70 89
-            L65 99
-        `;
-
-        leftGloveX = 65;
-        leftGloveY = 99;
-
-        torsoTransform = "rotate(5 100 95)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M141 76
-                   Q152 57 139 43"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M135 82 Q146 60 131 46"
-            />
-            <path
-                class="motion-line thin"
-                d="M129 87 Q135 65 125 51"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   FRONT KICK / TEEP
-========================================================= */
-
-if (type === "front-kick" || type === "teep") {
-
-    if (side === "lead") {
-
-        leftLeg = `
-            M88 116
-            Q78 125 69 138
-            L42 136
-        `;
-
-        leftFoot = `
-            M42 136
-            L24 133
-            Q19 136 24 140
-            L43 141
-        `;
-
-        rightLeg = `
-            M112 116
-            L120 143
-            L129 168
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M39 128 L13 124"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M42 143 L17 145"
-            />
-            <path
-                class="motion-line thin"
-                d="M47 120 L25 113"
-            />
-        `;
-
-    } else {
-
-        rightLeg = `
-            M112 116
-            Q122 125 131 138
-            L158 136
-        `;
-
-        rightFoot = `
-            M158 136
-            L176 133
-            Q181 136 176 140
-            L157 141
-        `;
-
-        leftLeg = `
-            M88 116
-            L80 143
-            L71 168
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M161 128 L187 124"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M158 143 L183 145"
-            />
-            <path
-                class="motion-line thin"
-                d="M153 120 L175 113"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   LOW KICK
-========================================================= */
-
-if (
-    type === "low-kick" ||
-    type === "inside-low" ||
-    type === "outside-low"
-) {
-
-    if (side === "lead") {
-
-        leftLeg = `
-            M88 116
-            Q78 129 66 140
-            L43 132
-        `;
-
-        leftFoot = `
-            M43 132
-            Q32 130 23 133
-            L43 138
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M46 123 L18 116"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M51 130 L25 128"
-            />
-        `;
-
-    } else {
-
-        rightLeg = `
-            M112 116
-            Q122 129 134 140
-            L157 132
-        `;
-
-        rightFoot = `
-            M157 132
-            Q168 130 177 133
-            L157 138
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M154 123 L182 116"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M149 130 L175 128"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   ROUND / HIGH KICK
-========================================================= */
-
-if (
-    type === "round-kick" ||
-    type === "high-kick" ||
-    type === "kick"
-) {
-
-    if (side === "lead") {
-
-        leftLeg = `
-            M88 116
-            Q75 122 67 130
-            L57 76
-        `;
-
-        leftFoot = `
-            M57 76
-            L47 65
-            Q44 61 48 58
-            L61 72
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M59 81
-                   Q42 56 25 47"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M67 87 Q48 58 34 53"
-            />
-            <path
-                class="motion-line thin"
-                d="M73 92 Q57 67 43 61"
-            />
-        `;
-
-    } else {
-
-        rightLeg = `
-            M112 116
-            Q125 122 133 130
-            L143 76
-        `;
-
-        rightFoot = `
-            M143 76
-            L153 65
-            Q156 61 152 58
-            L139 72
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M141 81
-                   Q158 56 175 47"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M133 87 Q152 58 166 53"
-            />
-            <path
-                class="motion-line thin"
-                d="M127 92 Q143 67 157 61"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   SIDE KICK
-========================================================= */
-
-if (type === "side-kick") {
-
-    if (side === "lead") {
-
-        leftLeg = `
-            M88 116
-            Q77 130 69 143
-            L37 126
-        `;
-
-        leftFoot = `
-            M37 126
-            L18 116
-            Q14 115 13 119
-            L34 132
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M37 119 L11 104"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M42 127 L18 119"
-            />
-        `;
-
-    } else {
-
-        rightLeg = `
-            M112 116
-            Q123 130 131 143
-            L163 126
-        `;
-
-        rightFoot = `
-            M163 126
-            L182 116
-            Q186 115 187 119
-            L166 132
-        `;
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M163 119 L189 104"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M158 127 L182 119"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   KNEE
-========================================================= */
-
-if (type === "knee") {
-
-    if (side === "lead") {
-
-        leftLeg = `
-            M88 116
-            Q76 130 73 145
-            Q86 126 101 99
-        `;
-
-        leftFoot = `
-            M101 99
-            L108 92
-            L101 104
-        `;
-
-        rightLeg = `
-            M112 116
-            L122 143
-            L132 168
-        `;
-
-        torsoTransform = "rotate(-4 100 95)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M99 103
-                   Q113 79 126 62"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M91 108 Q103 84 118 68"
-            />
-        `;
-
-    } else {
-
-        rightLeg = `
-            M112 116
-            Q124 130 127 145
-            Q114 126 99 99
-        `;
-
-        rightFoot = `
-            M99 99
-            L92 92
-            L99 104
-        `;
-
-        leftLeg = `
-            M88 116
-            L78 143
-            L68 168
-        `;
-
-        torsoTransform = "rotate(4 100 95)";
-
-        arrow = `
-            <path
-                class="motion-line"
-                d="M101 103
-                   Q87 79 74 62"
-                marker-end="url(#arrowHead)"
-            />
-            <path
-                class="motion-line thin"
-                d="M109 108 Q97 84 82 68"
-            />
-        `;
-    }
-}
-
-
-/* =========================================================
-   SLIP LEFT
-========================================================= */
-
-if (type === "slip-left") {
-
-    headTransform = "translate(-18 9) rotate(-8 100 40)";
-    torsoTransform = "rotate(-10 100 95)";
-
-    leftArm = `
-        M87 70
-        Q77 76 71 89
-        L66 99
-    `;
-
-    rightArm = `
-        M113 70
-        Q123 76 129 89
-        L135 99
-    `;
-
-    leftGloveX = 66;
-    leftGloveY = 99;
-
-    rightGloveX = 135;
-    rightGloveY = 99;
-
-    arrow = `
-        <path
-            class="motion-line"
-            d="M91 46 Q65 53 57 73"
-            marker-end="url(#arrowHead)"
-        />
-    `;
-}
-
-
-/* =========================================================
-   SLIP RIGHT
-========================================================= */
-
-if (type === "slip-right") {
-
-    headTransform = "translate(18 9) rotate(8 100 40)";
-    torsoTransform = "rotate(10 100 95)";
-
-    leftArm = `
-        M87 70
-        Q77 76 71 89
-        L65 99
-    `;
-
-    rightArm = `
-        M113 70
-        Q123 76 129 89
-        L134 99
-    `;
-
-    leftGloveX = 65;
-    leftGloveY = 99;
-
-    rightGloveX = 134;
-    rightGloveY = 99;
-
-    arrow = `
-        <path
-            class="motion-line"
-            d="M109 46 Q135 53 143 73"
-            marker-end="url(#arrowHead)"
-        />
-    `;
-}
-
-
-/* =========================================================
-   ROLL
-========================================================= */
-
-if (
-    type === "roll-left" ||
-    type === "roll-right"
-) {
-
-    headTransform =
-        type === "roll-left"
-            ? "translate(-12 25) rotate(-15 100 40)"
-            : "translate(12 25) rotate(15 100 40)";
-
-    torsoTransform =
-        type === "roll-left"
-            ? "rotate(-14 100 95)"
-            : "rotate(14 100 95)";
-
-    arrow = `
-        <path
-            class="motion-line"
-            d="M51 42 Q96 10 145 42"
-            marker-end="url(#arrowHead)"
-        />
-    `;
-}
-
-
-/* =========================================================
-   PIVOT
-========================================================= */
-
-if (type === "pivot") {
-
-    torsoTransform = "rotate(-8 100 110)";
-    headTransform = "rotate(-5 100 40)";
-
-    arrow = `
-        <path
-            class="pivot-line"
-            d="M48 165
-               A55 55 0 0 1 151 165"
-            marker-end="url(#arrowHeadBlue)"
-        />
-    `;
-}
-
-
-/* =========================================================
-   TARGET
-========================================================= */
-
-let target = "";
-
-if (move.target === "head") {
-
-    target = `
-        <circle
-            class="target"
-            cx="100"
-            cy="40"
-            r="25"
-        />
-    `;
-
-} else if (
-    move.target === "body" ||
-    move.target === "ribs"
-) {
-
-    target = `
-        <ellipse
-            class="target"
-            cx="100"
-            cy="91"
-            rx="34"
-            ry="27"
-        />
-    `;
-
-} else if (
-    move.target === "leg" ||
-    move.target === "inner-thigh" ||
-    move.target === "outer-thigh"
-) {
-
-    target = `
-        <ellipse
-            class="target"
-            cx="100"
-            cy="132"
-            rx="41"
-            ry="18"
-        />
-    `;
-}
-
-
-/* =========================================================
-   IMPACT EFFECT
-========================================================= */
-
-if (
-    type.includes("punch") ||
-    type === "jab" ||
-    type === "cross" ||
-    type === "hook" ||
-    type === "uppercut"
-) {
-
-    const ix =
-        side === "lead"
-            ? 39
-            : 161;
-
-    const iy =
-        type === "uppercut"
-            ? 59
-            : type === "hook"
-                ? 93
-                : 60;
-
-    impact = `
-        <g class="impact-effect">
-
+        target = `
             <circle
-                cx="${ix}"
-                cy="${iy}"
-                r="10"
+                class="target"
+                cx="145"
+                cy="39"
+                r="23"
             />
+        `;
 
-            <path d="M${ix - 16} ${iy} L${ix - 25} ${iy}" />
-            <path d="M${ix + 16} ${iy} L${ix + 25} ${iy}" />
-            <path d="M${ix} ${iy - 16} L${ix} ${iy - 25}" />
-            <path d="M${ix} ${iy + 16} L${ix} ${iy + 25}" />
+    } else if (
+        move.target === "body" ||
+        move.target === "ribs"
+    ) {
 
-        </g>
-    `;
-}
+        target = `
+            <ellipse
+                class="target"
+                cx="145"
+                cy="91"
+                rx="31"
+                ry="25"
+            />
+        `;
 
+    } else if (
+        move.target === "leg" ||
+        move.target === "inner-thigh" ||
+        move.target === "outer-thigh"
+    ) {
 
-/* =========================================================
-   SVG
-========================================================= */
+        target = `
+            <ellipse
+                class="target"
+                cx="145"
+                cy="133"
+                rx="35"
+                ry="17"
+            />
+        `;
+    }
 
-return `
+    /* =====================================================
+       ANIMATION
+    ===================================================== */
+
+    let animationClass = "";
+
+    if (animated) {
+
+        if (
+            type === "jab" ||
+            type === "cross" ||
+            type === "punch" ||
+            type === "hook" ||
+            type === "uppercut" ||
+            type === "body-punch" ||
+            type === "body-hook" ||
+            type === "body-uppercut" ||
+            type === "overhand"
+        ) {
+
+            animationClass = "boxing-punch-animation";
+
+        } else if (
+            type.includes("kick") ||
+            type === "teep" ||
+            type === "front-kick"
+        ) {
+
+            animationClass = "boxing-kick-animation";
+
+        } else if (type === "knee") {
+
+            animationClass = "boxing-knee-animation";
+
+        } else if (
+            type === "slip-left" ||
+            type === "slip-right"
+        ) {
+
+            animationClass = "boxing-slip-animation";
+
+        } else if (
+            type === "roll-left" ||
+            type === "roll-right"
+        ) {
+
+            animationClass = "boxing-roll-animation";
+        }
+    }
+
+    return `
 
 <svg
-    class="fighter-svg"
+    class="fighter-svg boxing-scene-svg"
     viewBox="0 0 200 185"
     role="img"
-    aria-label="${escapeHTML(move.ar || "")}"
+    aria-label="${escapeHTML(move.ar || move.en || "Boxing movement")}"
 >
 
-    <defs>
+<defs>
 
-        <marker
-            id="arrowHead"
-            markerWidth="9"
-            markerHeight="9"
-            refX="7"
-            refY="4"
-            orient="auto"
-        >
-            <path
-                d="M0 0 L0 8 L9 4 Z"
-                fill="#7654e8"
-            />
-        </marker>
-
-        <marker
-            id="arrowHeadBlue"
-            markerWidth="9"
-            markerHeight="9"
-            refX="7"
-            refY="4"
-            orient="auto"
-        >
-            <path
-                d="M0 0 L0 8 L9 4 Z"
-                fill="#4e8ee8"
-            />
-        </marker>
-
-    </defs>
-
-
-    <!-- =====================================================
-         MOTION / TARGET LAYER
-    ====================================================== -->
-
-    ${target}
-    ${arrow}
-    ${impact}
-
-
-    <!-- =====================================================
-         HUMAN FIGHTER
-    ====================================================== -->
-
-    <g
-        class="${animationClass}"
-        transform="${torsoTransform}"
+    <marker
+        id="arrowHeadPink"
+        markerWidth="9"
+        markerHeight="9"
+        refX="7"
+        refY="4"
+        orient="auto"
     >
-
-
-        <!-- =================================================
-             BACK HAIR
-        ================================================== -->
-
         <path
-            d="
-                M82 40
-                Q78 19 96 15
-                Q115 12 121 31
-                Q123 42 116 51
-                L108 43
-                L91 48
-                Z
-            "
-            fill="${hair}"
-            stroke="${outline}"
-            stroke-width="2"
-            stroke-linejoin="round"
+            d="M0 0 L0 8 L9 4 Z"
+            fill="${pink}"
         />
+    </marker>
 
-
-        <!-- =================================================
-             NECK
-        ================================================== -->
-
+    <marker
+        id="arrowHeadBlack"
+        markerWidth="9"
+        markerHeight="9"
+        refX="7"
+        refY="4"
+        orient="auto"
+    >
         <path
-            d="
-                M91 52
-                L91 67
-                Q100 73 109 67
-                L109 52
-                Z
-            "
-            fill="${skinDark}"
-            stroke="${outline}"
-            stroke-width="2"
+            d="M0 0 L0 8 L9 4 Z"
+            fill="${black}"
         />
+    </marker>
 
+</defs>
 
-        <!-- =================================================
-             HEAD
-        ================================================== -->
+<!-- =====================================================
+     TARGET / MOTION
+====================================================== -->
 
-        <g transform="${headTransform}">
+${target}
+${motion}
+${impact}
 
-            <circle
-                cx="${headX}"
-                cy="${headY}"
-                r="18"
-                fill="${skin}"
-                stroke="${outline}"
-                stroke-width="2.2"
-            />
+<!-- =====================================================
+     PINK ATTACKER
+====================================================== -->
 
+<g
+    class="${animationClass}"
+    transform="${pinkBodyTransform}"
+>
 
-            <!-- hair top -->
+    <!-- tied-back ponytail -->
 
-            <path
-                d="
-                    M82 39
-                    Q82 18 99 18
-                    Q116 18 118 38
-                    Q111 29 102 29
-                    Q92 29 85 38
-                    Z
-                "
-                fill="${hair}"
-            />
+    <path
+        d="
+            M78 29
+            Q88 20 91 28
+            Q99 22 102 28
+            Q92 30 88 38
+            Q82 35 78 29
+        "
+        fill="${pink}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
 
+    <!-- ponytail -->
 
-            <!-- hair strands -->
+    <path
+        d="
+            M83 27
+            Q101 17 108 27
+            Q102 35 91 37
+            Q103 40 108 47
+            Q95 46 87 39
+            Z
+        "
+        fill="${pink}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
 
-            <path
-                d="M86 28 Q91 20 96 19"
-                fill="none"
-                stroke="${hairLight}"
-                stroke-width="2"
-                stroke-linecap="round"
-            />
+    <!-- neck -->
 
-            <path
-                d="M96 20 Q103 16 110 22"
-                fill="none"
-                stroke="${hairLight}"
-                stroke-width="2"
-                stroke-linecap="round"
-            />
+    <path
+        d="
+            M61 52
+            L61 67
+            Q69 72 77 67
+            L77 52
+            Z
+        "
+        fill="${skinDark}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
 
+    <!-- head -->
 
-            <!-- ear -->
+    <g transform="${pinkHeadTransform}">
 
-            <circle
-                cx="116"
-                cy="42"
-                r="4"
-                fill="${skinLight}"
-            />
-
-
-            <!-- face -->
-
-            <path
-                d="M111 42 Q115 44 111 45"
-                fill="none"
-                stroke="${outline}"
-                stroke-width="1.5"
-                stroke-linecap="round"
-            />
-
-            <path
-                d="M96 47 Q101 50 106 47"
-                fill="none"
-                stroke="${skinDark}"
-                stroke-width="1.5"
-                stroke-linecap="round"
-            />
-
-        </g>
-
-
-        <!-- =================================================
-             TORSO / SHIRT
-        ================================================== -->
-
-        <path
-            d="
-                M82 65
-                Q91 59 100 61
-                Q109 59 118 65
-                L128 104
-                Q119 115 100 116
-                Q81 115 72 104
-                Z
-            "
-            fill="${shirt}"
-            stroke="${outline}"
-            stroke-width="2.3"
-            stroke-linejoin="round"
-        />
-
-
-        <!-- chest shading -->
-
-        <path
-            d="
-                M84 68
-                Q91 66 96 68
-                L93 103
-                Q83 101 77 96
-                Z
-            "
-            fill="${shirtDark}"
-            opacity="0.65"
-        />
-
-        <path
-            d="
-                M116 68
-                Q109 66 104 68
-                L107 103
-                Q117 101 123 96
-                Z
-            "
-            fill="${shirtDark}"
-            opacity="0.45"
-        />
-
-
-        <!-- neckline -->
-
-        <path
-            d="
-                M91 63
-                Q100 70 109 63
-            "
-            fill="none"
-            stroke="${outline}"
-            stroke-width="2"
-        />
-
-
-        <!-- =================================================
-             LEFT ARM
-        ================================================== -->
-
-        <path
-            class="animated-part"
-            d="${leftArm}"
-            fill="none"
-            stroke="${skin}"
-            stroke-width="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        />
-
-        <!-- elbow highlight -->
-
-        <path
-            d="${leftArm}"
-            fill="none"
-            stroke="${skinLight}"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            opacity="0.45"
-        />
-
-
-        <!-- =================================================
-             RIGHT ARM
-        ================================================== -->
-
-        <path
-            class="animated-part"
-            d="${rightArm}"
-            fill="none"
-            stroke="${skin}"
-            stroke-width="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        />
-
-        <path
-            d="${rightArm}"
-            fill="none"
-            stroke="${skinLight}"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            opacity="0.45"
-        />
-
-
-        <!-- =================================================
-             LEFT GLOVE
-        ================================================== -->
-
-        <g
-            transform="
-                translate(${leftGloveX} ${leftGloveY})
-                rotate(${leftGloveRotation})
-            "
-        >
-
-            <ellipse
-                cx="0"
-                cy="0"
-                rx="9"
-                ry="8"
-                fill="${gloveRed}"
-                stroke="${outline}"
-                stroke-width="2"
-            />
-
-            <path
-                d="
-                    M-6 -5
-                    Q-2 -10 5 -6
-                    L8 -1
-                    Q3 2 -4 1
-                    Z
-                "
-                fill="#f46b79"
-                opacity="0.8"
-            />
-
-            <path
-                d="M-3 5 Q2 8 6 3"
-                fill="none"
-                stroke="#b92e43"
-                stroke-width="1.5"
-            />
-
-        </g>
-
-
-        <!-- =================================================
-             RIGHT GLOVE
-        ================================================== -->
-
-        <g
-            transform="
-                translate(${rightGloveX} ${rightGloveY})
-                rotate(${rightGloveRotation})
-            "
-        >
-
-            <ellipse
-                cx="0"
-                cy="0"
-                rx="9"
-                ry="8"
-                fill="${gloveBlue}"
-                stroke="${outline}"
-                stroke-width="2"
-            />
-
-            <path
-                d="
-                    M-6 -5
-                    Q-2 -10 5 -6
-                    L8 -1
-                    Q3 2 -4 1
-                    Z
-                "
-                fill="#76aaf0"
-                opacity="0.8"
-            />
-
-            <path
-                d="M-3 5 Q2 8 6 3"
-                fill="none"
-                stroke="#356fbf"
-                stroke-width="1.5"
-            />
-
-        </g>
-
-
-        <!-- =================================================
-             WAIST
-        ================================================== -->
-
-        <path
-            d="
-                M73 103
-                Q100 112 127 103
-                L131 121
-                Q116 127 100 123
-                Q84 127 69 121
-                Z
-            "
-            fill="${shorts}"
+        <circle
+            cx="69"
+            cy="39"
+            r="18"
+            fill="${skin}"
             stroke="${outline}"
             stroke-width="2.2"
         />
 
-
-        <!-- shorts waistband -->
+        <!-- front hair -->
 
         <path
             d="
-                M72 105
-                Q100 114 128 105
+                M52 39
+                Q51 20 68 18
+                Q85 18 86 37
+                Q78 27 69 29
+                Q60 29 52 39
+                Z
             "
-            fill="none"
-            stroke="${shortsLight}"
-            stroke-width="3"
-        />
-
-
-        <!-- =================================================
-             LEFT LEG
-        ================================================== -->
-
-        <path
-            class="animated-part"
-            d="${leftLeg}"
-            fill="none"
-            stroke="${skin}"
-            stroke-width="12"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        />
-
-        <path
-            d="${leftLeg}"
-            fill="none"
-            stroke="${skinLight}"
-            stroke-width="3"
-            stroke-linecap="round"
-            opacity="0.45"
-        />
-
-
-        <!-- =================================================
-             RIGHT LEG
-        ================================================== -->
-
-        <path
-            class="animated-part"
-            d="${rightLeg}"
-            fill="none"
-            stroke="${skin}"
-            stroke-width="12"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        />
-
-        <path
-            d="${rightLeg}"
-            fill="none"
-            stroke="${skinLight}"
-            stroke-width="3"
-            stroke-linecap="round"
-            opacity="0.45"
-        />
-
-
-        <!-- =================================================
-             LEFT SHOE
-        ================================================== -->
-
-        <path
-            d="${leftFoot}"
-            fill="${shoe}"
+            fill="${pink}"
             stroke="${outline}"
-            stroke-width="2"
-            stroke-linejoin="round"
+            stroke-width="1.5"
         />
 
+        <!-- hair highlight -->
+
         <path
-            d="
-                M55 170
-                L70 171
-            "
+            d="M56 28 Q64 20 72 20"
             fill="none"
-            stroke="${shoeDark}"
+            stroke="#FF8FA4"
             stroke-width="2"
+            stroke-linecap="round"
         />
 
+        <!-- ear -->
 
-        <!-- =================================================
-             RIGHT SHOE
-        ================================================== -->
+        <circle
+            cx="84"
+            cy="42"
+            r="4"
+            fill="${skinLight}"
+        />
+
+        <!-- face -->
 
         <path
-            d="${rightFoot}"
-            fill="${shoe}"
+            d="M76 42 Q80 44 76 45"
+            fill="none"
             stroke="${outline}"
-            stroke-width="2"
-            stroke-linejoin="round"
+            stroke-width="1.4"
         />
 
         <path
-            d="
-                M130 171
-                L145 170
-            "
+            d="M64 47 Q69 50 74 47"
             fill="none"
-            stroke="${shoeDark}"
-            stroke-width="2"
+            stroke="${skinDark}"
+            stroke-width="1.5"
+            stroke-linecap="round"
         />
-
 
     </g>
+
+    <!-- torso -->
+
+    <path
+        d="
+            M58 65
+            Q69 59 80 65
+            L88 103
+            Q69 113 50 103
+            Z
+        "
+        fill="${pink}"
+        stroke="${outline}"
+        stroke-width="2.3"
+    />
+
+    <!-- sports bra -->
+
+    <path
+        d="
+            M58 66
+            Q69 73 80 66
+            L78 82
+            Q69 87 60 82
+            Z
+        "
+        fill="${pinkDark}"
+        stroke="${outline}"
+        stroke-width="1.8"
+    />
+
+    <!-- shoulder straps -->
+
+    <path
+        d="M61 64 L65 76"
+        stroke="#FF91A5"
+        stroke-width="3"
+        stroke-linecap="round"
+    />
+
+    <path
+        d="M77 64 L73 76"
+        stroke="#FF91A5"
+        stroke-width="3"
+        stroke-linecap="round"
+    />
+
+    <!-- left arm -->
+
+    <path
+        d="${pinkLeftArm}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <path
+        d="${pinkLeftArm}"
+        fill="none"
+        stroke="${skinLight}"
+        stroke-width="3"
+        stroke-linecap="round"
+        opacity=".45"
+    />
+
+    <!-- right arm -->
+
+    <path
+        d="${pinkRightArm}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <path
+        d="${pinkRightArm}"
+        fill="none"
+        stroke="${skinLight}"
+        stroke-width="3"
+        stroke-linecap="round"
+        opacity=".45"
+    />
+
+    <!-- left glove -->
+
+    <g
+        transform="
+            translate(
+                ${pinkLeftGlove[0]}
+                ${pinkLeftGlove[1]}
+            )
+            rotate(${pinkLeftGlove[2]})
+        "
+    >
+
+        <ellipse
+            cx="0"
+            cy="0"
+            rx="9"
+            ry="8"
+            fill="${glovePink}"
+            stroke="${outline}"
+            stroke-width="2"
+        />
+
+        <path
+            d="
+                M-6 -4
+                Q-2 -10 5 -6
+                L8 -1
+                Q2 2 -5 1
+            "
+            fill="#FF8196"
+            opacity=".75"
+        />
+
+    </g>
+
+    <!-- right glove -->
+
+    <g
+        transform="
+            translate(
+                ${pinkRightGlove[0]}
+                ${pinkRightGlove[1]}
+            )
+            rotate(${pinkRightGlove[2]})
+        "
+    >
+
+        <ellipse
+            cx="0"
+            cy="0"
+            rx="9"
+            ry="8"
+            fill="${glovePink}"
+            stroke="${outline}"
+            stroke-width="2"
+        />
+
+        <path
+            d="
+                M-6 -4
+                Q-2 -10 5 -6
+                L8 -1
+                Q2 2 -5 1
+            "
+            fill="#FF8196"
+            opacity=".75"
+        />
+
+    </g>
+
+    <!-- shorts -->
+
+    <path
+        d="
+            M50 101
+            Q69 108 88 101
+            L91 120
+            Q80 125 69 120
+            Q58 125 47 120
+            Z
+        "
+        fill="${pinkDark}"
+        stroke="${outline}"
+        stroke-width="2.2"
+    />
+
+    <!-- legs -->
+
+    <path
+        d="${pinkLeftLeg}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <path
+        d="${pinkRightLeg}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <!-- shoes -->
+
+    <path
+        d="${pinkLeftFoot}"
+        fill="${shoe}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+    <path
+        d="${pinkRightFoot}"
+        fill="${shoe}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+</g>
+
+<!-- =====================================================
+     BLACK DEFENDER
+====================================================== -->
+
+<g
+    transform="${blackBodyTransform}"
+>
+
+    <!-- tied-back hair -->
+
+    <path
+        d="
+            M132 28
+            Q148 18 159 27
+            Q169 24 175 30
+            Q164 35 158 39
+            Q149 34 139 37
+            Z
+        "
+        fill="${black}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+    <!-- ponytail -->
+
+    <path
+        d="
+            M158 26
+            Q176 16 187 26
+            Q179 34 166 37
+            Q180 39 186 47
+            Q171 45 162 38
+            Z
+        "
+        fill="${black}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+    <!-- neck -->
+
+    <path
+        d="
+            M137 52
+            L137 67
+            Q145 72 153 67
+            L153 52
+            Z
+        "
+        fill="${skinDark}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+    <!-- head -->
+
+    <g transform="${blackHeadTransform}">
+
+        <circle
+            cx="145"
+            cy="39"
+            r="18"
+            fill="${skin}"
+            stroke="${outline}"
+            stroke-width="2.2"
+        />
+
+        <!-- black hair -->
+
+        <path
+            d="
+                M128 39
+                Q127 20 144 18
+                Q161 18 162 37
+                Q154 27 145 29
+                Q136 29 128 39
+                Z
+            "
+            fill="${black}"
+        />
+
+        <path
+            d="M132 28 Q140 20 148 20"
+            fill="none"
+            stroke="${blackLight}"
+            stroke-width="2"
+            stroke-linecap="round"
+        />
+
+        <!-- ear -->
+
+        <circle
+            cx="160"
+            cy="42"
+            r="4"
+            fill="${skinLight}"
+        />
+
+        <!-- face -->
+
+        <path
+            d="M152 42 Q156 44 152 45"
+            fill="none"
+            stroke="${outline}"
+            stroke-width="1.4"
+        />
+
+        <path
+            d="M140 47 Q145 50 150 47"
+            fill="none"
+            stroke="${skinDark}"
+            stroke-width="1.5"
+            stroke-linecap="round"
+        />
+
+    </g>
+
+    <!-- black sports bra -->
+
+    <path
+        d="
+            M134 65
+            Q145 59 156 65
+            L164 103
+            Q145 113 126 103
+            Z
+        "
+        fill="${black}"
+        stroke="${outline}"
+        stroke-width="2.3"
+    />
+
+    <!-- bra straps -->
+
+    <path
+        d="M137 64 L141 76"
+        stroke="${blackLight}"
+        stroke-width="3"
+        stroke-linecap="round"
+    />
+
+    <path
+        d="M153 64 L149 76"
+        stroke="${blackLight}"
+        stroke-width="3"
+        stroke-linecap="round"
+    />
+
+    <!-- arms -->
+
+    <path
+        d="${blackLeftArm}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <path
+        d="${blackRightArm}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <!-- gloves -->
+
+    <g
+        transform="
+            translate(
+                ${blackLeftGlove[0]}
+                ${blackLeftGlove[1]}
+            )
+            rotate(${blackLeftGlove[2]})
+        "
+    >
+
+        <ellipse
+            cx="0"
+            cy="0"
+            rx="9"
+            ry="8"
+            fill="${gloveBlack}"
+            stroke="${outline}"
+            stroke-width="2"
+        />
+
+        <path
+            d="M-6 -3 Q0 -9 6 -4"
+            fill="none"
+            stroke="${blackLight}"
+            stroke-width="2"
+        />
+
+    </g>
+
+    <g
+        transform="
+            translate(
+                ${blackRightGlove[0]}
+                ${blackRightGlove[1]}
+            )
+            rotate(${blackRightGlove[2]})
+        "
+    >
+
+        <ellipse
+            cx="0"
+            cy="0"
+            rx="9"
+            ry="8"
+            fill="${gloveBlack}"
+            stroke="${outline}"
+            stroke-width="2"
+        />
+
+        <path
+            d="M-6 -3 Q0 -9 6 -4"
+            fill="none"
+            stroke="${blackLight}"
+            stroke-width="2"
+        />
+
+    </g>
+
+    <!-- shorts -->
+
+    <path
+        d="
+            M126 101
+            Q145 108 164 101
+            L167 120
+            Q156 125 145 120
+            Q134 125 123 120
+            Z
+        "
+        fill="${black}"
+        stroke="${outline}"
+        stroke-width="2.2"
+    />
+
+    <!-- legs -->
+
+    <path
+        d="${blackLeftLeg}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <path
+        d="${blackRightLeg}"
+        fill="none"
+        stroke="${skin}"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+
+    <!-- shoes -->
+
+    <path
+        d="${blackLeftFoot}"
+        fill="${shoe}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+    <path
+        d="${blackRightFoot}"
+        fill="${shoe}"
+        stroke="${outline}"
+        stroke-width="2"
+    />
+
+</g>
+
+<!-- =====================================================
+     VISUAL LABELS
+====================================================== -->
+
+<g>
+
+    <circle
+        cx="69"
+        cy="8"
+        r="5"
+        fill="${pink}"
+    />
+
+    <text
+        x="78"
+        y="11"
+        font-size="6"
+        font-weight="800"
+        fill="${outline}"
+    >
+        ATTACK
+    </text>
+
+    <circle
+        cx="137"
+        cy="8"
+        r="5"
+        fill="${black}"
+    />
+
+    <text
+        x="146"
+        y="11"
+        font-size="6"
+        font-weight="800"
+        fill="${outline}"
+    >
+        DEFENSE
+    </text>
+
+</g>
 
 </svg>
 
 `;
-
-           
-
 }
-
 
 /* =========================================================
    RENDER MOVES
